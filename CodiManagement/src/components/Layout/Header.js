@@ -86,7 +86,7 @@ class Header extends React.Component {
           </Button>
         </Nav>
         <Nav navbar>
-          <SearchInput />
+          {/* <SearchInput /> */}
         </Nav>
 
         <Nav navbar className={bem.e('nav-right')}>

@@ -56,11 +56,12 @@ class App extends React.Component {
               )}
             />
 
+
             <MainLayout breakpoint={this.props.breakpoint}>
+              
               <React.Suspense fallback={<PageSpinner />}>
-
               <Route exact path="/codi-dashboard" component={CodiDashboard} />
-
+              
 
 
                 <Route exact path="/" component={DashboardPage} />
