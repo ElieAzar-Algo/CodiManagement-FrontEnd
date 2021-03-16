@@ -26,7 +26,8 @@ const TypographyPage = React.lazy(() => import('pages/TypographyPage'));
 const WidgetPage = React.lazy(() => import('pages/WidgetPage'));
 
 
-const CodiDashboard = React.lazy(() => import('./codiPages/CodiDashboard'));
+const BranchesInfo = React.lazy(() => import('./codiPages/BranchesInfo'));
+const CohortInfo = React.lazy(() => import('./codiPages/CohortInfo'));
 
 
 const getBasename = () => {
@@ -60,7 +61,8 @@ class App extends React.Component {
             <MainLayout breakpoint={this.props.breakpoint}>
               
               <React.Suspense fallback={<PageSpinner />}>
-              <Route exact path="/codi-dashboard" component={CodiDashboard} />
+              <Route exact path="/branches-info" component={BranchesInfo} />
+              <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
               
 
 

@@ -12,7 +12,7 @@ import { iconWidgetsData, numberWidgetsData } from 'demos/widgetPage';import {
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 
 
-const CodiDashboard = () => {
+const BranchesInfo = () => {
 
   const [branches, setBranches] = useState([]);
   const [individualBranch, setIndividualBranch] = useState([]);
@@ -138,7 +138,13 @@ const CodiDashboard = () => {
                               <td>{branch.admins.length}</td>
                               <td>
                                 {' '}
-                                <Link to="/cards">
+                                <Link to ={{
+                                  pathname: `/cohort-info/${branch.branch_name}/${cohort.id}`, 
+                                  state: { 
+                                      branch_name:"batata", 
+                                      new_id:"", 
+                                  }
+                                }}>
                                   <Button color="info"> More Info </Button>
                                 </Link>
                               </td>
@@ -170,4 +176,4 @@ const CodiDashboard = () => {
     </Row>
   );
 };
-export default CodiDashboard;
+export default BranchesInfo;
