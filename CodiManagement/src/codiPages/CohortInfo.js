@@ -1,31 +1,27 @@
 //import Page from 'components/Page';
-import './codiStyles/CodiDashboard.css';
-import React,{useEffect,useState, useCallback}from 'react';
+import React,{useEffect,useState}from 'react';
 import {Link} from 'react-router-dom'
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, CardText,CardImg,CardTitle,Form,Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    UncontrolledButtonDropdown,
-    DropdownToggle,
-    DropdownItem,
-    DropdownMenu,} from 'reactstrap';
-import { NumberWidget, IconWidget } from 'components/Widget';
-import { iconWidgetsData, numberWidgetsData } from 'demos/widgetPage';import {
-  MdSearch,
-  MdRoom
-} from 'react-icons/md';
-
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, CardText, CardImg, CardTitle, Form, Input,
+    InputGroup, InputGroupAddon, UncontrolledButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu,} from 'reactstrap';
 import codilogo from 'assets/img/logo/Codi-Logo.png';
+import './codiStyles/CodiDashboard.css';
+
+
+// import { NumberWidget, IconWidget } from 'components/Widget';
+// import { iconWidgetsData, numberWidgetsData } from 'demos/widgetPage';import {
+//   MdSearch,
+//   MdRoom
+// } from 'react-icons/md';
+
 
 
 const CohortInfo = (props) => {
 
   const [cohort, setCohort] = useState([]);
   const [searchField, setSearchField] = useState("Choose a field ");
-  const [searchValue, setSearchValue] = useState("");
-  const [users, setUsers] = useState([]);
-  const [errors, setErrors] = useState(false);
+  const [searchValue, setSearchValue] = useState("");//search function is not completed
+  //const [users, setUsers] = useState([]);
+  //const [errors, setErrors] = useState(false);
 
   const branchName=props.match.params.name;
   
@@ -43,8 +39,9 @@ const CohortInfo = (props) => {
 
    const searchForUser =async(e)=>{
     e.preventDefault()
-    const search= cohort.map((coh)=>coh.users.filter(e=>(e.user_first_name=='Elie')>-1))
+    const search= cohort.map((coh)=>coh.users.filter(e=>(e.user_first_name==='Elie')>-1))
     console.log(search)
+
     }
 
   
@@ -173,11 +170,13 @@ const CohortInfo = (props) => {
                               <td>{user.user_last_name}</td>
                               <td>{user.email}</td>
                               <td>{user.user_gender}</td>
-                              <td>{user.active_inactive?"Active":"Inactive"}</td>
+                              <td>{user.active_inactive?"Active":"Alumni"}</td>
                              
                               <td>
                                 {' '}
-                                <Link to="/cards">
+                                <Link to ={{
+                                  pathname: `/user-profile/${coh.cohort_code}/${user.id}`, 
+                                }}>
                                   <Button color="info"> More Info </Button>
                                 </Link>
                               </td>

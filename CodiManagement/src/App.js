@@ -28,6 +28,7 @@ const WidgetPage = React.lazy(() => import('pages/WidgetPage'));
 
 const BranchesInfo = React.lazy(() => import('./codiPages/BranchesInfo'));
 const CohortInfo = React.lazy(() => import('./codiPages/CohortInfo'));
+const userProfile = React.lazy(() => import('./codiPages/UserProfile'));
 
 
 const getBasename = () => {
@@ -63,6 +64,7 @@ class App extends React.Component {
               <React.Suspense fallback={<PageSpinner />}>
               <Route exact path="/branches-info" component={BranchesInfo} />
               <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
+              <Route exact path='/user-profile/:name/:id' component={userProfile} />
               
 
 

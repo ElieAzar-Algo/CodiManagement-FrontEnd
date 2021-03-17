@@ -1,13 +1,10 @@
 //import Page from 'components/Page';
 import './codiStyles/CodiDashboard.css';
-import React,{useEffect,useState, useCallback}from 'react';
+import React,{useEffect,useState,}from 'react';
 import {Link} from 'react-router-dom'
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, CardText,CardImg,CardTitle,Form,Input} from 'reactstrap';
-import { NumberWidget, IconWidget } from 'components/Widget';
-import { iconWidgetsData, numberWidgetsData } from 'demos/widgetPage';import {
-  MdSearch,
-  MdRoom
-} from 'react-icons/md';
+import {IconWidget } from 'components/Widget';
+import { MdSearch, MdRoom} from 'react-icons/md';
 
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 
@@ -16,11 +13,9 @@ const BranchesInfo = () => {
 
   const [branches, setBranches] = useState([]);
   const [individualBranch, setIndividualBranch] = useState([]);
-  const [individualCohort, setIndividualCohort] = useState([]);
+  const [individualCohort, setIndividualCohort] = useState([]);//search function not complete
   const [search, setSearch] = useState([]);
-
-
-  const [errors, setErrors] = useState(false);
+  //const [errors, setErrors] = useState(false);
 
 
   const getBranches=async ()=>{
