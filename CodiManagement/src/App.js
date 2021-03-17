@@ -28,7 +28,8 @@ const WidgetPage = React.lazy(() => import('pages/WidgetPage'));
 
 const BranchesInfo = React.lazy(() => import('./codiPages/BranchesInfo'));
 const CohortInfo = React.lazy(() => import('./codiPages/CohortInfo'));
-const userProfile = React.lazy(() => import('./codiPages/UserProfile'));
+const UserProfile = React.lazy(() => import('./codiPages/UserProfile'));
+const CreateUser = React.lazy(() => import('./codiPages/CreateUser'));
 
 
 const getBasename = () => {
@@ -64,7 +65,8 @@ class App extends React.Component {
               <React.Suspense fallback={<PageSpinner />}>
               <Route exact path="/branches-info" component={BranchesInfo} />
               <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
-              <Route exact path='/user-profile/:name/:id' component={userProfile} />
+              <Route exact path='/user-profile/:name/:id' component={UserProfile} />
+              <Route exact path='/create-user' component={CreateUser} />
               
 
 

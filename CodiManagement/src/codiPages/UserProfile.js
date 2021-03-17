@@ -73,14 +73,15 @@ const UserProfile = (props) => {
           />
         </Col>
         </Row>
-            <Row className="m-3">
+            <Row className="m-2">
             <Col xl={3} lg={3} md={6}>
-                <Link to="">
-            <Button color="success">success</Button></Link>
+                <Link to="/create-user">
+            <Button className='mr-3' color="primary">Create Student</Button></Link>
+            <Button color="primary">Edit Profile</Button>
                 </Col>
 
                 {/* //------------------------------//---------------------// */}
-                <Col xl={3} lg={3} md={6}>
+                <Col xl={2} lg={2} md={6}>
             <Button color="danger" onClick={toggle}>Delete Profile</Button>
                 <Modal
                   isOpen={modal}
@@ -117,6 +118,8 @@ const UserProfile = (props) => {
                       plaintext
                       value={user.email}
                       readOnly
+                      hidden={false}
+                      
                     />
                   </Col>
                 </FormGroup>
