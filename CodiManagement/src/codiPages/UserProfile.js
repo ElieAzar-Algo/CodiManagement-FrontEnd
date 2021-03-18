@@ -4,6 +4,7 @@ import {Row,Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Lab
     ModalBody, ModalFooter, ModalHeader,} from 'reactstrap';
 import { UserCard } from '../components/Card';
 import user1Image from '../assets/img/users/100_1.jpg';
+import EditUser from './EditUser';
 
 
 
@@ -11,6 +12,7 @@ import user1Image from '../assets/img/users/100_1.jpg';
 const UserProfile = (props) => {
     const [user, setUser] = useState({});
     const [modal, setModal] = useState(false);
+    const [editUser, setEditUser] = useState(true);
 
     const userId=props.match.params.id;
 
@@ -40,24 +42,16 @@ const UserProfile = (props) => {
 
      }
 
-     const history=()=>{
-        
-        toggle();
-     }
-
      const toggle = () => {
           setModal(!modal)
       };
 
-
-     
      useEffect(()=>{
-    
         getUser();
-      
       },[])
     return(
         <>
+        
         <Row>
         <Col xl={12} lg={12} md={12} md={5}>
           <UserCard
@@ -77,7 +71,7 @@ const UserProfile = (props) => {
             <Col xl={3} lg={3} md={6}>
                 <Link to="/create-user">
             <Button className='mr-3' color="primary">Create Student</Button></Link>
-            <Button color="primary">Edit Profile</Button>
+            <Button onClick={()=>setEditUser(!editUser)} color="primary">Edit Profile</Button>
                 </Col>
 
                 {/* //------------------------------//---------------------// */}
@@ -103,6 +97,7 @@ const UserProfile = (props) => {
                 </Modal>
                 </Col>
             </Row>
+            <div hidden={!editUser}>
         <Row className="m-2">
         <Col  xl={6} lg={12} md={12}>
           <Card>
@@ -118,7 +113,8 @@ const UserProfile = (props) => {
                       plaintext
                       value={user.email}
                       readOnly
-                      hidden={false}
+                    
+                      
                       
                     />
                   </Col>
@@ -258,6 +254,11 @@ const UserProfile = (props) => {
           </Card>
         </Col>
         </Row>
+        </div>
+              <div hidden={editUser}>
+           <EditUser  userInfo={user}/>
+           </div>
+        
         </>
     )
 }

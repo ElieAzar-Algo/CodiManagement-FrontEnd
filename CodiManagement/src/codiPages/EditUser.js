@@ -11,19 +11,22 @@ import {
   FormGroup,
   Input,
   Label,
+  
   Alert,
+  
   UncontrolledButtonDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
 } from 'reactstrap';
 
-const CreateUser = props => {
-  const [cohorts, setCohorts] = useState([]);
-  const [UserCohort, setUserCohort] = useState();
-  const [cohortName, setCohortName] = useState('Cohorts');
+const EditUser = props => {
   const [userInputs, setUserInputs] = useState([]);
   const [errors, setErrors] = useState([]);
+  const [cohorts, setCohorts] = useState([]);
+  const [UserCohort, setUserCohort] = useState();
+  const [cohortName, setCohortName] = useState(props.userInfo.cohort_code);
+  const [userActive, setUserActive] = useState(1);
 
   const getCohorts = async () => {
     const response = await fetch('http://localhost:8000/api/only-cohorts');
@@ -37,13 +40,16 @@ const CreateUser = props => {
       ...userInputs,
       [e.target.name]: e.target.value,
     });
+
     console.log(userInputs);
   };
 
   const createUser = async e => {
     e.preventDefault();
-    const response = await fetch('http://localhost:8000/api/user', {
-      method: 'POST',
+    console.log(UserCohort)
+    const userId = props.userInfo.id;
+    const response = await fetch(`http://localhost:8000/api/user/${userId}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -51,7 +57,7 @@ const CreateUser = props => {
       },
       body: JSON.stringify({
         ...userInputs,
-        active_inactive: 1,
+        active_inactive: userActive,
         cohort_code: UserCohort,
       }),
     });
@@ -71,7 +77,12 @@ const CreateUser = props => {
     getCohorts();
   }, []);
   return (
-    <>
+    <>  
+      {!errors.message ? (
+       <Row><Col>   <Alert color="danger">CHANGE ONLY the info that you to edit </Alert>   </Col> </Row>) : (
+        ''
+      )}
+
       {errors.message ? (
         <Row className="m-2">
           <Col xl={12} lg={12} md={12}>
@@ -87,6 +98,28 @@ const CreateUser = props => {
             <CardHeader>Student Info</CardHeader>
             <CardBody>
               <Form>
+                <FormGroup row>
+                  <Label for="exampleEmail" sm={5}>
+                    Change to Alumni :
+                  </Label>
+                  <Col sm={7}>
+                    <UncontrolledButtonDropdown addonType="append">
+                      <DropdownToggle caret> {userActive?"Active":"Alumni"}  </DropdownToggle>
+                      <DropdownMenu>
+                       
+                          <DropdownItem onClick={()=>setUserActive(1)}> Active </DropdownItem>
+                          <DropdownItem onClick={()=>setUserActive(0)}> Alumni </DropdownItem>
+                      
+                      </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                    {errors.cohort_code ? (
+                      <Alert color="danger">{errors.cohort_code} </Alert>
+                    ) : (
+                      ''
+                    )}
+                  </Col>
+                </FormGroup>
+
                 <FormGroup row>
                   <Label for="exampleEmail" sm={5}>
                     Choose a cohort :
@@ -115,6 +148,7 @@ const CreateUser = props => {
                     )}
                   </Col>
                 </FormGroup>
+
                 <FormGroup row>
                   <Label for="exampleEmail" sm={5}>
                     First Name :
@@ -122,7 +156,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="text"
-                      placeholder="example: Adam"
+                      placeholder={props.userInfo.user_first_name}
                       onChange={catchInput}
                       name="user_first_name"
                     />
@@ -140,7 +174,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="text"
-                      placeholder="example: Azar"
+                      placeholder={props.userInfo.user_last_name}
                       onChange={catchInput}
                       name="user_last_name"
                     />
@@ -159,7 +193,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="email"
-                      placeholder="example@mail.com"
+                      placeholder={props.userInfo.email}
                       onChange={catchInput}
                       name="email"
                     />
@@ -178,7 +212,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="password"
-                      placeholder="password"
+                      placeholder="********"
                       onChange={catchInput}
                       name="password"
                     />
@@ -197,7 +231,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="number"
-                      placeholder="example: 0096170123456"
+                      placeholder={props.userInfo.user_phone_number}
                       onChange={catchInput}
                       name="user_phone_number"
                     />
@@ -216,7 +250,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="number"
-                      placeholder="example: 0096170123456"
+                      placeholder={props.userInfo.user_emergency_number}
                       onChange={catchInput}
                       name="user_emergency_number"
                     />
@@ -230,7 +264,7 @@ const CreateUser = props => {
                   <Col sm={7}>
                     <Input
                       type="text"
-                      placeholder="example: #5579"
+                      placeholder={props.userInfo.user_discord_id}
                       onChange={catchInput}
                       name="user_discord_id"
                     />
@@ -261,6 +295,8 @@ const CreateUser = props => {
                       name="user_birth_date"
                       onChange={catchInput}
                     />
+                    <p>{props.userInfo.user_birth_date}</p>
+
                     {errors.user_birth_date ? (
                       <Alert color="danger">{errors.user_birth_date} </Alert>
                     ) : (
@@ -276,7 +312,7 @@ const CreateUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder="Nationality"
+                      placeholder={props.userInfo.user_nationality}
                       onChange={catchInput}
                       name="user_nationality"
                     />
@@ -314,7 +350,7 @@ const CreateUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder="City name"
+                      placeholder={props.userInfo.user_city}
                       onChange={catchInput}
                       name="user_city"
                     />
@@ -333,7 +369,7 @@ const CreateUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder="Blg-Street-Town-"
+                      placeholder={props.userInfo.user_address}
                       onChange={catchInput}
                       name="user_address"
                     />
@@ -352,7 +388,7 @@ const CreateUser = props => {
                   <Col sm={8}>
                     <Input
                       type="number"
-                      placeholder="Between 1 and 3"
+                      placeholder={props.userInfo.user_security_level}
                       onChange={catchInput}
                       name="user_security_level"
                     />
@@ -366,7 +402,7 @@ const CreateUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder="Upload photo "
+                      placeholder={props.userInfo.user_avatar}
                       onChange={catchInput}
                       name="user_avatar"
                     />
@@ -383,4 +419,4 @@ const CreateUser = props => {
     </>
   );
 };
-export default CreateUser;
+export default EditUser;
