@@ -30,6 +30,7 @@ const BranchesInfo = React.lazy(() => import('./codiPages/BranchesInfo'));
 const CohortInfo = React.lazy(() => import('./codiPages/CohortInfo'));
 const UserProfile = React.lazy(() => import('./codiPages/UserProfile'));
 const CreateUser = React.lazy(() => import('./codiPages/CreateUser'));
+const AbsenceRequestsInfo = React.lazy(() => import('./codiPages/AbsenceRequestInfo'));
 
 
 const getBasename = () => {
@@ -67,6 +68,7 @@ class App extends React.Component {
               <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
               <Route exact path='/user-profile/:name/:id' component={UserProfile} />
               <Route exact path='/create-user' component={CreateUser} />
+              <Route exact path='/user-absence-requests/:id' component={AbsenceRequestsInfo} />
               
 
 
