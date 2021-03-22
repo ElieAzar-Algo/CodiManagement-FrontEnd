@@ -14,7 +14,8 @@ const AbsenceRequestInfo = (props) => {
   const [absenceInputs, setAbsenceInputs] = useState([]);
   const [infoModal, setInfoModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
+  const [editForm, setEditForm] = useState(false);
+  const [editId, setEditId] = useState(false);
   
 
   const userId=props.match.params.id;
@@ -35,7 +36,7 @@ const AbsenceRequestInfo = (props) => {
       [e.target.name]: e.target.value,
     });
 
-    //console.log(absenceInputs);
+    console.log(absenceInputs);
   };
 
   const createAbsence = async e => {
@@ -63,14 +64,44 @@ const AbsenceRequestInfo = (props) => {
     if (result.success) {
       setErrors(result);
       setTimeout(() => {
-        getAbsenceRequests();
-      }, 1000);
+        window.location.reload();
+      }, 1800);
     } else {
       setErrors(result.errors);
     }
   };
 
-
+  
+const editRequest =async()=>{
+  //console.log('hey'+editId);
+  var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    // console.log(date)
+    const response = await fetch(`http://localhost:8000/api/edit-userAbsenceRequest/${editId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        ...absenceInputs,
+        user_id:userId,
+        absence_approved: '0',
+        absence_requested_date: date,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1800);
+    } else {
+      setErrors(result.errors);
+    }
+   }
  
   const deleteRequest = async(id)=>{
     const res= await fetch(`http://localhost:8000/api/UserAbsenceRequest/${id}`, {
@@ -82,9 +113,7 @@ const AbsenceRequestInfo = (props) => {
         }});
     const result=await res.json()
     setErrors(result)
-    setTimeout(() => {
-      getAbsenceRequests();
-    }, 2000);
+    getAbsenceRequests();
   }
 
    
@@ -120,8 +149,8 @@ const AbsenceRequestInfo = (props) => {
             <Card className="mb-3">
               <CardHeader>Create New Absence Request {errors.message?<UncontrolledAlert color='success'>{errors.message} </UncontrolledAlert>:""} </CardHeader>
               <CardBody>
-
-                <Row>
+               
+               {editForm? <Row style={{backgroundColor:"red"}}>
                   <Col >
                   <Form>
                               <FormGroup row>
@@ -135,6 +164,7 @@ const AbsenceRequestInfo = (props) => {
                                       placeholder=""
                                       onChange={catchInput}
                                       name="absence_reason"
+                                      placeholder="EDIT ONLY YOUR REQUEST INFO THAT YOU NEED "
                                     />
                                       {errors.absence_reason ? (
                                       <UncontrolledAlert color="danger">{errors.absence_reason} </UncontrolledAlert>
@@ -161,7 +191,7 @@ const AbsenceRequestInfo = (props) => {
 
                                   <Col xl={2} l={2} md={6} sm={6}>
                                   <Label for="exampleEmail">
-                                    Start Date
+                                    End Date
                                   </Label>
                                     <Input
                                       type="date"
@@ -178,14 +208,81 @@ const AbsenceRequestInfo = (props) => {
                                   
                                   <Col xl={2} l={2}>
                                   <Label for="exampleEmail">
-                                    Submit your request
+                                    Submit request
+                                  </Label>
+                                    <Button onClick={editRequest} color="success">Submit Changes</Button>
+                                  </Col>
+                                </FormGroup>
+                  </Form>
+                  </Col>
+                </Row>
+                :
+                <Row>
+                  <Col >
+                  <Form>
+                              <FormGroup row>
+                                  
+                                  <Col xl={6} l={6} md={12} sm={12}>
+                                  <Label for="exampleEmail">
+                                    Absence reason 
+                                  </Label>
+                                    <Input
+                                      type="textarea"
+                                      placeholder=""
+                                      onChange={catchInput}
+                                      name="absence_reason"
+                                      placeholder='CREATE A NEW REQUEST'
+                                    />
+                                      {errors.absence_reason ? (
+                                      <UncontrolledAlert color="danger">{errors.absence_reason} </UncontrolledAlert>
+                                    ) : ( 
+                                      ''
+                                    )}
+                                  </Col>
+                                  <Col xl={2} l={2} md={6} sm={6}>
+                                  <Label for="exampleEmail">
+                                    Start Date
+                                  </Label>
+                                    <Input
+                                      type="date"
+                                      placeholder=""
+                                      onChange={catchInput}
+                                      name="absence_start_date"
+                                    />
+                                     {errors.absence_start_date ? (
+                                      <UncontrolledAlert color="danger">{errors.absence_start_date} </UncontrolledAlert>
+                                    ) : ( 
+                                      ''
+                                    )}
+                                  </Col>
+
+                                  <Col xl={2} l={2} md={6} sm={6}>
+                                  <Label for="exampleEmail">
+                                    End Date
+                                  </Label>
+                                    <Input
+                                      type="date"
+                                      placeholder=""
+                                      onChange={catchInput}
+                                      name="absence_end_date"
+                                    />
+                                     {errors.absence_end_date ? (
+                                      <UncontrolledAlert color="danger">{errors.absence_end_date} </UncontrolledAlert>
+                                    ) : ( 
+                                      ''
+                                    )}
+                                  </Col>
+                                  
+                                  <Col xl={2} l={2}>
+                                  <Label for="exampleEmail">
+                                    Submit request
                                   </Label>
                                     <Button onClick={createAbsence} color="success">Submit</Button>
                                   </Col>
                                 </FormGroup>
                   </Form>
                   </Col>
-                </Row>
+                </Row>}
                 <Row>
                   <Col>
                     <Card body>
@@ -232,8 +329,8 @@ const AbsenceRequestInfo = (props) => {
                                 </ModalFooter>
                               </Modal>{' '}
 
-                              <Button color="primary" disabled={abs.absence_approved} onClick={()=>setEditModal(!editModal)}> Edit </Button>
-                              <Modal isOpen={editModal}>
+                              <Button color="primary" disabled={abs.absence_approved?true:false} onClick={()=>{setEditForm(!editForm);setEditId(abs.id)}}> Edit </Button>
+                              {/* <Modal isOpen={editModal}>
                                 <ModalHeader>
                                   Edit Absence 
                                 </ModalHeader>
@@ -241,27 +338,51 @@ const AbsenceRequestInfo = (props) => {
                                   <Form>
 
                                   <FormGroup row>
-                                  <Label for="exampleEmail" sm={5}>
-                                    Last Name :
-                                  </Label>
+                                 
                                   <Col sm={7}>
+                                  <Label for="exampleEmail" sm={5}>
+                                    Reason :
+                                  </Label>
                                     <Input
                                       type="text"
                                       placeholder=""
                                       onChange={catchInput}
                                       name="absence_reason"
                                     />
+
+                                  <Label for="exampleEmail" sm={5}>
+                                    Start Date :
+                                  </Label>
+                                    <Input
+                                      type="date"
+                                      placeholder=""
+                                      onChange={catchInput}
+                                      name="absence_start_date"
+                                    />
+
+                                    <Label for="exampleEmail" sm={5}>
+                                    End Date :
+                                  </Label>
+                                    <Input
+                                      type="date"
+                                      placeholder=""
+                                      onChange={catchInput}
+                                      name="absence_end_date"
+                                    />
                                   </Col>
                                 </FormGroup>
                                   </Form>
                                 </ModalBody>
                                 <ModalFooter>
-                                  
+                                <Button color="primary" onClick={()=>editRequest(abs.id)}>
+                                    Confirm
+                                  </Button>
                                   <Button color="secondary" onClick={()=>setEditModal(!editModal)}>
                                     Cancel
                                   </Button>
+                                  
                                 </ModalFooter>
-                              </Modal>{' '}
+                              </Modal>{' '} */}
                             
                             <Button color="danger" onClick={()=>setDeleteModal(!deleteModal)}>
                                 Delete
