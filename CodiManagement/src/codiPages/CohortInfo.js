@@ -117,19 +117,40 @@ const CohortInfo = (props) => {
               <Col>
               <Row className='mb-2' >
                 <Col>
+
+                <Link to="/create-user">
+                <Button className='mr-3' color="primary">
+                  Create Student
+                </Button>
+                </Link>
+
                   <Link to ={{pathname: `/attendance/${cohortId}` }}> 
                   <Button className="mr-3" color='primary'> 
                    Take cohort Attendance
                     </Button>
                     </Link>
 
+                    <Link to ={{pathname: `/view-attendance/${cohortId}` }}> 
+                  <Button className="mr-3" color='primary'> 
+                   View attendance individually
+                    </Button>
+                    </Link>
+
+                    <Link to ={{pathname: `/view-attendance/${cohortId}` }}> 
+                  <Button className="mr-3" color='primary'> 
+                   View Attendance By Day 
+                    </Button>
+                    </Link> 
+
+                    <Link to ={{pathname: `/view-attendance/${cohortId}` }}> 
+                  <Button className="mr-3" color='primary'> 
+                   Mentors
+                    </Button>
+                    </Link>
+
                     <Button className="mr-3" color='primary'
                   > Disable Cohort
                     </Button>
-                    </Col>
-
-                    <Col>
-              
                     </Col>
                     </Row>
                <Row>
