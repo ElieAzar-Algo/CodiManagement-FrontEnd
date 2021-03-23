@@ -24,11 +24,11 @@ const CohortInfo = (props) => {
   //const [errors, setErrors] = useState(false);
 
   const branchName=props.match.params.name;
+  const cohortId=props.match.params.id;
   
 
   const getCohort =async ()=>{
-     // const branchName=props.match.params.name;
-      const cohortId=props.match.params.id;
+
      // console.log(branchName,cohortId);
     const res =await  fetch(`http://localhost:8000/api/cohort/${cohortId}`);
     const result=await res.json()
@@ -44,8 +44,6 @@ const CohortInfo = (props) => {
 
     }
 
-  
-  
   
   useEffect(()=>{
     
@@ -115,9 +113,27 @@ const CohortInfo = (props) => {
           </CardHeader>
           <CardBody>
             <Row>
+            
               <Col>
-               
-                  <Card body>
+              <Row className='mb-2' >
+                <Col>
+                  <Link to ={{pathname: `/attendance/${cohortId}` }}> 
+                  <Button className="mr-3" color='primary'> 
+                   Take cohort Attendance
+                    </Button>
+                    </Link>
+
+                    <Button className="mr-3" color='primary'
+                  > Disable Cohort
+                    </Button>
+                    </Col>
+
+                    <Col>
+              
+                    </Col>
+                    </Row>
+               <Row>
+                 <Col>                  <Card body>
                   Search for a Student{' '}
                             <Form
                             inline
@@ -199,12 +215,14 @@ const CohortInfo = (props) => {
                       </tr> */}
                       </tbody>
                     </Table>
-                  </Card>
+                  </Card> </Col>
+                  </Row>
                 
               </Col>
             </Row>
           </CardBody>
         </Card>
+        
         //cohort map closings
         ))}
       </Col>
