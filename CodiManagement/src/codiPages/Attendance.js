@@ -26,7 +26,7 @@ const Attendance = props => {
   const [modal, setModal] = useState(false);
   const [studentId, setStudentId] = useState();
   const [attendanceId, setAttendanceId] = useState();
-  const [present, setPresent] = useState();
+  const [present, setPresent] = useState(1);
   const [excuse, setExcuse] = useState(0);
   const [disabled, setDisabled] = useState(-1);
   const cohortId = props.match.params.id;

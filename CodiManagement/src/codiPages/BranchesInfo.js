@@ -2,9 +2,17 @@
 import './codiStyles/CodiDashboard.css';
 import React,{useEffect,useState,}from 'react';
 import {Link} from 'react-router-dom'
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, CardText,CardImg,CardTitle,Form,Input} from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, CardText,CardImg,CardTitle,Form,FormGroup,
+  Input,
+  Label,
+  UncontrolledButtonDropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,Modal,
+  ModalBody, ModalFooter, ModalHeader,
+Alert} from 'reactstrap';
 import {IconWidget } from 'components/Widget';
-import { MdSearch, MdRoom} from 'react-icons/md';
+import { MdSearch, MdRoom, MdSentimentDissatisfied} from 'react-icons/md';
 
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 
@@ -15,7 +23,23 @@ const BranchesInfo = () => {
   const [individualBranch, setIndividualBranch] = useState([]);
   const [individualCohort, setIndividualCohort] = useState([]);//search function not complete
   const [search, setSearch] = useState([]);
-  //const [errors, setErrors] = useState(false);
+  const [cohortInputs, setCohortInputs] = useState([]);
+  const [cohortForm, setCohortForm] = useState(false);
+  const [editForm, setEditForm] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [editId, setEditId] = useState();
+  const [branchId, setBranchId] = useState();
+  const [branchName, setBranchName] = useState('Branches');
+  const [errors, setErrors] = useState(false);
+
+  const catchInput = e => {
+    e.persist();
+    setCohortInputs({
+      ...cohortInputs,
+      [e.target.name]: e.target.value,
+    });
+    console.log(cohortInputs);
+  };
 
 
   const getBranches=async ()=>{
@@ -39,6 +63,69 @@ const BranchesInfo = () => {
     const result=await res.json()
     setIndividualCohort(result.data)
     console.log(result.data)
+  }
+
+  const createCohort = async e => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:8000/api/cohort', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        ...cohortInputs,
+         branch_id:branchId,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      window.location.reload();
+    } else {
+      setErrors(result.errors);
+    }
+  };
+  const editCohort = async e => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:8000/api/cohort/${editId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        ...cohortInputs,
+         branch_id:branchId,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      window.location.reload();
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
+  const deleteCohort=async(id)=>{
+    
+    const deleteRequestOptions = {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        //Authorization: "Bearer " + token,
+      },};
+  const res =await  fetch(`http://localhost:8000/api/cohort/${id}`,deleteRequestOptions);
+  const result=await res.json()
+
+  console.log(result.message)
+  getIndividualBranchInfo();
   }
   
   
@@ -73,26 +160,200 @@ const BranchesInfo = () => {
         </Row>
         <Card className="mb-3">
           <CardHeader>
-           Search for cohort{' '}
             <Form
               inline
               className="cr-search-form"
               onSubmit={e => searchForCohort(e)}
             >
-              <MdSearch
-                size="20"
-                className="cr-search-form__icon-search text-secondary"
-              />
-              <Input
+            
+              <Button color='primary'
+              onClick={()=>setCohortForm(!cohortForm)}>
+              Create New Cohort
+              </Button>
+              {/* <Input
                 type="search"
                 className="cr-search-form__input"
                 placeholder="Search..."
                 onChange={e => setSearch(e.target.value)}
-              />
+              /> */}
             </Form>
           </CardHeader>
           <CardBody>
             <Row>
+              {cohortForm? 
+              <Row>
+                <Col>
+                <Row>
+                <Label for="exampleEmail" sm={5} >
+                    Choose Branch
+                  </Label>
+                <UncontrolledButtonDropdown className="m-2 ml-3">
+              <DropdownToggle caret>{branchName}</DropdownToggle>
+                <DropdownMenu>
+                 {branches.map((branch,branchKey)=>(
+                  <DropdownItem key={branchKey}
+                     onClick={()=>{setBranchId(branch.id);setBranchName(branch.branch_name)}}>
+                      {branch.branch_name} 
+                      </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </UncontrolledButtonDropdown>
+              {errors.branch_id ? (
+                      <Alert color="danger">{errors.branch_id} </Alert>
+                    ) : (
+                      ''
+                    )}
+              </Row>
+
+
+                <FormGroup row>
+                  <Label for="exampleEmail" sm={5}>
+                    Cohort Code
+                  </Label>
+                  <Col sm={7}>
+                    <Input
+                      type="text"
+                      placeholder="example: BB09"
+                      onChange={catchInput}
+                      name="cohort_code"
+                    />
+                    {errors.cohort_code ? (
+                      <Alert color="danger">{errors.cohort_code} </Alert>
+                    ) : (
+                      ''
+                    )}
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="exampleEmail" sm={5}>
+                    Start Date
+                  </Label>
+                  <Col sm={7}>
+                    <Input
+                      type="date"
+                      onChange={catchInput}
+                      name="start_date"
+                    />
+                    {errors.start_date ? (
+                      <Alert color="danger">{errors.start_date} </Alert>
+                    ) : (
+                      ''
+                    )}
+                  </Col>
+                </FormGroup>
+
+                <FormGroup row>
+                  <Label for="exampleEmail" sm={5}>
+                    End Date
+                  </Label>
+                  <Col sm={7}>
+                    <Input
+                      type="date"
+                      onChange={catchInput}
+                      name="end_date"
+                    />
+                    {errors.end_date ? (
+                      <Alert color="danger">{errors.end_date} </Alert>
+                    ) : (
+                      ''
+                    )}
+                    <Button color='primary'  onClick={createCohort}>Submit</Button>
+                  </Col>
+                </FormGroup>
+                
+                
+               
+                
+                </Col>
+              </Row>:
+
+editForm? 
+  <Row>
+    <Col>
+    <h3>Edit Form <Button onClick={()=>setEditForm(!editForm)}>x</Button></h3>
+    <Row>
+    <Label for="exampleEmail" sm={5} >
+        Choose Branch
+      </Label>
+    <UncontrolledButtonDropdown className="m-2 ml-3">
+  <DropdownToggle caret>{branchName}</DropdownToggle>
+    <DropdownMenu>
+     {branches.map((branch,branchKey)=>(
+      <DropdownItem key={branchKey}
+         onClick={()=>{setBranchId(branch.id);setBranchName(branch.branch_name)}}>
+          {branch.branch_name} 
+          </DropdownItem>
+      ))}
+    </DropdownMenu>
+  </UncontrolledButtonDropdown>
+  {errors.branch_id ? (
+          <Alert color="danger">{errors.branch_id} </Alert>
+        ) : (
+          ''
+        )}
+  </Row>
+
+
+    <FormGroup row>
+      <Label for="exampleEmail" sm={5}>
+        Cohort Code
+      </Label>
+      <Col sm={7}>
+        <Input
+          type="text"
+          placeholder="example: BB09"
+          onChange={catchInput}
+          name="cohort_code"
+        />
+        {errors.cohort_code ? (
+          <Alert color="danger">{errors.cohort_code} </Alert>
+        ) : (
+          ''
+        )}
+      </Col>
+    </FormGroup>
+    <FormGroup row>
+      <Label for="exampleEmail" sm={5}>
+        Start Date
+      </Label>
+      <Col sm={7}>
+        <Input
+          type="date"
+          onChange={catchInput}
+          name="start_date"
+        />
+        {errors.start_date ? (
+          <Alert color="danger">{errors.start_date} </Alert>
+        ) : (
+          ''
+        )}
+      </Col>
+    </FormGroup>
+
+    <FormGroup row>
+      <Label for="exampleEmail" sm={5}>
+        End Date
+      </Label>
+      <Col sm={7}>
+        <Input
+          type="date"
+          onChange={catchInput}
+          name="end_date"
+        />
+        {errors.end_date ? (
+          <Alert color="danger">{errors.end_date} </Alert>
+        ) : (
+          ''
+        )}
+        <Button color='primary'  onClick={editCohort}>Submit Changes</Button>
+      </Col>
+    </FormGroup>
+    
+    
+   
+    
+    </Col>
+  </Row>:
               <Col>
                 {!individualBranch ? (
                   <Card className="flex-row">
@@ -142,6 +403,34 @@ const BranchesInfo = () => {
                                 }}>
                                   <Button color="info"> More Info </Button>
                                 </Link>
+                              </td><td>
+                                  <Button 
+                                  onClick={(e)=>{setEditForm(!editForm);setEditId(cohort.id)}}
+                                  color="primary"> Edit </Button>
+                              </td>
+                              <td>
+                                  <Button 
+                                  onClick={()=>setModal(!modal)}
+                                  color="danger"> Delete </Button>
+                                  <Modal
+                                    isOpen={modal}
+                                    
+                                  //   className={props.className}
+                                  >
+                                    <ModalHeader>You cannot undo this action !</ModalHeader>
+                                    <ModalBody>
+                                      Are you sure, you want to delete {cohort.cohort_code}?
+                                      This could cause a loss of all the cohort's students
+                                    </ModalBody>
+                                    <ModalFooter>
+                                      <Button color="primary" onClick={()=>deleteCohort(cohort.id)}>
+                                        Confirm
+                                      </Button>{' '}
+                                      <Button color="secondary" onClick={()=>setModal(!modal)}>
+                                        Cancel
+                                      </Button>
+                                    </ModalFooter>
+                                  </Modal>
                               </td>
                             </tr>
                           )),
@@ -163,7 +452,7 @@ const BranchesInfo = () => {
                     </Table>
                   </Card>
                 )}
-              </Col>
+              </Col>}
             </Row>
           </CardBody>
         </Card>
