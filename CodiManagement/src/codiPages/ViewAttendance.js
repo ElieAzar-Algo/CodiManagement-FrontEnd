@@ -9,36 +9,20 @@ import {
   Row,
   Table,
   Button,
-  CardText,
-  CardImg,
-  CardTitle,
-  Alert,
-  Form,
   Input,
   UncontrolledAlert,
-  Label,
-  FormGroup,
-  InputGroup,
-  InputGroupAddon,
   UncontrolledButtonDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
 } from 'reactstrap';
-import codilogo from 'assets/img/logo/Codi-Logo.png';
-import './codiStyles/CodiDashboard.css';
-import { MdCheckBox } from 'react-icons/md';
+
 
 const ViewAttendance = props => {
   
   const [students, setStudents] = useState([]);
   const [attendances, setAttendances] = useState([]);
   const [errors, setErrors] = useState([]);
-  const [modal, setModal] = useState(false);
   const [studentId, setStudentId] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -53,7 +37,7 @@ const ViewAttendance = props => {
 
     setStudents(result.data[0].users);
    // setCohortCode(result.data[0].cohort_code);
-    console.log(result.data[0].users)
+    console.log(result.data)
   };
 
   const getAttendances = async () => {
@@ -62,8 +46,10 @@ const ViewAttendance = props => {
     setAttendances(result.data)
    // console.log(result.data)
     let count=0
+    
     result.data.map((s)=>(
-       count= s.user_attendance[0].present_absent+count
+        s.user_attendance[0]?
+       count= s.user_attendance[0].present_absent+count:""
     ))
     setPresentDays(count)
 }
@@ -125,40 +111,7 @@ const ViewAttendance = props => {
                   {studentName} has attended {presentDays} days from {attendances.length} active days
                   </h5>
               </Col>
-              <Col>
-                <Modal isOpen={modal}>
-                  <ModalHeader>
-                    You are creating a new attendance day
-                  </ModalHeader>
-                  <ModalBody>the current attendance day is </ModalBody>
-                  <ModalFooter>
-                    <Button color="primary" onClick="">
-                      Confirm
-                    </Button>
-                    <Button color="secondary" onClick={() => setModal(!modal)}>
-                      Close
-                    </Button>
-                  </ModalFooter>
-                </Modal>
-              </Col>
-            </Row>
-            <Row>
-              <Col></Col>
-              <Col>
-                <Modal isOpen={modal}>
-                  <ModalHeader>
-                    You are creating a new attendance day
-                  </ModalHeader>
-                  <ModalBody>the current attendance day is </ModalBody>
-                  <ModalFooter>
-                    <Button color="secondary" onClick={() => setModal(!modal)}>
-                      Close
-                    </Button>
-                  </ModalFooter>
-                </Modal>
-              </Col>
-            </Row>
-
+           </Row>
             <Row>
               <Col>
                 <Table hover>
@@ -176,8 +129,10 @@ const ViewAttendance = props => {
 
                   <tbody>
                     {attendances.map((info, infoKey) => (
-                      <tr>
+                     info.user_attendance[0]?
+                    <tr key={infoKey}>
                         <td>{info.attendance_date}</td>
+                       
                         <td>{info.user_attendance[0].present_absent?'Present':"Absent"} </td>
                         <td>{info.user_attendance[0].excuse?'Yes':"No"}</td>
     
@@ -186,6 +141,8 @@ const ViewAttendance = props => {
 
 
                       </tr>
+                      :""
+                     
                     ))}
                   </tbody>
                 </Table>

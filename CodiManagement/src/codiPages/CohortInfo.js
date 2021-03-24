@@ -136,7 +136,7 @@ const CohortInfo = (props) => {
                     </Button>
                     </Link>
 
-                    <Link to ={{pathname: `/view-attendance/${cohortId}` }}> 
+                    <Link to ={{pathname: `/view-attendance-day/${cohortId}` }}> 
                   <Button className="mr-3" color='primary'> 
                    View Attendance By Day 
                     </Button>

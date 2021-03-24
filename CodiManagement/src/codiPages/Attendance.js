@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 
 const Attendance = props => {
-  const [day, setDay] = useState('');
+  const [day, setDay] = useState(0);
   const [cohortCode, setCohortCode] = useState('');
   const [students, setStudents] = useState([]);
   const [attendancesInputs, setAttendancesInputs] = useState([]);
@@ -157,7 +157,7 @@ const Attendance = props => {
                   type="date"
                   onChange={e => setDay(e.target.value)}
                 ></Input>
-                <Button color="primary" onClick={() => setModal(!modal)}>
+                <Button disabled={!day?true:false} color="primary" onClick={() => setModal(!modal)}>
                   {' '}
                   Start An Attendance Day
                 </Button>
