@@ -105,7 +105,7 @@ const Attendance = props => {
     //console.log(result);
     if (result.success) {
       setErrors(result);
-      setDisabled(-1)
+      setDisabled(-1);
       console.log(result);
     } else {
       setErrors(result.errors);
@@ -157,7 +157,11 @@ const Attendance = props => {
                   type="date"
                   onChange={e => setDay(e.target.value)}
                 ></Input>
-                <Button disabled={!day?true:false} color="primary" onClick={() => setModal(!modal)}>
+                <Button
+                  disabled={!day ? true : false}
+                  color="primary"
+                  onClick={() => setModal(!modal)}
+                >
                   {' '}
                   Start An Attendance Day
                 </Button>
@@ -226,9 +230,8 @@ const Attendance = props => {
                                 type="checkbox"
                                 id="present_absent"
                                 name="present_absent"
-                          
                                 onChange={e => {
-                                  setPresent(e.target.checked? 1 : 0);
+                                  setPresent(e.target.checked ? 1 : 0);
                                   setStudentId(student.id);
                                   handleIndexClick(studentKey);
                                 }}
@@ -303,7 +306,7 @@ const Attendance = props => {
               </Col>
             </Row>
           </CardBody>
-          <Button onClick={()=>window.location.reload()} color="info">
+          <Button onClick={() => window.location.reload()} color="info">
             {' '}
             Finish{' '}
           </Button>
