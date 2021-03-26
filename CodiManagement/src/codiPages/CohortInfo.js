@@ -290,18 +290,6 @@ const CohortInfo = props => {
                                 </tr>
                               ))}
 
-                              {/* <tr>
-                        <th scope="row">2</th>
-                        <td>Codi</td>
-                        <td>Tech</td>
-                        <td>@JIJI</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Hello</td>
-                        <td>World</td>
-                        <td>@Nice</td>
-                      </tr> */}
                             </tbody>
                           </Table>
                         </Card>{' '}

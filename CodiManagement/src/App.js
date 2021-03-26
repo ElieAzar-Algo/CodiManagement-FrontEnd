@@ -35,6 +35,8 @@ const Attendance = React.lazy(() => import('./codiPages/Attendance'));
 const ViewAttendance = React.lazy(() => import('./codiPages/ViewAttendance'));
 const ViewAttendanceDay = React.lazy(() => import('./codiPages/ViewAttendanceDay'));
 const StagesInfo = React.lazy(() => import('./codiPages/StagesInfo'));
+const StageTasks = React.lazy(() => import('./codiPages/StageTasks'));
+//StageTasks
 
 
 const getBasename = () => {
@@ -77,6 +79,7 @@ class App extends React.Component {
               <Route exact path='/view-attendance/:id' component={ViewAttendance}/>
               <Route exact path='/view-attendance-day/:id' component={ViewAttendanceDay}/>
               <Route exact path='/stages-info/:id' component={StagesInfo}/>
+              <Route exact path='/stage-tasks/:id' component={StageTasks}/>
               
 
 

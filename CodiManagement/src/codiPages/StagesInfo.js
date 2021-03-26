@@ -30,8 +30,10 @@ import './codiStyles/CodiDashboard.css';
 const StagesInfo = props => {
   const [stages, setStages] = useState([]);
   const [stageInputs, setStageInputs] = useState([]);
+  const [stageId, setStageId] = useState();
 
   const [createForm, setCreateForm] = useState(false);
+  const [editForm, setEditForm] = useState(false);
   const [prairie, setPrairie] = useState(false);
   //const [users, setUsers] = useState([]);
   const [errors, setErrors] = useState(false);
@@ -103,6 +105,37 @@ const StagesInfo = props => {
       setErrors(result.errors);
     }
   };
+
+  const editStage = async e => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:8000/api/stage/${stageId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        ...stageInputs,
+        cohort_code: cohortId,
+        prairie: prairie,
+        active_inactive: 0,
+
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      
+        window.location.reload();
+    
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
+  
 
   useEffect(() => {
     getStages();
@@ -209,7 +242,91 @@ const StagesInfo = props => {
                         </Col>
                       </FormGroup>
                     </Col>
-                  ) : (
+                  ) :editForm?(
+                    <Col sm={5}>
+                      <FormGroup row>
+                        <Label for="exampleEmail" sm={5}>
+                          Stage Name
+                        </Label>
+                        <Col sm={7}>
+                          <Input
+                            type="text"
+                            placeholder=""
+                            onChange={catchInput}
+                            name="stage_name"
+                          />
+                          {errors.stage_name ? (
+                            <Alert color="danger">{errors.stage_name} </Alert>
+                          ) : (
+                            ''
+                          )}
+                        </Col>
+                      </FormGroup>
+
+                      <FormGroup check>
+                        <Label check>
+                          <Input
+                            type="checkbox"
+                            id="prairie"
+                            name="prairie"
+                            onChange={e => {
+                              setPrairie(e.target.checked ? 1 : 0);
+                            }}
+                          />{' '}
+                          {errors.prairie ? (
+                            <Alert color="danger">{errors.prairie} </Alert>
+                          ) : (
+                            ''
+                          )}
+                          Prairie
+                        </Label>
+                      </FormGroup>
+
+                      <FormGroup row>
+                        <Label for="exampleEmail" sm={5}>
+                          Start Date
+                        </Label>
+                        <Col sm={7}>
+                          <Input
+                            type="date"
+                            onChange={catchInput}
+                            name="start_date"
+                          />
+                          {errors.start_date ? (
+                            <Alert color="danger">{errors.start_date} </Alert>
+                          ) : (
+                            ''
+                          )}
+                        </Col>
+                      </FormGroup>
+
+                      <FormGroup row>
+                        <Label for="exampleEmail" sm={5}>
+                          End Date
+                        </Label>
+                        <Col sm={7}>
+                          <Input
+                            type="date"
+                            onChange={catchInput}
+                            name="end_date"
+                          />
+                          {errors.end_date ? (
+                            <Alert color="danger">{errors.end_date} </Alert>
+                          ) : (
+                            ''
+                          )}
+                          <Button className=" mr-3"color="primary" onClick={editStage}>
+                            Submit
+                          </Button>
+                          <Button color="primary" onClick={()=>setEditForm(!editForm)}>
+                            Back
+                          </Button>
+
+                        </Col>
+                      </FormGroup>
+                      
+                    </Col>
+                  ) :(
                     <Col>
                       <Card body>
                         <Table hover>
@@ -252,10 +369,16 @@ const StagesInfo = props => {
                                   </Button>
                                 </td>
                                 <td>
+                                  <Button className="mr-3"
+                                    color="primary"
+                                    onClick={()=>{setEditForm(!editForm);setStageId(stage.id);}} >
+                                    Edit
+                                  </Button></td>
+                                <td>
                                   {' '}
                                   <Link
                                     to={{
-                                      pathname: ``,
+                                      pathname: `/stage-tasks/${stage.id}`,
                                     }}
                                   >
                                     <Button color="info"> More Info </Button>
