@@ -336,7 +336,9 @@ const StagesInfo = props => {
                               <th>Prairie</th>
                               <th>Start Date</th>
                               <th>End Date</th>
+                              <th></th>
                               <th>Active</th>
+                              
                             </tr>
                           </thead>
 
@@ -347,6 +349,7 @@ const StagesInfo = props => {
                                 <td>{stage.prairie}</td>
                                 <td>{stage.start_date}</td>
                                 <td>{stage.end_date}</td>
+                                <td></td>
                                 <td>
                                   {stage.active_inactive
                                     ? 'Active'
@@ -354,8 +357,23 @@ const StagesInfo = props => {
                                 </td>
                                 <td>
                                   {' '}
-                                  <Button
+                                  <Link
+                                    to={{
+                                      pathname: `/stage-tasks/${stage.id}`,
+                                    }}
+                                  >
+                                    <Button color="info"> More Info </Button>
+                                  </Link>
+
+
+                                  <Button className="mr-3 ml-3"
                                     color="primary"
+                                    onClick={()=>{setEditForm(!editForm);setStageId(stage.id);}} >
+                                    Edit Stage
+                                  </Button>
+
+                                  <Button
+                                    color="danger"
                                     onClick={() =>
                                       activateStage(
                                         stage.id,
@@ -367,23 +385,9 @@ const StagesInfo = props => {
                                       ? 'Deactivate'
                                       : 'Activate'}{' '}
                                   </Button>
+                                  
                                 </td>
-                                <td>
-                                  <Button className="mr-3"
-                                    color="primary"
-                                    onClick={()=>{setEditForm(!editForm);setStageId(stage.id);}} >
-                                    Edit
-                                  </Button></td>
-                                <td>
-                                  {' '}
-                                  <Link
-                                    to={{
-                                      pathname: `/stage-tasks/${stage.id}`,
-                                    }}
-                                  >
-                                    <Button color="info"> More Info </Button>
-                                  </Link>
-                                </td>
+                               
                               </tr>
                             ))}
                           </tbody>
@@ -396,7 +400,7 @@ const StagesInfo = props => {
             </Row>
           </CardBody>
         </Card>
-        //cohort map closings
+        
       </Col>
     </Row>
   );

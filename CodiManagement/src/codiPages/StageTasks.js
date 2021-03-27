@@ -13,7 +13,11 @@ import {
   FormGroup,
   Alert,
   Label,Modal,
-  ModalBody, ModalFooter, ModalHeader
+  ModalBody, ModalFooter, ModalHeader,
+  UncontrolledButtonDropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,
   
 } from 'reactstrap';
 
@@ -21,9 +25,12 @@ import './codiStyles/CodiDashboard.css';
 
 const StageTasks = props => {
   const [tasks, setTasks] = useState([]);  
+  const [teamwork, setTeamwork] = useState(0);  
   const [createForm, setCreateForm] = useState(false);  
+  const [editForm, setEditForm] = useState(false);  
   const [modal, setModal] = useState(false);  
   const [taskInputs, setTaskInputs] = useState([]);
+  const [taskId, setTaskId] = useState();
   const [errors, setErrors] = useState(false);
 
 
@@ -58,6 +65,7 @@ const StageTasks = props => {
       body: JSON.stringify({
         ...taskInputs,
         stage_id: stageId,
+        is_teamwork:teamwork,
       }),
     });
     const result = await response.json();
@@ -87,6 +95,34 @@ const StageTasks = props => {
     props.history.goBack();
   };
 
+  const editTask = async e => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:8000/api/task/${taskId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        ...taskInputs,
+        is_teamwork:teamwork,
+
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      
+        window.location.reload();
+    
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
+  
   useEffect(() => {
     getTasks();
   }, []);
@@ -114,13 +150,6 @@ const StageTasks = props => {
                             Create Task
                           </Button>
 
-                          <Button className="mr-3"
-                           color="primary"
-                           onClick={()=>setCreateForm(!createForm)}
-                          >
-                            Create Task
-                          </Button>
-                        
 
                           <Button 
                           className="mr-3"
@@ -228,6 +257,60 @@ const StageTasks = props => {
                         )}
                       </Col>
                     </FormGroup>
+
+                    <UncontrolledButtonDropdown addonType="append">
+                      <DropdownToggle caret>{teamwork?'Teamwork':'solo'} </DropdownToggle>
+                      <DropdownMenu>
+                       
+                          <DropdownItem onClick={()=>setTeamwork(1)}> Teamwork</DropdownItem>
+                          <DropdownItem onClick={()=>setTeamwork(0)}> solo</DropdownItem>
+                      
+                      </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                    {errors.is_teamwork ? (
+                      <Alert color="danger">{errors.is_teamwork} </Alert>
+                    ) : (
+                      ''
+                    )}
+
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        Start Date
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="date"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="start_date"
+                        />
+                        {errors.start_date ? (
+                          <Alert color="danger">{errors.start_date} </Alert>
+                        ) : (
+                          ''
+                        )}
+                      </Col>
+                    </FormGroup>
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        End Date
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="date"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="end_date"
+                        />
+                        {errors.end_date ? (
+                          <Alert color="danger">{errors.end_date} </Alert>
+                        ) : (
+                          ''
+                        )}
+                      </Col>
+                    </FormGroup>
                     <Button className="mr-3"
                            color="primary"
                            onClick={createTask}
@@ -236,7 +319,133 @@ const StageTasks = props => {
                           </Button>
                           </Col>
                     </Row>
-                    :
+                    :editForm?(
+<Row>
+                      <Col sm={6}>
+                         <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        Task Name
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="text"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="task_name"
+                        />
+                       
+                      </Col>
+                    </FormGroup>
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        Task Link
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="text"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="task_link"
+                        />
+                       
+                      </Col>
+                    </FormGroup>
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        Task Type
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="text"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="task_type"
+                        />
+                       
+                      </Col>
+                    </FormGroup>
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        Key Range
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="number"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="key_range"
+                        />
+                        
+                      </Col>
+                    </FormGroup>
+
+                    <UncontrolledButtonDropdown addonType="append">
+                      <DropdownToggle caret>{teamwork?'Teamwork':'solo'} </DropdownToggle>
+                      <DropdownMenu>
+                       
+                          <DropdownItem onClick={()=>setTeamwork(1)}> Teamwork</DropdownItem>
+                          <DropdownItem onClick={()=>setTeamwork(0)}> solo</DropdownItem>
+                      
+                      </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                   
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        Start Date
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="date"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="start_date"
+                        />
+                        {errors.start_date ? (
+                          <Alert color="danger">{errors.start_date} </Alert>
+                        ) : (
+                          ''
+                        )}
+                      </Col>
+                    </FormGroup>
+
+                    <FormGroup row>
+                      <Label for="exampleEmail" sm={5}>
+                        End Date
+                      </Label>
+                      <Col sm={7}>
+                        <Input
+                          type="date"
+                          placeholder=""
+                          onChange={catchInput}
+                          name="end_date"
+                        />
+                        {errors.end_date ? (
+                          <Alert color="danger">{errors.end_date} </Alert>
+                        ) : (
+                          ''
+                        )}
+                      </Col>
+                    </FormGroup>
+                    <Button className="mr-3"
+                           color="primary"
+                           onClick={editTask}
+                          >
+                            Submit 
+                          </Button> 
+
+                          <Button className="mr-3"
+                           color="primary"
+                           onClick={()=>setEditForm(!editForm)}
+                          >
+                            Back 
+                          </Button>
+                          </Col>
+                    </Row>
+                    ):
                     <Row>
                       <Col>
                         {' '}
@@ -250,6 +459,9 @@ const StageTasks = props => {
                                 <th>Link</th>
                                 <th>Type</th>
                                 <th>Key Range</th>
+                                <th>Team/Solo</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                                 
                                 
                               </tr>
@@ -263,16 +475,40 @@ const StageTasks = props => {
                                   <td><a href={task.task_link} target="_blank">LINK</a></td>
                                   <td>{task.task_type}</td>
                                   <td>{task.key_range}</td>
+                                  <td>{task.is_teamwork?'Teamwork':'Solo'}</td>
+                                  <td>{task.start_date}</td>
+                                  <td>{task.end_date}</td>
+                                 {task.is_teamwork?
                                   <td>
-                                    {' '}
+  
                                     <Link
                                       to={{
-                                        pathname: ``,
+                                         pathname: ``,
                                       }}
                                     >
                                       <Button color="info"> More Info </Button>
                                     </Link>
                                   </td>
+                                  :
+                                  <td>
+  
+                                    <Link
+                                      to={{
+                                         pathname: `/solo-task-info/${task.id}`,
+                                      }}
+                                    >
+                                      <Button color="info"> More Info </Button>
+                                    </Link>
+                                  </td>
+                                  }
+
+                                  <td><Button className="mr-3"
+                                  color="primary"
+                                  onClick={()=>{setEditForm(!editForm);setTaskId(task.id)}}
+                                  >
+                                    Edit Task
+                                  </Button>
+                                 </td>
                                 </tr>
                               ))}
 
