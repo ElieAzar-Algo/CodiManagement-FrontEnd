@@ -12,31 +12,23 @@ import {
   CardText,
   CardImg,
   CardTitle,
-  Form,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  UncontrolledButtonDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
+  // Form,
+  // Input,
+  // InputGroup,
+  // InputGroupAddon,
+  // UncontrolledButtonDropdown,
+  // DropdownToggle,
+  // DropdownItem,
+  // DropdownMenu,
 } from 'reactstrap';
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 import './codiStyles/CodiDashboard.css';
 
-// import { NumberWidget, IconWidget } from 'components/Widget';
-// import { iconWidgetsData, numberWidgetsData } from 'demos/widgetPage';import {
-//   MdSearch,
-//   MdRoom
-// } from 'react-icons/md';
 
 const CohortInfo = props => {
   const [cohort, setCohort] = useState([]);
-  const [searchField, setSearchField] = useState('Choose a field ');
-  const [searchValue, setSearchValue] = useState(''); //search function is not completed
-  //const [users, setUsers] = useState([]);
-  //const [errors, setErrors] = useState(false);
-
+  //const [searchField, setSearchField] = useState('Choose a field ');
+  //const [searchValue, setSearchValue] = useState(''); //search function is not completed
   const branchName = props.match.params.name;
   const cohortId = props.match.params.id;
 
@@ -82,22 +74,7 @@ const CohortInfo = props => {
             <Card className="mb-3">
               <CardHeader>
                 Cohort Info{' '}
-                {/* <Form
-              inline
-              className="cr-search-form"
-              onSubmit={e => searchForCohort(e)}
-            >
-              <MdSearch
-                size="20"
-                className="cr-search-form__icon-search text-secondary"
-              />
-              <Input
-                type="search"
-                className="cr-search-form__input"
-                placeholder="Search..."
-                onChange={e => setSearch(e.target.value)}
-              />
-            </Form> */}
+                
                 <Card className="flex-row">
                   <CardImg
                     className="card-img-left"
@@ -178,8 +155,8 @@ const CohortInfo = props => {
                       <Col>
                         {' '}
                         <Card body>
-                          Search for a Student{' '}
-                          <Form
+                          {/* Search for a Student{' '} */}
+                          {/* <Form
                             inline
                             className="cr-search-form"
                             onSubmit={searchForUser}
@@ -252,7 +229,7 @@ const CohortInfo = props => {
                                 </Button>
                               </InputGroupAddon>
                             </InputGroup>
-                          </Form>
+                          </Form> */}
                           <Table hover>
                             <thead>
                               <tr>

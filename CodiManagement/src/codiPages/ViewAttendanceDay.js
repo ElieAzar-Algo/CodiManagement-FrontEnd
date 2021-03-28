@@ -1,6 +1,6 @@
 //import Page from 'components/Page';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -124,7 +124,6 @@ const ViewAttendanceDay = props => {
                       <th>Name</th>
                       <th>Attendance</th>
                       <th>Excuse</th>
-
                       <th>Comments</th>
                       <th>Cohort</th>
                       <th>Mentor</th>

@@ -9,20 +9,10 @@ import {
   Row,
   Table,
   Button,
-  CardText,
-  CardImg,
-  CardTitle,
-  Form,
   Input,
   FormGroup,
   Alert,
   Label,
-  InputGroup,
-  InputGroupAddon,
-  UncontrolledButtonDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
 } from 'reactstrap';
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 import './codiStyles/CodiDashboard.css';

@@ -58,6 +58,7 @@ class App extends React.Component {
                 <AuthPage {...props} authState={STATE_LOGIN} />
               )}
             />
+            
             <LayoutRoute
               exact
               path="/signup"

@@ -28,7 +28,7 @@ import {
   Alert,
 } from 'reactstrap';
 import { IconWidget } from 'components/Widget';
-import { MdSearch, MdRoom, MdSentimentDissatisfied } from 'react-icons/md';
+import {  MdRoom } from 'react-icons/md';
 
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 
@@ -483,18 +483,6 @@ const BranchesInfo = () => {
                             )),
                           )}
 
-                          {/* <tr>
-                        <th scope="row">2</th>
-                        <td>Codi</td>
-                        <td>Tech</td>
-                        <td>@JIJI</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Hello</td>
-                        <td>World</td>
-                        <td>@Nice</td>
-                      </tr> */}
                         </tbody>
                       </Table>
                     </Card>
