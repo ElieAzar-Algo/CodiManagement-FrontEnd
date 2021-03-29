@@ -27,8 +27,6 @@ const UserSkills = props => {
   const [studentId, setStudentId] = useState();
   const [studentName, setStudentName] = useState('Student');
 
-
-  const [modal, setModal] = useState(false);
   const [progress, setProgress] = useState();
   const [editForm, setEditForm] = useState(0);
   const [errors, setErrors] = useState(false);

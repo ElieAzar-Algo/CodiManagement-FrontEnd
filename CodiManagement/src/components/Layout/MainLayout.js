@@ -31,10 +31,10 @@ class MainLayout extends React.Component {
 
       this.notificationSystem.addNotification({
         title: <MdImportantDevices />,
-        message: 'Welome to Reduction Admin!',
+        message: 'Welcome to Codi Tech Dashboard',
         level: 'info',
       });
-    }, 1500);
+    }, 2500);
 
     setTimeout(() => {
       if (!this.notificationSystem) {
@@ -44,10 +44,10 @@ class MainLayout extends React.Component {
       this.notificationSystem.addNotification({
         title: <MdLoyalty />,
         message:
-          'Reduction is carefully designed template powered by React and Bootstrap4!',
+          'Codi is a free school of programming for people who have a passion for digital and want to build a career in technology but cannot pursue a traditional university education.',
         level: 'info',
       });
-    }, 2500);
+    }, 3500);
   }
 
   // close sidebar when

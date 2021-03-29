@@ -128,11 +128,6 @@ const CohortInfo = props => {
                           </Button>
                         </Link>
 
-                        <Link to={{ pathname: `/view-attendance/${cohortId}` }}>
-                          <Button className="mr-3" color="primary">
-                            Mentors
-                          </Button>
-                        </Link>
                         <Button className="mr-3" color="primary">
                           {' '}
                           Disable Cohort
@@ -141,10 +136,10 @@ const CohortInfo = props => {
                       </Col>
                     </Row>
 
-                    <Row className="mb-3">
+                    <Row className="mb-3 mt-3">
                       <Col>
                       <Link to={{ pathname: `/stages-info/${cohortId}` }}>
-                          <Button className="mr-3" color="primary">
+                          <Button className="mr-3 " color="primary">
                             Stages
                           </Button>
                         </Link>

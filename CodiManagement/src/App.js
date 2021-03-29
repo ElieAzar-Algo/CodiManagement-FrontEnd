@@ -39,6 +39,8 @@ const StageTasks = React.lazy(() => import('./codiPages/StageTasks'));
 const SoloTaskInfo = React.lazy(() => import('./codiPages/SoloTaskInfo'));
 const UserSkills = React.lazy(() => import('./codiPages/UserSkills'));
 const CreateSkillMap = React.lazy(() => import('./codiPages/CreateSkillMap'));
+const Branches = React.lazy(() => import('./codiPages/Branches'));
+const Mentors = React.lazy(() => import('./codiPages/Mentors'));
 //StageTasks
 
 
@@ -87,6 +89,8 @@ class App extends React.Component {
               <Route exact path='/solo-task-info/:id' component={SoloTaskInfo}/>
               <Route exact path='/user-skills/:id' component={UserSkills}/>
               <Route exact path='/create-skill-map/:id' component={CreateSkillMap}/>
+              <Route exact path='/create-branch/' component={Branches}/>
+              <Route exact path='/admins-page/' component={Mentors}/>
               
 
 

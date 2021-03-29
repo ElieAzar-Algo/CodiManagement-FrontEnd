@@ -1,5 +1,5 @@
 //import logo200Image from 'assets/img/logo/logo_200.png';
-import codilogo from 'assets/img/logo/Codi-Logo.png';
+import codilogo from 'assets/img/logo/codi-logo.svg';
 //import {Link} from 'react-router-dom'
 
 import sidebarBgImage from 'assets/img/sidebar/sidebar-4.jpg';
@@ -84,10 +84,10 @@ const pageContents = [
 ];
 
 const navItems = [
-  { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },
-  { to: '/cards', name: 'cards', exact: false, Icon: MdWeb },
-  { to: '/charts', name: 'charts', exact: false, Icon: MdInsertChart },
-  { to: '/widgets', name: 'widgets', exact: false, Icon: MdWidgets },
+  { to: '/branches-info', name: 'dashboard', exact: true, Icon: MdDashboard },
+  { to: '/create-branch', name: 'Branches', exact: false, Icon: MdWidgets },
+  { to: '/create-user', name: 'add new student', exact: false, Icon: MdWeb },
+  { to: '/admins-page', name: 'mentors', exact: false, Icon: MdWeb },
 ];
 
 const bem = bn.create('sidebar');
@@ -119,13 +119,13 @@ class Sidebar extends React.Component {
             href="https://codi.gitbook.io/docs/general/01_pragma/01_welcome" target="blank">
               <img
                 src={codilogo}
-                width="40"
-                height="30"
-                className="pr-2"
+                width="120"
+                height="60"
+                className="pr-2 ml-4"
                 alt=""
               />
               <span className="text-white">
-                Codi Tech <FaGithub />
+                
               </span>
             </a>
           </Navbar>
@@ -146,7 +146,7 @@ class Sidebar extends React.Component {
               </NavItem>
             ))}
 
-            <NavItem
+            {/* <NavItem
               className={bem.e('nav-item')}
               onClick={this.handleClick('Components')}
             >
@@ -167,8 +167,8 @@ class Sidebar extends React.Component {
                   }}
                 />
               </BSNavLink>
-            </NavItem>
-            <Collapse isOpen={this.state.isOpenComponents}>
+            </NavItem> */}
+            {/* <Collapse isOpen={this.state.isOpenComponents}>
               {navComponents.map(({ to, name, exact, Icon }, index) => (
                 <NavItem key={index} className={bem.e('nav-item')}>
                   <BSNavLink
@@ -184,9 +184,9 @@ class Sidebar extends React.Component {
                   </BSNavLink>
                 </NavItem>
               ))}
-            </Collapse>
+            </Collapse> */}
 
-            <NavItem
+            {/* <NavItem
               className={bem.e('nav-item')}
               onClick={this.handleClick('Contents')}
             >
@@ -224,9 +224,9 @@ class Sidebar extends React.Component {
                   </BSNavLink>
                 </NavItem>
               ))}
-            </Collapse>
+            </Collapse> */}
 
-            <NavItem
+            {/* <NavItem
               className={bem.e('nav-item')}
               onClick={this.handleClick('Pages')}
             >
@@ -264,7 +264,7 @@ class Sidebar extends React.Component {
                   </BSNavLink>
                 </NavItem>
               ))}
-            </Collapse>
+            </Collapse> */}
           </Nav>
         </div>
       </aside>
