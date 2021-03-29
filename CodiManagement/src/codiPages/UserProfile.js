@@ -8,6 +8,7 @@ import {Row,Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Lab
 import { UserCard } from '../components/Card';
 import user1Image from '../assets/img/users/100_1.jpg';
 import EditUser from './EditUser';
+import {Link} from 'react-router-dom'
 
 
 
@@ -28,6 +29,11 @@ const UserProfile = (props) => {
     const [admins, setAdmins] = useState([]);
     const [adminId, setAdminId] = useState();
     const [adminName, setAdminName] = useState('Mentors');
+
+    const [studentSkills, setStudentSkills] = useState([]);
+    const [skillForm, setSkillForm] = useState(false);
+
+
   const [errors, setErrors] = useState(false);
 
 
@@ -116,6 +122,14 @@ const UserProfile = (props) => {
           setModal(!modal)
       };
 
+      const getStudentSkills = async () => {
+    
+        const res = await fetch(`http://localhost:8000/api/user-skills/${userId}`);
+        const result = await res.json();
+        console.log(result.data);
+        setStudentSkills(result.data);
+      };
+
      useEffect(()=>{
         getUser();
         getAdmins();
@@ -140,10 +154,14 @@ const UserProfile = (props) => {
         </Col>
         </Row>
             <Row className="m-2">
-            <Col sm={6}>
+            <Col sm={12}>
                 
             <Button className="mr-4" onClick={()=>setEditUser(!editUser)} color="primary">Edit Profile</Button>
             <Button className="mr-4" onClick={()=>{setAssignmentForm(!assignmentForm)}} color="primary">Current Tasks</Button>
+            <Button className="mr-4" onClick={()=>{setSkillForm(!skillForm);getStudentSkills()}} color="primary">My Skill Map</Button>
+            <Link to={{ pathname: `/user-absence-requests/${userId}` }}>
+              <Button className="mr-4" color="primary">Absence Request</Button>
+            </Link>
                 
             <Button color="danger" onClick={toggle}>Delete Profile</Button>
                 <Modal
@@ -166,10 +184,57 @@ const UserProfile = (props) => {
                 </Modal>
                 </Col>
             </Row>
-          
-          
-           
 
+
+            <Row className='m-2'hidden={!skillForm}>
+                    <Col>
+                      <Card body>
+                        <Table hover>
+                          <thead>
+                            <tr>
+                              <th>Skill Family</th>
+                              <th>Skill</th>
+                              <th>Progress</th>
+                              <th></th>
+                              <th>last Update</th>
+                              
+                              
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {studentSkills.map(ts => (
+                                
+                                ts.skill.map((s,key)=>(
+                              <tr key={key}>
+                                  
+                                <td>{s.skill_family}</td>
+                                <td>{s.name}</td>
+                                <td>
+                                    
+                                  <Input 
+                                  max='3'
+                                  min='0'
+                                  type='number'
+                                  className="w-50" 
+                                  defaultValue={s.pivot.progress} 
+                                 disabled
+                                 /> 
+                                  
+                                  </td>
+                                  
+                                <td>{s.updated_at}</td>
+                               
+                              </tr>
+                              ))
+                            ))}
+                          </tbody>
+                          
+                        </Table>
+                      </Card>
+                    </Col>
+                  
+                </Row>
             
             <Row className='m-2'hidden={!assignmentForm}>
               <Col>
@@ -353,7 +418,7 @@ const UserProfile = (props) => {
                 </Col>
                 
             </Row>
-            <div hidden={!editUser||assignmentForm}>
+            <div hidden={!editUser||assignmentForm||skillForm}>
         <Row className="m-2">
           
         <Col  xl={6} lg={12} md={12}>

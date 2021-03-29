@@ -37,6 +37,8 @@ const ViewAttendanceDay = React.lazy(() => import('./codiPages/ViewAttendanceDay
 const StagesInfo = React.lazy(() => import('./codiPages/StagesInfo'));
 const StageTasks = React.lazy(() => import('./codiPages/StageTasks'));
 const SoloTaskInfo = React.lazy(() => import('./codiPages/SoloTaskInfo'));
+const UserSkills = React.lazy(() => import('./codiPages/UserSkills'));
+const CreateSkillMap = React.lazy(() => import('./codiPages/CreateSkillMap'));
 //StageTasks
 
 
@@ -58,7 +60,7 @@ class App extends React.Component {
                 <AuthPage {...props} authState={STATE_LOGIN} />
               )}
             />
-            
+
             <LayoutRoute
               exact
               path="/signup"
@@ -83,6 +85,8 @@ class App extends React.Component {
               <Route exact path='/stages-info/:id' component={StagesInfo}/>
               <Route exact path='/stage-tasks/:id' component={StageTasks}/>
               <Route exact path='/solo-task-info/:id' component={SoloTaskInfo}/>
+              <Route exact path='/user-skills/:id' component={UserSkills}/>
+              <Route exact path='/create-skill-map/:id' component={CreateSkillMap}/>
               
 
 

@@ -133,21 +133,27 @@ const CohortInfo = props => {
                             Mentors
                           </Button>
                         </Link>
-
-                        <Link to={{ pathname: `/stages-info/${cohortId}` }}>
-                          <Button className="mr-3" color="primary">
-                            Stages
-                          </Button>
-                        </Link>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col>
                         <Button className="mr-3" color="primary">
                           {' '}
                           Disable Cohort
                         </Button>
+                       
+                      </Col>
+                    </Row>
+
+                    <Row className="mb-3">
+                      <Col>
+                      <Link to={{ pathname: `/stages-info/${cohortId}` }}>
+                          <Button className="mr-3" color="primary">
+                            Stages
+                          </Button>
+                        </Link>
+                        <Link to={{ pathname: `/user-skills/${cohortId}` }}>
+                          <Button className="mr-3" color="primary">
+                            Skill Map
+                          </Button>
+                        </Link>
+                        
                       </Col>
                     </Row>
 
