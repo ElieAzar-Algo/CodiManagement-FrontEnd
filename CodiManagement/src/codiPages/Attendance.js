@@ -309,7 +309,9 @@ const Attendance = props => {
           <Button onClick={() => window.location.reload()} color="info">
             {' '}
             Finish{' '}
+            
           </Button>
+          <Button onClick={()=>props.history.goBack()} >Back</Button>
         </Card>
       </Col>
     </Row>

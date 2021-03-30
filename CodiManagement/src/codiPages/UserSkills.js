@@ -177,6 +177,7 @@ const UserSkills = props => {
             {' '}
             Finish{' '}
           </Button>
+          <Button onClick={()=>props.history.goBack()} >Back</Button>
         </Card>
         
       </Col>

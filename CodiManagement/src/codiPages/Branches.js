@@ -20,7 +20,7 @@ import {
   UncontrolledAlert
 } from 'reactstrap';
 
-const BranchesInfo = () => {
+const BranchesInfo = (props) => {
   const [branches, setBranches] = useState([]);
   const [branchInputs, setBranchInputs] = useState([]);
 
@@ -345,6 +345,7 @@ const BranchesInfo = () => {
               
             </Row>
           </CardBody>
+          <Button onClick={()=>props.history.goBack()} >Back</Button>
         </Card>
       </Col>
     </Row>

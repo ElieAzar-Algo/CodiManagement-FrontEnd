@@ -12,7 +12,7 @@ class AuthPage extends React.Component {
   };
 
   handleLogoClick = () => {
-    this.props.history.push('/');
+    this.props.history.push('/login');
   };
 
   render() {

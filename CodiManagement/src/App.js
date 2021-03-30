@@ -3,6 +3,8 @@ import GAListener from 'components/GAListener';
 import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout';
 import PageSpinner from 'components/PageSpinner';
 import AuthPage from 'pages/AuthPage';
+import Login from './codiPages/Login';
+import LoginAdmin from './codiPages/LoginAdmin';
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
@@ -56,10 +58,18 @@ class App extends React.Component {
           <Switch>
             <LayoutRoute
               exact
-              path="/login"
+              path="/"
               layout={EmptyLayout}
               component={props => (
-                <AuthPage {...props} authState={STATE_LOGIN} />
+                <Login/>
+              )}
+            />
+            <LayoutRoute
+              exact
+              path="/admin"
+              layout={EmptyLayout}
+              component={props => (
+                <LoginAdmin/>
               )}
             />
 
@@ -72,13 +82,22 @@ class App extends React.Component {
               )}
             />
 
+            {/* <LayoutRoute
+              exact
+              path="/user-profile/:id"
+              layout={EmptyLayout}
+              component={props => (
+                <UserProfile/>
+              )}
+            /> */}
+
 
             <MainLayout breakpoint={this.props.breakpoint}>
               
               <React.Suspense fallback={<PageSpinner />}>
               <Route exact path="/branches-info" component={BranchesInfo} />
               <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
-              <Route exact path='/user-profile/:name/:id' component={UserProfile} />
+              <Route exact path='/user-profile/:id' component={UserProfile} />
               <Route exact path='/create-user' component={CreateUser} />
               <Route exact path='/user-absence-requests/:id' component={AbsenceRequestsInfo} />
               <Route exact path='/attendance/:id' component={Attendance}/>
@@ -94,7 +113,7 @@ class App extends React.Component {
               
 
 
-                <Route exact path="/" component={DashboardPage} />
+                <Route exact path="/dd" component={DashboardPage} />
                 <Route exact path="/login-modal" component={AuthModalPage} />
                 <Route exact path="/buttons" component={ButtonPage} />
                 <Route exact path="/cards" component={CardPage} />

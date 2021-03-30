@@ -33,7 +33,7 @@ import {  MdRoom } from 'react-icons/md';
 
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 
-const BranchesInfo = () => {
+const BranchesInfo = (props) => {
   const [admins, setAdmins] = useState([]);
   const [branchInputs, setBranchInputs] = useState([]);
 
@@ -363,6 +363,7 @@ const BranchesInfo = () => {
               
             </Row>
           </CardBody>
+          <Button onClick={()=>props.history.goBack()} >Back</Button>
         </Card>
       </Col>
     </Row>

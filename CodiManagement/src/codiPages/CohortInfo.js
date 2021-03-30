@@ -259,7 +259,7 @@ const CohortInfo = props => {
                                     {' '}
                                     <Link
                                       to={{
-                                        pathname: `/user-profile/${coh.cohort_code}/${user.id}`,
+                                        pathname: `/user-profile/${user.id}`,
                                       }}
                                     >
                                       <Button color="info"> More Info </Button>
@@ -276,6 +276,7 @@ const CohortInfo = props => {
                   </Col>
                 </Row>
               </CardBody>
+              <Button onClick={()=>props.history.goBack()} >Back</Button>
             </Card>
 
             //cohort map closings

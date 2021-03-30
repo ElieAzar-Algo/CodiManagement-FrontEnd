@@ -423,9 +423,11 @@ const AbsenceRequestInfo = props => {
                 </Col>
               </Row>
             </CardBody>
+            <Button onClick={()=>props.history.goBack()} >Back</Button>
           </Card>
         </Col>
       )}
+       
     </Row>
   );
 };

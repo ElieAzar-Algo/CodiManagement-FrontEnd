@@ -145,7 +145,7 @@ const UserProfile = (props) => {
             avatar={user1Image}
             title={user.user_first_name+" "+user.user_last_name}
             subtitle={user.active_inactive==1?'Active':'Alumni'}
-            text={props.match.params.name+ " Student"}
+            //text={props.match.params.name+ " Student"}
             style={{
               height: 300,
             

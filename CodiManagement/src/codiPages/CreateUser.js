@@ -377,7 +377,9 @@ const CreateUser = props => {
                 </Button>
               </Form>
             </CardBody>
+            
           </Card>
+          <Button onClick={()=>props.history.goBack()} >Back</Button>
         </Col>
       </Row>
     </>

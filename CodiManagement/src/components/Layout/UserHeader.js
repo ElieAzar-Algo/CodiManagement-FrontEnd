@@ -45,14 +45,13 @@ const MdNotificationsActiveWithBadge = withBadge({
   children: <small>5</small>,
 })(MdNotificationsActive);
 
-class Header extends React.Component {
-  
-state = {
-  isOpenNotificationPopover: false,
-  isNotificationConfirmed: false,
-  isOpenUserCardPopover: false,
-};
-  
+class UserHeader extends React.Component {
+  state = {
+    isOpenNotificationPopover: false,
+    isNotificationConfirmed: false,
+    isOpenUserCardPopover: false,
+  };
+
   toggleNotificationPopover = () => {
     this.setState({
       isOpenNotificationPopover: !this.state.isOpenNotificationPopover,
@@ -81,17 +80,16 @@ state = {
 
     return (
       <Navbar light expand className={bem.b('bg-white')}>
-        <Nav navbar className="mr-2">
+        {/* <Nav navbar className="mr-2">
           <Button outline onClick={this.handleSidebarControlButton}>
             <MdClearAll size={25} />
           </Button>
-        </Nav>
+        </Nav> */}
         <Nav navbar>
           {/* <SearchInput /> */}
         </Nav>
 
         <Nav navbar className={bem.e('nav-right')}>
-          
           {/* <NavItem className="d-inline-flex">
             <NavLink id="Popover1" className="position-relative">
               {isNotificationConfirmed ? (
@@ -122,10 +120,10 @@ state = {
 
           <NavItem>
             <NavLink id="Popover2">
-              {/* <Avatar
+              <Avatar
                 onClick={this.toggleUserCardPopover}
                 className="can-click"
-              /> */}
+              />
             </NavLink>
             <Popover
               placement="bottom-end"
@@ -172,4 +170,4 @@ state = {
   }
 }
 
-export default Header;
+export default UserHeader;

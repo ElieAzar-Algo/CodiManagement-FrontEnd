@@ -5,6 +5,7 @@ import codilogo from 'assets/img/logo/codi-logo.svg';
 
 
 import SourceLink from 'components/SourceLink';
+import Button from 'reactstrap/lib/Button';
 
 const Footer = () => {
   return (
@@ -27,6 +28,7 @@ const Footer = () => {
              
         </NavItem>
       </Nav>
+      
     </Navbar>
   );
 };
