@@ -24,6 +24,9 @@ import {
 } from 'reactstrap';
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 import './codiStyles/CodiDashboard.css';
+import { Navbar, Nav, NavItem } from 'reactstrap';
+
+import SourceLink from 'components/SourceLink';
 
 const AbsenceRequestInfo = props => {
   const [absence, setAbsence] = useState([]);
@@ -157,6 +160,7 @@ const AbsenceRequestInfo = props => {
   }, []);
 
   return (
+    <>
     <Row>
       {absence == null ? (
         <Col>
@@ -313,7 +317,7 @@ const AbsenceRequestInfo = props => {
                         </Col>
 
                         <Col xl={2} l={2}>
-                          <Label for="exampleEmail">Submit request</Label>
+                          <Label for="exampleEmail"></Label>
                           <Button onClick={createAbsence} color="success">
                             Submit
                           </Button>
@@ -326,7 +330,7 @@ const AbsenceRequestInfo = props => {
               <Row>
                 <Col>
                   <Card body>
-                    <Table hover>
+                    <Table responsive hover>
                       <thead>
                         <tr>
                           <th>Number</th>
@@ -352,6 +356,7 @@ const AbsenceRequestInfo = props => {
                             <td>
                               {' '}
                               <Button
+                              className="mr-3"
                                 color="info"
                                 onClick={() => setInfoModal(!infoModal)}
                               >
@@ -372,6 +377,7 @@ const AbsenceRequestInfo = props => {
                                 </ModalFooter>
                               </Modal>{' '}
                               <Button
+                              className="mr-3"
                                 color="primary"
                                 disabled={abs.absence_approved ? true : false}
                                 onClick={() => {
@@ -383,6 +389,7 @@ const AbsenceRequestInfo = props => {
                                 Edit{' '}
                               </Button>
                               <Button
+                              className="mr-3"
                                 color="danger"
                                 onClick={() => setDeleteModal(!deleteModal)}
                               >
@@ -429,6 +436,29 @@ const AbsenceRequestInfo = props => {
       )}
        
     </Row>
+    <Navbar>
+      <Nav navbar>
+        <NavItem>
+         <SourceLink>
+         
+              <img
+                src={codilogo}
+                width="120"
+                height="60"
+                className="pr-2 ml-4"
+                alt=""
+              />
+              Codi Tech Lebanon  About us 
+              </SourceLink>
+                          
+
+             
+        </NavItem>
+      </Nav>
+      
+    </Navbar>
+    
+      </>
   );
 };
 export default AbsenceRequestInfo;

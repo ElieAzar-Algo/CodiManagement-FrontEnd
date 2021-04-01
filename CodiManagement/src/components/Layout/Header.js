@@ -51,6 +51,7 @@ state = {
   isOpenNotificationPopover: false,
   isNotificationConfirmed: false,
   isOpenUserCardPopover: false,
+  todayRequest:[],
 };
   
   toggleNotificationPopover = () => {
@@ -75,6 +76,23 @@ state = {
 
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
+  
+
+//  async componentDidMount(){
+ 
+//       var today = new Date();
+//       var date =
+//         today.getFullYear() +
+//         '-' +
+//         (today.getMonth() + 1) +
+//         '-' +
+//         today.getDate();
+//       const res = await fetch(`http://localhost:8000/api/UserAbsenceRequest/${date}`);
+//       const result = await res.json();
+//       console.log(result.data);
+//       this.setState({todayRequest:result.data})
+    
+//   }
 
   render() {
     const { isNotificationConfirmed } = this.state;

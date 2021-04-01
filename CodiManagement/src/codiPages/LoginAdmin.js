@@ -103,13 +103,8 @@ handlePassword =(e)=>{
         </Button>
 
         <div className="text-center pt-1">
-          <h6>or</h6>
-          <h6>
-              <a href="#signup" >
-                Signup
-              </a>
-        
-          </h6>
+          <h6>ADMIN</h6>
+         
         </div>
 
     

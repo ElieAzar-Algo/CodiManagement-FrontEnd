@@ -6,6 +6,7 @@ import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import UncontrolledAlert from 'reactstrap/lib/UncontrolledAlert';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
     state={
@@ -104,9 +105,9 @@ handlePassword =(e)=>{
         <div className="text-center pt-1">
           <h6>or</h6>
           <h6>
-              <a href="#signup" >
+           <Link to='/signup'><a>
                 Signup
-              </a>
+              </a></Link>   
         
           </h6>
         </div>

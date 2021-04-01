@@ -117,7 +117,7 @@ const ViewAttendanceDay = props => {
             </Row>
             <Row>
               <Col>
-                <Table hover>
+                <Table responsive hover>
                   <thead>
                     <tr>
                       <th>Date</th>

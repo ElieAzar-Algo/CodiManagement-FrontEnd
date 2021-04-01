@@ -202,7 +202,7 @@ const Attendance = props => {
 
             <Row>
               <Col>
-                <Table hover>
+                <Table responsive hover>
                   <thead>
                     <tr>
                       <th>Student</th>
@@ -306,12 +306,14 @@ const Attendance = props => {
               </Col>
             </Row>
           </CardBody>
-          <Button onClick={() => window.location.reload()} color="info">
+          <Row>
+          <Button  className='col-6' onClick={() => window.location.reload()} color="info">
             {' '}
             Finish{' '}
-            
           </Button>
-          <Button onClick={()=>props.history.goBack()} >Back</Button>
+          
+          <Button className='col-6' onClick={()=>props.history.goBack()} >Back</Button>
+          </Row>
         </Card>
       </Col>
     </Row>

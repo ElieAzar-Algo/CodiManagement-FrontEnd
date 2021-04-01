@@ -231,7 +231,7 @@ const CohortInfo = props => {
                               </InputGroupAddon>
                             </InputGroup>
                           </Form> */}
-                          <Table hover>
+                          <Table responsive hover>
                             <thead>
                               <tr>
                                 <th>Student</th>

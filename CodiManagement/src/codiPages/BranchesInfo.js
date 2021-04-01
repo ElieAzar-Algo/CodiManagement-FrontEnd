@@ -395,7 +395,7 @@ const BranchesInfo = () => {
                     </Card>
                   ) : (
                     <Card body>
-                      <Table hover>
+                      <Table responsive hover>
                         <thead>
                           <tr>
                             <th>#</th>
@@ -403,7 +403,7 @@ const BranchesInfo = () => {
                             <th>Start date</th>
                             <th>End date</th>
                             <th>Students Number</th>
-                            <th>Admins Number</th>
+                            <th>Mentors Number</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -414,11 +414,11 @@ const BranchesInfo = () => {
                                 <td>{cohort.cohort_code}</td>
                                 <td>{cohort.start_date} </td>
                                 <td>{cohort.end_date}</td>
-                                <td>{cohort.users.length}</td>
-                                <td>{branch.admins.length}</td>
+                                <td>{cohort.users.length} Students</td>
+                                <td>{branch.admins.length} Mentors</td>
+                                
                                 <td>
-                                  {' '}
-                                  <Link
+                                <Link
                                     to={{
                                       pathname: `/cohort-info/${branch.branch_name}/${cohort.id}`,
                                       state: {
@@ -429,9 +429,9 @@ const BranchesInfo = () => {
                                   >
                                     <Button color="info"> More Info </Button>
                                   </Link>
-                                </td>
-                                <td>
+
                                   <Button
+                                  className="ml-3 mr-3"
                                     onClick={e => {
                                       setEditForm(!editForm);
                                       setEditId(cohort.id);
@@ -441,8 +441,6 @@ const BranchesInfo = () => {
                                     {' '}
                                     Edit{' '}
                                   </Button>
-                                </td>
-                                <td>
                                   <Button
                                     onClick={() => setModal(!modal)}
                                     color="danger"
@@ -479,6 +477,7 @@ const BranchesInfo = () => {
                                     </ModalFooter>
                                   </Modal>
                                 </td>
+                                
                               </tr>
                             )),
                           )}

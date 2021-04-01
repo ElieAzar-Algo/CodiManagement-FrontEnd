@@ -85,9 +85,11 @@ const pageContents = [
 
 const navItems = [
   { to: '/branches-info', name: 'dashboard', exact: true, Icon: MdDashboard },
+  { to: '/today-absence-requests/', name: 'absence', exact: true, Icon: MdNotificationsActive },
   { to: '/create-branch', name: 'Branches', exact: false, Icon: MdWidgets },
   { to: '/create-user', name: 'add new student', exact: false, Icon: MdWeb },
   { to: '/admins-page', name: 'mentors', exact: false, Icon: MdWeb },
+  { to: '/skills-list', name: 'skills', exact: false, Icon: MdWeb },
 ];
 
 const bem = bn.create('sidebar');

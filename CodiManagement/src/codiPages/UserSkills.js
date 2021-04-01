@@ -44,14 +44,16 @@ const UserSkills = props => {
     const result = await res.json();
     console.log(result.data);
     setStudentSkills(result.data);
+    setStudentId(result.data[0].id)
   };
 
   const getCohortStudents = async () => {
     
     const res = await fetch(`http://localhost:8000/api/user-byCohort/${cohortId}`);
     const result = await res.json();
-    console.log(result.data);
+   // console.log(result.data);
     setStudents(result.data);
+
   };
 
   const editProgress= async (id) => {
@@ -120,7 +122,7 @@ const UserSkills = props => {
                  
                     <Col>
                       <Card body>
-                        <Table hover>
+                        <Table responsive hover>
                           <thead>
                             <tr>
                               <th>Skill Family</th>
@@ -136,7 +138,7 @@ const UserSkills = props => {
                           <tbody>
                             {studentSkills.map(ts => (
                                 !ts.skill[0]?<tr> <td><h3>No Skill Map Yet, Please Create A Skill Map For {studentName}</h3>
-                                <Link to={{ pathname: `/create-skill-map/${cohortId}` }}><Button 
+                                <Link to={{ pathname: `/create-skill-map/${cohortId}/student/${studentId}` }}><Button 
                                 className="ml-3"
                                  color="info">Create Skill Map</Button></Link></td></tr>:
                                 ts.skill.map((s,key)=>(
@@ -173,11 +175,14 @@ const UserSkills = props => {
               </Col>
             </Row>
           </CardBody>
-          <Button onClick={() => window.location.reload()} color="info">
+          <Row>
+          <Button  className='col-6' onClick={() => window.location.reload()} color="info">
             {' '}
             Finish{' '}
           </Button>
-          <Button onClick={()=>props.history.goBack()} >Back</Button>
+          
+          <Button className='col-6' onClick={()=>props.history.goBack()} >Back</Button>
+          </Row>
         </Card>
         
       </Col>

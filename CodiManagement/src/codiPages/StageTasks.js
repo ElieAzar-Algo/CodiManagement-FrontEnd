@@ -451,7 +451,7 @@ const StageTasks = props => {
                         {' '}
                         <Card body>
                     
-                          <Table hover>
+                          <Table responsive hover>
                             <thead>
                               <tr>
                               <th>#</th>

@@ -131,7 +131,7 @@ const createSKillMap = props => {
                  
                     <Col>
                       <Card body>
-                        <Table hidden={errors.user_id?true:false} hover>
+                        <Table responsive hidden={errors.user_id?true:false} hover>
                           <thead>
                             <tr>
                               <th>Skill Family</th>
@@ -179,11 +179,18 @@ const createSKillMap = props => {
               </Col>
             </Row>
           </CardBody>
-          <Button onClick={() => window.location.reload()} color="info">
+         <Row>
+          <Button  className='col-6' onClick={() => window.location.reload()} color="info">
             {' '}
             Finish{' '}
           </Button>
+          
+          <Button className='col-6' onClick={()=>props.history.goBack()} >Back</Button>
+          </Row>
+          
         </Card>
+        
+
         
       </Col>
     </Row>

@@ -319,7 +319,7 @@ const StagesInfo = props => {
                   ) :(
                     <Col>
                       <Card body>
-                        <Table hover>
+                        <Table responsive hover>
                           <thead>
                             <tr>
                               <th>Stage Name</th>

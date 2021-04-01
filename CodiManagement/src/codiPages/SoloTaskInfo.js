@@ -105,7 +105,7 @@ const SoloTaskInfo = props => {
                  
                     <Col>
                       <Card body>
-                        <Table hover>
+                        <Table responsive hover>
                           <thead>
                             <tr>
                               <th>Student</th>
