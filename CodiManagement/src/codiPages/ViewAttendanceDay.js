@@ -27,7 +27,7 @@ const ViewAttendanceDay = props => {
   const cohortId = props.match.params.id;
 
   const getAttendances = async () => {
-    const res = await fetch(`http://localhost:8000/api/attendance/${date}`);
+    const res = await fetch(`http://localhost:8000/api/attendance/${date}/${cohortId}`);
     const result = await res.json();
     setAttendances(result.data);
     if (result.data[0]) {
@@ -35,6 +35,8 @@ const ViewAttendanceDay = props => {
     }
     console.log(result.data);
   };
+
+
   const deleteRecord = async () => {
     const deleteRequestOptions = {
       method: 'DELETE',
@@ -53,7 +55,7 @@ const ViewAttendanceDay = props => {
     props.history.goBack();
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <Row>
@@ -70,8 +72,8 @@ const ViewAttendanceDay = props => {
                 {errors.attendance_date}{' '}
               </UncontrolledAlert>
             ) : (
-              ''
-            )}{' '}
+                  ''
+                )}{' '}
           </CardHeader>
           <CardBody>
             <Row>
@@ -100,7 +102,7 @@ const ViewAttendanceDay = props => {
                 <Modal
                   isOpen={modal}
 
-                  //   className={props.className}
+                //   className={props.className}
                 >
                   <ModalHeader>You cannot undo this action !</ModalHeader>
                   <ModalBody>Are you sure, you want to delete?</ModalBody>
@@ -151,12 +153,12 @@ const ViewAttendanceDay = props => {
                                 : 'No Comments'}
                             </td>
                             <td>{user.cohort.cohort_code}</td>
-                            <td>{info.admin.username}</td>
+
                             <td></td>
                           </tr>
                         ) : (
-                          ''
-                        ),
+                            ''
+                          ),
                       ),
                     )}
                   </tbody>
@@ -164,7 +166,7 @@ const ViewAttendanceDay = props => {
               </Col>
             </Row>
           </CardBody>
-          <Button onClick={()=>props.history.goBack()} >Back</Button>
+          <Button onClick={() => props.history.goBack()} >Back</Button>
         </Card>
       </Col>
     </Row>

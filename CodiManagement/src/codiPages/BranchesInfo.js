@@ -28,7 +28,7 @@ import {
   Alert,
 } from 'reactstrap';
 import { IconWidget } from 'components/Widget';
-import {  MdRoom } from 'react-icons/md';
+import { MdRoom } from 'react-icons/md';
 
 import codilogo from 'assets/img/logo/Codi-Logo.png';
 
@@ -58,8 +58,10 @@ const BranchesInfo = () => {
   const getBranches = async () => {
     const res = await fetch('http://localhost:8000/api/branch');
     const result = await res.json();
+    //(value)=>{setBra}
+    // console.log(result)
     setBranches(result.data);
-    //console.log(students)
+    console.log(branches)
   };
 
   const getIndividualBranchInfo = async id => {
@@ -221,8 +223,8 @@ const BranchesInfo = () => {
                       {errors.branch_id ? (
                         <Alert color="danger">{errors.branch_id} </Alert>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </Row>
 
                     <FormGroup row>
@@ -239,8 +241,8 @@ const BranchesInfo = () => {
                         {errors.cohort_code ? (
                           <Alert color="danger">{errors.cohort_code} </Alert>
                         ) : (
-                          ''
-                        )}
+                            ''
+                          )}
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -256,8 +258,8 @@ const BranchesInfo = () => {
                         {errors.start_date ? (
                           <Alert color="danger">{errors.start_date} </Alert>
                         ) : (
-                          ''
-                        )}
+                            ''
+                          )}
                       </Col>
                     </FormGroup>
 
@@ -274,8 +276,8 @@ const BranchesInfo = () => {
                         {errors.end_date ? (
                           <Alert color="danger">{errors.end_date} </Alert>
                         ) : (
-                          ''
-                        )}
+                            ''
+                          )}
                         <Button color="primary" onClick={createCohort}>
                           Submit
                         </Button>
@@ -313,8 +315,8 @@ const BranchesInfo = () => {
                       {errors.branch_id ? (
                         <Alert color="danger">{errors.branch_id} </Alert>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </Row>
 
                     <FormGroup row>
@@ -331,8 +333,8 @@ const BranchesInfo = () => {
                         {errors.cohort_code ? (
                           <Alert color="danger">{errors.cohort_code} </Alert>
                         ) : (
-                          ''
-                        )}
+                            ''
+                          )}
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -348,8 +350,8 @@ const BranchesInfo = () => {
                         {errors.start_date ? (
                           <Alert color="danger">{errors.start_date} </Alert>
                         ) : (
-                          ''
-                        )}
+                            ''
+                          )}
                       </Col>
                     </FormGroup>
 
@@ -366,8 +368,8 @@ const BranchesInfo = () => {
                         {errors.end_date ? (
                           <Alert color="danger">{errors.end_date} </Alert>
                         ) : (
-                          ''
-                        )}
+                            ''
+                          )}
                         <Button color="primary" onClick={editCohort}>
                           Submit Changes
                         </Button>
@@ -376,118 +378,118 @@ const BranchesInfo = () => {
                   </Col>
                 </Row>
               ) : (
-                <Col>
-                  {!individualBranch ? (
-                    <Card className="flex-row">
-                      <CardImg
-                        className="card-img-left"
-                        src={codilogo}
-                        style={{ width: 'auto', height: 150 }}
-                      />
-                      <CardBody>
-                        <CardTitle>
-                          Welcome To Codi Tech Branches Dashboard
+                    <Col>
+                      {!individualBranch ? (
+                        <Card className="flex-row">
+                          <CardImg
+                            className="card-img-left"
+                            src={codilogo}
+                            style={{ width: 'auto', height: 150 }}
+                          />
+                          <CardBody>
+                            <CardTitle>
+                              Welcome To Codi Tech Branches Dashboard
                         </CardTitle>
-                        <CardText>
-                          Please choose a branch to see more info
+                            <CardText>
+                              Please choose a branch to see more info
                         </CardText>
-                      </CardBody>
-                    </Card>
-                  ) : (
-                    <Card body>
-                      <Table responsive hover>
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>Cohort</th>
-                            <th>Start date</th>
-                            <th>End date</th>
-                            <th>Students Number</th>
-                            <th>Mentors Number</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {individualBranch.map((branch, key) =>
-                            branch.cohorts.map((cohort, cohortKey) => (
-                              <tr key={key}>
-                                <th scope="row">{cohortKey + 1}</th>
-                                <td>{cohort.cohort_code}</td>
-                                <td>{cohort.start_date} </td>
-                                <td>{cohort.end_date}</td>
-                                <td>{cohort.users.length} Students</td>
-                                <td>{branch.admins.length} Mentors</td>
-                                
-                                <td>
-                                <Link
-                                    to={{
-                                      pathname: `/cohort-info/${branch.branch_name}/${cohort.id}`,
-                                      state: {
-                                        branch_name: 'batata',
-                                        new_id: '',
-                                      },
-                                    }}
-                                  >
-                                    <Button color="info"> More Info </Button>
-                                  </Link>
+                          </CardBody>
+                        </Card>
+                      ) : (
+                          <Card body>
+                            <Table responsive hover>
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Cohort</th>
+                                  <th>Start date</th>
+                                  <th>End date</th>
+                                  <th>Students Number</th>
+                                  <th>Mentors Number</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {individualBranch.map((branch, key) =>
+                                  branch.cohorts.map((cohort, cohortKey) => (
+                                    <tr key={key}>
+                                      <th scope="row">{cohortKey + 1}</th>
+                                      <td>{cohort.cohort_code}</td>
+                                      <td>{cohort.start_date} </td>
+                                      <td>{cohort.end_date}</td>
+                                      <td>{cohort.users.length} Students</td>
+                                      <td>{branch.admins.length} Mentors</td>
 
-                                  <Button
-                                  className="ml-3 mr-3"
-                                    onClick={e => {
-                                      setEditForm(!editForm);
-                                      setEditId(cohort.id);
-                                    }}
-                                    color="primary"
-                                  >
-                                    {' '}
+                                      <td>
+                                        <Link
+                                          to={{
+                                            pathname: `/cohort-info/${branch.branch_name}/${cohort.id}`,
+                                            state: {
+                                              branch_name: 'batata',
+                                              new_id: '',
+                                            },
+                                          }}
+                                        >
+                                          <Button color="info"> More Info </Button>
+                                        </Link>
+
+                                        <Button
+                                          className="ml-3 mr-3"
+                                          onClick={e => {
+                                            setEditForm(!editForm);
+                                            setEditId(cohort.id);
+                                          }}
+                                          color="primary"
+                                        >
+                                          {' '}
                                     Edit{' '}
-                                  </Button>
-                                  <Button
-                                    onClick={() => setModal(!modal)}
-                                    color="danger"
-                                  >
-                                    {' '}
+                                        </Button>
+                                        <Button
+                                          onClick={() => setModal(!modal)}
+                                          color="danger"
+                                        >
+                                          {' '}
                                     Delete{' '}
-                                  </Button>
-                                  <Modal
-                                    isOpen={modal}
+                                        </Button>
+                                        <Modal
+                                          isOpen={modal}
 
-                                    //   className={props.className}
-                                  >
-                                    <ModalHeader>
-                                      You cannot undo this action !
+                                        //   className={props.className}
+                                        >
+                                          <ModalHeader>
+                                            You cannot undo this action !
                                     </ModalHeader>
-                                    <ModalBody>
-                                      Are you sure, you want to delete{' '}
-                                      {cohort.cohort_code}? This could cause a
+                                          <ModalBody>
+                                            Are you sure, you want to delete{' '}
+                                            {cohort.cohort_code}? This could cause a
                                       loss of all the cohort's students
                                     </ModalBody>
-                                    <ModalFooter>
-                                      <Button
-                                        color="primary"
-                                        onClick={() => deleteCohort(cohort.id)}
-                                      >
-                                        Confirm
+                                          <ModalFooter>
+                                            <Button
+                                              color="primary"
+                                              onClick={() => deleteCohort(cohort.id)}
+                                            >
+                                              Confirm
                                       </Button>{' '}
-                                      <Button
-                                        color="secondary"
-                                        onClick={() => setModal(!modal)}
-                                      >
-                                        Cancel
+                                            <Button
+                                              color="secondary"
+                                              onClick={() => setModal(!modal)}
+                                            >
+                                              Cancel
                                       </Button>
-                                    </ModalFooter>
-                                  </Modal>
-                                </td>
-                                
-                              </tr>
-                            )),
-                          )}
+                                          </ModalFooter>
+                                        </Modal>
+                                      </td>
 
-                        </tbody>
-                      </Table>
-                    </Card>
+                                    </tr>
+                                  )),
+                                )}
+
+                              </tbody>
+                            </Table>
+                          </Card>
+                        )}
+                    </Col>
                   )}
-                </Col>
-              )}
             </Row>
           </CardBody>
         </Card>

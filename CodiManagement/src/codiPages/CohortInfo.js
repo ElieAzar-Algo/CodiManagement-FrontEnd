@@ -69,95 +69,95 @@ const CohortInfo = props => {
           </Card>
         </Col>
       ) : (
-        <Col>
-          {cohort.map((coh, key) => (
-            <Card className="mb-3">
-              <CardHeader>
-                Cohort Info{' '}
-                
-                <Card className="flex-row">
-                  <CardImg
-                    className="card-img-left"
-                    src={codilogo}
-                    style={{ width: 'auto', height: 150 }}
-                  />
+          <Col>
+            {cohort.map((coh, key) => (
+              <Card className="mb-3">
+                <CardHeader>
+                  Cohort Info{' '}
 
-                  <CardBody>
-                    <CardTitle>
-                      {' '}
-                      <h3>{coh.cohort_code}</h3>{' '}
-                    </CardTitle>
-                    <CardText>
-                      <h5> {branchName} </h5>
-                      <p>
-                        started on {coh.start_date} Till {coh.end_date}{' '}
-                      </p>
-                      <p> has {coh.users.length} students </p>
-                    </CardText>
-                  </CardBody>
-                </Card>
-              </CardHeader>
-              <CardBody>
-                <Row>
-                  <Col>
-                    <Row className="mb-2">
-                      <Col>
-                        <Link to="/create-user">
-                          <Button className="mr-3" color="primary">
-                            Create Student
+                  <Card className="flex-row">
+                    <CardImg
+                      className="card-img-left"
+                      src={codilogo}
+                      style={{ width: 'auto', height: 150 }}
+                    />
+
+                    <CardBody>
+                      <CardTitle>
+                        {' '}
+                        <h3>{coh.cohort_code}</h3>{' '}
+                      </CardTitle>
+                      <CardText>
+                        <h5> {branchName} </h5>
+                        <p>
+                          started on {coh.start_date} Till {coh.end_date}{' '}
+                        </p>
+                        <p> has {coh.users.length} students </p>
+                      </CardText>
+                    </CardBody>
+                  </Card>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col>
+                      <Row className="mb-2">
+                        <Col>
+                          <Link to="/create-user">
+                            <Button className="mr-3" color="primary">
+                              Create Student
                           </Button>
-                        </Link>
+                          </Link>
 
-                        <Link to={{ pathname: `/attendance/${cohortId}` }}>
-                          <Button className="mr-3" color="primary">
-                            Take cohort Attendance
+                          <Link to={{ pathname: `/attendance/${cohortId}` }}>
+                            <Button className="mr-3" color="primary">
+                              Take cohort Attendance
                           </Button>
-                        </Link>
+                          </Link>
 
-                        <Link to={{ pathname: `/view-attendance/${cohortId}` }}>
-                          <Button className="mr-3" color="primary">
-                            View attendance individually
+                          <Link to={{ pathname: `/view-attendance/${cohortId}` }}>
+                            <Button className="mr-3" color="primary">
+                              View attendance individually
                           </Button>
-                        </Link>
+                          </Link>
 
-                        <Link
+                          {/* <Link
                           to={{ pathname: `/view-attendance-day/${cohortId}` }}
                         >
                           <Button className="mr-3" color="primary">
                             View Attendance By Day
                           </Button>
-                        </Link>
+                        </Link> */}
 
-                        <Button className="mr-3" color="primary">
-                          {' '}
+                          <Button className="mr-3" color="primary">
+                            {' '}
                           Disable Cohort
                         </Button>
-                       
-                      </Col>
-                    </Row>
 
-                    <Row className="mb-3 mt-3">
-                      <Col>
-                      <Link to={{ pathname: `/stages-info/${cohortId}` }}>
-                          <Button className="mr-3 " color="primary">
-                            Stages
-                          </Button>
-                        </Link>
-                        <Link to={{ pathname: `/user-skills/${cohortId}` }}>
-                          <Button className="mr-3" color="primary">
-                            Skill Map
-                          </Button>
-                        </Link>
-                        
-                      </Col>
-                    </Row>
+                        </Col>
+                      </Row>
 
-                    <Row>
-                      <Col>
-                        {' '}
-                        <Card body>
-                          {/* Search for a Student{' '} */}
-                          {/* <Form
+                      <Row className="mb-3 mt-3">
+                        <Col>
+                          <Link to={{ pathname: `/stages-info/${cohortId}` }}>
+                            <Button className="mr-3 " color="primary">
+                              Stages
+                          </Button>
+                          </Link>
+                          <Link to={{ pathname: `/user-skills/${cohortId}` }}>
+                            <Button className="mr-3" color="primary">
+                              Skill Map
+                          </Button>
+                          </Link>
+
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col>
+                          {' '}
+                          <Card body>
+                            {/* Search for a Student{' '} */}
+                            {/* <Form
                             inline
                             className="cr-search-form"
                             onSubmit={searchForUser}
@@ -231,58 +231,58 @@ const CohortInfo = props => {
                               </InputGroupAddon>
                             </InputGroup>
                           </Form> */}
-                          <Table responsive hover>
-                            <thead>
-                              <tr>
-                                <th>Student</th>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Email</th>
-                                <th>Gender</th>
-                                <th>Active</th>
-                              </tr>
-                            </thead>
-
-                            <tbody>
-                              {coh.users.map((user, userKey) => (
-                                <tr key={userKey}>
-                                  <td> {userKey + 1}</td>
-                                  <td>{user.user_first_name}</td>
-                                  <td>{user.user_last_name}</td>
-                                  <td>{user.email}</td>
-                                  <td>{user.user_gender}</td>
-                                  <td>
-                                    {user.active_inactive ? 'Active' : 'Alumni'}
-                                  </td>
-
-                                  <td>
-                                    {' '}
-                                    <Link
-                                      to={{
-                                        pathname: `/user-profile/${user.id}`,
-                                      }}
-                                    >
-                                      <Button color="info"> More Info </Button>
-                                    </Link>
-                                  </td>
+                            <Table responsive hover>
+                              <thead>
+                                <tr>
+                                  <th>Student</th>
+                                  <th>First name</th>
+                                  <th>Last name</th>
+                                  <th>Email</th>
+                                  <th>Gender</th>
+                                  <th>Active</th>
                                 </tr>
-                              ))}
+                              </thead>
 
-                            </tbody>
-                          </Table>
-                        </Card>{' '}
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </CardBody>
-              <Button onClick={()=>props.history.goBack()} >Back</Button>
-            </Card>
+                              <tbody>
+                                {coh.users.map((user, userKey) => (
+                                  <tr key={userKey}>
+                                    <td> {userKey + 1}</td>
+                                    <td>{user.user_first_name}</td>
+                                    <td>{user.user_last_name}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.user_gender}</td>
+                                    <td>
+                                      {user.active_inactive ? 'Active' : 'Alumni'}
+                                    </td>
 
-            //cohort map closings
-          ))}
-        </Col>
-      )}
+                                    <td>
+                                      {' '}
+                                      <Link
+                                        to={{
+                                          pathname: `/user-profile/${user.id}`,
+                                        }}
+                                      >
+                                        <Button color="info"> More Info </Button>
+                                      </Link>
+                                    </td>
+                                  </tr>
+                                ))}
+
+                              </tbody>
+                            </Table>
+                          </Card>{' '}
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </CardBody>
+                <Button onClick={() => props.history.goBack()} >Back</Button>
+              </Card>
+
+              //cohort map closings
+            ))}
+          </Col>
+        )}
     </Row>
   );
 };

@@ -10,6 +10,7 @@ import {
   Table,
   Button,
   Input,
+  Label,
   UncontrolledAlert,
   UncontrolledButtonDropdown,
   DropdownToggle,
@@ -44,7 +45,7 @@ const ViewAttendance = props => {
     );
     const result = await res.json();
     setAttendances(result.data);
-    // console.log(result.data)
+    console.log(result.data)
     let count = 0;
 
     result.data.map(s =>
@@ -74,12 +75,13 @@ const ViewAttendance = props => {
                 {errors.attendance_date}{' '}
               </UncontrolledAlert>
             ) : (
-              ''
-            )}{' '}
+                  ''
+                )}{' '}
           </CardHeader>
           <CardBody>
             <Row>
               <Col sm={2}>
+                <Label>From</Label>
                 <Input
                   type="date"
                   onChange={e => setStartDate(e.target.value)}
@@ -87,6 +89,8 @@ const ViewAttendance = props => {
               </Col>
 
               <Col sm={2}>
+                <Label>To</Label>
+
                 <Input
                   type="date"
                   onChange={e => setEndDate(e.target.value)}
@@ -102,8 +106,8 @@ const ViewAttendance = props => {
                         onClick={() => {
                           setStudentName(
                             student.user_first_name +
-                              ' ' +
-                              student.user_last_name,
+                            ' ' +
+                            student.user_last_name,
                           );
                           setStudentId(student.id);
                         }}
@@ -132,10 +136,8 @@ const ViewAttendance = props => {
                     <tr>
                       <th>Date</th>
                       <th>Attendance</th>
-                      <th>Excuse</th>
-
                       <th>Comments</th>
-                      <th>Mentor</th>
+
                     </tr>
                   </thead>
 
@@ -150,27 +152,24 @@ const ViewAttendance = props => {
                               ? 'Present'
                               : 'Absent'}{' '}
                           </td>
-                          <td>
-                            {info.user_attendance[0].excuse ? 'Yes' : 'No'}
-                          </td>
 
                           <td>
                             {info.user_attendance[0].comment
                               ? info.user_attendance[0].comment
                               : 'No Comments'}
                           </td>
-                          <td>{info.admin.username}</td>
+
                         </tr>
                       ) : (
-                        ''
-                      ),
+                          ''
+                        ),
                     )}
                   </tbody>
                 </Table>
               </Col>
             </Row>
           </CardBody>
-          <Button onClick={()=>props.history.goBack()} >Back</Button>
+          <Button onClick={() => props.history.goBack()} >Back</Button>
         </Card>
       </Col>
     </Row>

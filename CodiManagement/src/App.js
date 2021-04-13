@@ -38,7 +38,7 @@ const CreateUser = React.lazy(() => import('./codiPages/CreateUser'));
 // const AbsenceRequestsInfo = React.lazy(() => import('./codiPages/AbsenceRequestInfo'));
 const Attendance = React.lazy(() => import('./codiPages/Attendance'));
 const ViewAttendance = React.lazy(() => import('./codiPages/ViewAttendance'));
-const ViewAttendanceDay = React.lazy(() => import('./codiPages/ViewAttendanceDay'));
+//const ViewAttendanceDay = React.lazy(() => import('./codiPages/ViewAttendanceDay'));
 const StagesInfo = React.lazy(() => import('./codiPages/StagesInfo'));
 const StageTasks = React.lazy(() => import('./codiPages/StageTasks'));
 const SoloTaskInfo = React.lazy(() => import('./codiPages/SoloTaskInfo'));
@@ -66,7 +66,7 @@ class App extends React.Component {
               path="/"
               layout={EmptyLayout}
               component={props => (
-                <Login/>
+                <Login />
               )}
             />
             <LayoutRoute
@@ -74,7 +74,7 @@ class App extends React.Component {
               path="/admin"
               layout={EmptyLayout}
               component={props => (
-                <LoginAdmin/>
+                <LoginAdmin />
               )}
             />
 
@@ -92,7 +92,7 @@ class App extends React.Component {
               path="/user-profile/:id"
               layout={EmptyLayout}
               component={props => (
-                <UserProfile {...props}/>
+                <UserProfile {...props} />
               )}
             />
             <LayoutRoute
@@ -100,32 +100,32 @@ class App extends React.Component {
               path="/user-absence-requests/:id"
               layout={EmptyLayout}
               component={props => (
-                <AbsenceRequestsInfo {...props}/>
+                <AbsenceRequestsInfo {...props} />
               )}
             />
 
 
             <MainLayout breakpoint={this.props.breakpoint}>
-              
+
               <React.Suspense fallback={<PageSpinner />}>
-              <Route exact path="/branches-info" component={BranchesInfo} />
-              <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
-              {/* <Route exact path='/user-profile/:id' component={UserProfile} /> */}
-              <Route exact path='/create-user' component={CreateUser} />
-              {/* <Route exact path='/user-absence-requests/:id' component={AbsenceRequestsInfo} /> */}
-              <Route exact path='/attendance/:id' component={Attendance}/>
-              <Route exact path='/view-attendance/:id' component={ViewAttendance}/>
-              <Route exact path='/view-attendance-day/:id' component={ViewAttendanceDay}/>
-              <Route exact path='/stages-info/:id' component={StagesInfo}/>
-              <Route exact path='/stage-tasks/:id' component={StageTasks}/>
-              <Route exact path='/solo-task-info/:id' component={SoloTaskInfo}/>
-              <Route exact path='/user-skills/:id/' component={UserSkills}/>
-              <Route exact path='/create-skill-map/:id/student/:student' component={CreateSkillMap}/>
-              <Route exact path='/create-branch/' component={Branches}/>
-              <Route exact path='/admins-page/' component={Mentors}/>
-              <Route exact path='/today-absence-requests/' component={TodayAbsenceRequests}/>
-              <Route exact path='/skills-list/' component={Skills}/>
-              
+                <Route exact path="/branches-info" component={BranchesInfo} />
+                <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
+                {/* <Route exact path='/user-profile/:id' component={UserProfile} /> */}
+                <Route exact path='/create-user' component={CreateUser} />
+                {/* <Route exact path='/user-absence-requests/:id' component={AbsenceRequestsInfo} /> */}
+                <Route exact path='/attendance/:id' component={Attendance} />
+                <Route exact path='/view-attendance/:id' component={ViewAttendance} />
+                {/* <Route exact path='/view-attendance-day/:id' component={ViewAttendanceDay}/> */}
+                <Route exact path='/stages-info/:id' component={StagesInfo} />
+                <Route exact path='/stage-tasks/:id' component={StageTasks} />
+                <Route exact path='/solo-task-info/:id' component={SoloTaskInfo} />
+                <Route exact path='/user-skills/:id/' component={UserSkills} />
+                <Route exact path='/create-skill-map/:id/student/:student' component={CreateSkillMap} />
+                <Route exact path='/create-branch/' component={Branches} />
+                <Route exact path='/admins-page/' component={Mentors} />
+                <Route exact path='/today-absence-requests/' component={TodayAbsenceRequests} />
+                <Route exact path='/skills-list/' component={Skills} />
+
 
 
                 <Route exact path="/dd" component={DashboardPage} />
