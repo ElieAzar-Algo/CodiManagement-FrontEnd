@@ -34,6 +34,7 @@ login=async(e)=>{
     const result = await response.json();
     //console.log(result);
     if (result.access_token) {
+      
         localStorage.setItem('adminToken',result.access_token)
 
         localStorage.setItem('adminID',result.admin)
@@ -58,6 +59,7 @@ handlePassword =(e)=>{
   render() {
 
     if(this.state.auth===200){
+      this.props.updateIsAdmin(true)
         return(
             <Redirect to={{pathname:`/branches-info`}}  />
         )

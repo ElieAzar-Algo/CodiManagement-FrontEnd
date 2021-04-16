@@ -12,6 +12,8 @@ import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './styles/reduction.scss';
+import SecureRoute from './components/SecuredRoute'
+import SecuredRoute from './components/SecuredRoute';
 
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
 const AuthModalPage = React.lazy(() => import('pages/AuthModalPage'));
@@ -56,6 +58,12 @@ const getBasename = () => {
 };
 
 class App extends React.Component {
+  state = {
+    isAdmin: false
+  }
+  updateIsAdmin = () => {
+    this.setState({ isAdmin: true });
+  }
   render() {
     return (
       <BrowserRouter basename={getBasename()}>
@@ -74,7 +82,7 @@ class App extends React.Component {
               path="/admin"
               layout={EmptyLayout}
               component={props => (
-                <LoginAdmin />
+                <LoginAdmin updateIsAdmin={this.updateIsAdmin} />
               )}
             />
 
@@ -108,7 +116,7 @@ class App extends React.Component {
             <MainLayout breakpoint={this.props.breakpoint}>
 
               <React.Suspense fallback={<PageSpinner />}>
-                <Route exact path="/branches-info" component={BranchesInfo} />
+                <SecuredRoute isAdmin={this.state.isAdmin} exact path="/branches-info" component={BranchesInfo} />
                 <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
                 {/* <Route exact path='/user-profile/:id' component={UserProfile} /> */}
                 <Route exact path='/create-user' component={CreateUser} />
