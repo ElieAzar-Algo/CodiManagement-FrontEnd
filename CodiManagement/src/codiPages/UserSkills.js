@@ -38,14 +38,41 @@ const UserSkills = props => {
     setEditForm(sKey);
   };
 
-
+  function groupByKey(array, key) {
+    return array
+      .reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, { [obj[key]]: (hash[obj[key]] || []).concat(obj) })
+      }, {})
+  }
   const getStudentSkills = async () => {
 
     const res = await fetch(`http://localhost:8000/api/user-skills-stage/${studentId}`);
     const result = await res.json();
     console.log(result.data);
-    setStudentSkills(result.data);
-    //setStudentId(result.data[0].id)
+    const grouped = Object.values(groupByKey(result.data, 'skill_id'));
+    console.log(grouped);
+    const sortedGroups = grouped.map(group => {
+      const sorted = group.sort(function (a, b) {
+        var keyA = a.stage_id,
+          keyB = b.stage_id;
+        // Compare the 2 dates
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      })
+      return sorted
+    });
+    console.log(sortedGroups);
+    if (!sortedGroups.length == 0) {
+      setStudentSkills(sortedGroups);
+      getCohortStages()
+    }
+    else {
+      setStudentSkills(-1)
+      setStages([])
+    }
+
   };
 
   const getCohortStudents = async () => {
@@ -66,8 +93,8 @@ const UserSkills = props => {
 
   };
 
-  const editProgress = async (id) => {
-    const response = await fetch(`http://localhost:8000/api/skill-progress/${studentId}/${id}`, {
+  const editProgress = async (skillId, stageId) => {
+    const response = await fetch(`http://localhost:8000/api/skill-progress/${studentId}/${skillId}/${stageId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -88,11 +115,36 @@ const UserSkills = props => {
     }
   };
 
+  const addProgress = async (skillId, stageId) => {
+    const response = await fetch(`http://localhost:8000/api/skill-progress`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        user_id: studentId,
+        skill_id: skillId,
+        stage_id: stageId,
+        progress: progress,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
 
 
   useEffect(() => {
     getCohortStudents();
-    getCohortStages()
+
   }, []);
 
   return (
@@ -145,43 +197,53 @@ const UserSkills = props => {
                         </thead>
 
                         <tbody>
-                          {!studentSkills ? <tr> <td><h3>No Skill Map Yet, Please Create A Skill Map For {studentName}</h3>
+                          {studentSkills == -1 && studentId ? <tr> <td><h3>No Skill Map Yet, Please Create A Skill Map For {studentName}</h3>
                             <Link to={{ pathname: `/create-skill-map/${cohortId}/student/${studentId}` }}><Button
                               className="ml-3"
                               color="info">Create Skill Map</Button></Link></td></tr> :
 
-                            studentSkills.map((ts, key) => (
-
-
-                              <tr key={key}>
-
-                                <td>{ts.skill.skill_family}</td>
-                                <td>{ts.skill.name}</td>
-
-                                {stages.map((stg, stgKey) =>
-                                  <td key={stgKey}>
+                            studentSkills.map(group => <tr>
+                              <td>{group[0].skill.skill_family}</td>
+                              <td>{group[0].skill.name}</td>
+                              {stages.map(stage => {
+                                const skill = group.find(skill => skill.stage.id === stage.id);
+                                return skill ?
+                                  <td>
                                     <Form onSubmit={(e) => {
-                                      e.preventDefault(); editProgress(ts.id)
-                                      const k = key + 1; handleIndexClick(k)
+                                      e.preventDefault(); editProgress(skill.skill.id, skill.stage.id)
+                                      /* const k = key + 1; handleIndexClick(k) */
                                     }}>
                                       <Input
                                         max='3'
                                         min='0'
                                         type='number'
                                         className="w-50"
-                                        defaultValue={ts.stage.id == stg.id ? ts.progress : ""}
-                                        disabled={editForm !== key}
+                                        defaultValue={skill.progress}
+                                        /* disabled={editForm !== key} */
+                                        onChange={(e) => setProgress(e.target.value)} />
+                                    </Form>
+                                  </td> : <td>
+                                    <Form onSubmit={(e) => {
+                                      e.preventDefault(); addProgress(group[0].skill.id, stage.id)
+                                      /* const k = key + 1; handleIndexClick(k) */
+                                    }}>
+                                      <Input
+                                        max='3'
+                                        min='0'
+                                        type='number'
+                                        className="w-50"
+                                        defaultValue=""
+                                        /*  disabled={editForm !== key} */
                                         onChange={(e) => setProgress(e.target.value)} />
                                     </Form>
                                   </td>
-                                )}
+                              }
 
-                                <td>{ts.updated_at}</td>
+                              )}
 
-                              </tr>
+                            </tr>)}
 
-                            ))
-                          }
+
                         </tbody>
 
                       </Table>

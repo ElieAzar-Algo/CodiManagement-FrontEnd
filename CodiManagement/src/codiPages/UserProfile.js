@@ -22,6 +22,9 @@ import SourceLink from 'components/SourceLink';
 
 const UserProfile = (props) => {
   const [user, setUser] = useState({});
+  const [cohortId, setCohortId] = useState();
+  const [stages, setStages] = useState([]);
+
   const [modal, setModal] = useState(false);
   const [editUser, setEditUser] = useState(true);
 
@@ -63,6 +66,7 @@ const UserProfile = (props) => {
     const result = await res.json()
     console.log(result.data[0])
     setUser(result.data[0])
+    setCohortId(result.data[0].cohort_code)
   }
 
   const getAdmins = async () => {
@@ -78,6 +82,15 @@ const UserProfile = (props) => {
     console.log(result.data)
     setYourTasks(result.data)
   }
+
+  const getCohortStages = async () => {
+
+    const res = await fetch(`http://localhost:8000/api/stage/${cohortId}`);
+    const result = await res.json();
+    // console.log(result.data);
+    setStages(result.data);
+
+  };
 
 
   const deleteUser = async () => {
@@ -131,13 +144,50 @@ const UserProfile = (props) => {
     setModal(!modal)
   };
 
+  function groupByKey(array, key) {
+    return array
+      .reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, { [obj[key]]: (hash[obj[key]] || []).concat(obj) })
+      }, {})
+  }
+
   const getStudentSkills = async () => {
 
-    const res = await fetch(`http://localhost:8000/api/user-skills/${userId}`);
+    const res = await fetch(`http://localhost:8000/api/user-skills-stage/${userId}`);
     const result = await res.json();
     console.log(result.data);
-    setStudentSkills(result.data);
+    const grouped = Object.values(groupByKey(result.data, 'skill_id'));
+    console.log(grouped);
+    const sortedGroups = grouped.map(group => {
+      const sorted = group.sort(function (a, b) {
+        var keyA = a.stage_id,
+          keyB = b.stage_id;
+        // Compare the 2 dates
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      })
+      return sorted
+    });
+    console.log(sortedGroups);
+    if (!sortedGroups.length == 0) {
+      setStudentSkills(sortedGroups);
+      getCohortStages()
+    }
+    else {
+      setStudentSkills(-1)
+      setStages([])
+    }
+
   };
+  // const getStudentSkills = async () => {
+
+  //   const res = await fetch(`http://localhost:8000/api/user-skills/${userId}`);
+  //   const result = await res.json();
+  //   console.log(result.data);
+  //   setStudentSkills(result.data);
+  // };
 
   const editProgress = async (id) => {
     const response = await fetch(`http://localhost:8000/api/user-task/${id}`, {
@@ -250,33 +300,49 @@ const UserProfile = (props) => {
                 <tr>
                   <th>Skill Family</th>
                   <th>Skill</th>
-                  <th>Progress</th>
-                  <th></th>
-                  <th>last Update</th>
+                  {stages.map((st, stageKey) => (
+                    <th key={stageKey}>{st.stage_name}</th>
+                  ))}
                 </tr>
               </thead>
-
               <tbody>
-                {studentSkills.map(ts =>
-                  ts.skill.map((s, key) => (
-                    <tr key={key}>
-                      <td>{s.skill_family}</td>
-                      <td>{s.name}</td>
-                      <td>
-                        <Input
-                          max="3"
-                          min="0"
-                          type="number"
-                          className="w-50"
-                          defaultValue={s.pivot.progress}
-                          disabled
-                        />
-                      </td>
 
-                      <td>{s.updated_at}</td>
-                    </tr>
-                  )),
-                )}
+
+                {studentSkills.map(group => <tr>
+                  <td>{group[0].skill.skill_family}</td>
+                  <td>{group[0].skill.name}</td>
+                  {stages.map(stage => {
+                    const skill = group.find(skill => skill.stage.id === stage.id);
+                    return skill ?
+                      <td>
+                        <Form
+                        >
+                          <Input
+                            max='3'
+                            min='0'
+                            type='number'
+                            className="w-50"
+                            defaultValue={skill.progress}
+                            disabled={true}
+                          />
+                        </Form>
+                      </td> : <td>
+                        <Form>
+                          <Input
+                            max='3'
+                            min='0'
+                            type='number'
+                            className="w-50"
+                            defaultValue=""
+                            disabled={true}
+                          />
+                        </Form>
+                      </td>
+                  }
+
+                  )}
+
+                </tr>)}
               </tbody>
             </Table>
           </Card>

@@ -128,7 +128,7 @@ class App extends React.Component {
                 <Route exact path='/stage-tasks/:id' component={StageTasks} />
                 <Route exact path='/solo-task-info/:id' component={SoloTaskInfo} />
                 <Route exact path='/user-skills/:id/' component={UserSkills} />
-                <Route exact path='/create-skill-map/:id/student/:student' component={CreateSkillMap} />
+                <Route exact path='/create-skill-map/:id/student/:studentId' component={CreateSkillMap} />
                 <Route exact path='/create-branch/' component={Branches} />
                 <Route exact path='/admins-page/' component={Mentors} />
                 <Route exact path='/today-absence-requests/' component={TodayAbsenceRequests} />
