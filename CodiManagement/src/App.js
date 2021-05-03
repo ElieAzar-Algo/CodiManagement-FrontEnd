@@ -50,6 +50,7 @@ const Branches = React.lazy(() => import('./codiPages/Branches'));
 const Mentors = React.lazy(() => import('./codiPages/Mentors'));
 const TodayAbsenceRequests = React.lazy(() => import('./codiPages/TodayAbsenceRequests'));
 const Skills = React.lazy(() => import('./codiPages/Skills'));
+const ActivityEvaluationAdmin = React.lazy(() => import('./codiPages/ActivityEvaluationAdmin'));
 //StageTasks
 
 
@@ -133,6 +134,8 @@ class App extends React.Component {
                 <Route exact path='/admins-page/' component={Mentors} />
                 <Route exact path='/today-absence-requests/' component={TodayAbsenceRequests} />
                 <Route exact path='/skills-list/' component={Skills} />
+                <Route exact path='/activity-evaluation-admin/:id' component={ActivityEvaluationAdmin} />
+                
 
 
 

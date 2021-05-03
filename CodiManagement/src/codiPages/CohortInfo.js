@@ -120,6 +120,12 @@ const CohortInfo = props => {
                           </Button>
                           </Link>
 
+                          <Link to={{ pathname: `/activity-evaluation-admin/${cohortId}` }}>
+                            <Button className="mr-3" color="primary">
+                              Activity Evaluation
+                          </Button>
+                          </Link>
+
                           {/* <Link
                           to={{ pathname: `/view-attendance-day/${cohortId}` }}
                         >

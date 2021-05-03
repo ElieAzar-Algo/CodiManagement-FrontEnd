@@ -131,8 +131,8 @@ const SoloTaskInfo = props => {
                         <thead>
                           <tr>
                             <th>Student</th>
-                            <th>Assignment Link</th>
-                            <th>Keys</th>
+                            <th style={{width:"17%"}}>Assignment Link</th>
+                            <th style={{width:"10%"}}>Keys</th>
                             <th>Progress</th>
                             <th>Mentor</th>
 
@@ -221,8 +221,8 @@ const SoloTaskInfo = props => {
                         <thead>
                           <tr>
                             <th>Student</th>
-                            <th>Assignment Link</th>
-                            <th>Keys</th>
+                            <th style={{width:"17%"}}>Assignment Link</th>
+                            <th style={{width:"10%"}}>Keys</th>
                             <th>Progress</th>
                             <th>Mentor</th>
 
@@ -300,8 +300,8 @@ const SoloTaskInfo = props => {
                         <thead>
                           <tr>
                             <th>Student</th>
-                            <th>Assignment Link</th>
-                            <th>Keys</th>
+                            <th style={{width:"17%"}}>Assignment Link</th>
+                            <th style={{width:"10%"}}>Keys</th>
                             <th>Progress</th>
                             <th>Mentor</th>
 
@@ -380,8 +380,8 @@ const SoloTaskInfo = props => {
                         <thead>
                           <tr>
                             <th>Student</th>
-                            <th>Assignment Link</th>
-                            <th>Keys</th>
+                            <th style={{width:"17%"}}>Assignment Link</th>
+                            <th style={{width:"10%"}}>Keys</th>
                             <th>Progress</th>
                             <th>Mentor</th>
 
