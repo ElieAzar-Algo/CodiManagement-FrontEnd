@@ -32,17 +32,126 @@ import {
 
 const ActivityEvaluationAdmin = props => {
   const [additionalKeys, setAdditionalKeys] = useState([]);
+  const [classKeys, setClassKeys] = useState([]);
   const [attendanceKeys, setAttendanceKeys] = useState([]);
   const [assignmentKeys, setAssignmentKeys] = useState([]);
-  const [branchInputs, setBranchInputs] = useState([]);
+  const [additionalKeysInputs, setAdditionalKeysInputs] = useState([]);
+
+  const [students, setStudents] = useState([]);
+  const [studentName, setStudentName] = useState('Student');
+  const [studentId, setStudentId] = useState();
+
 
   const [createForm, setCreateForm] = useState(false);
+  const [createFormClassKeys, setCreateFormClassKeys] = useState(false);
+  
   const [editForm, setEditForm] = useState(false);
   const [modal, setModal] = useState(false);
+  const [modalClassKeys, setModalClassKeys] = useState(false);
   const [editId, setEditId] = useState();
   const [errors, setErrors] = useState(false);
+  const [disabled, setDisabled] = useState(-1);
+  const [disabledClassKeys, setDisabledClassKeys] = useState(-1);
+
 
   const cohortId = props.match.params.id;
+
+  const handleIndexClick = additionalKeysRecord => {
+    if(disabled!==additionalKeysRecord){
+    setDisabled(additionalKeysRecord);}
+    else{
+      setDisabled(-1)
+    }
+  };
+
+  const handleIndexClickClassKeys = classKeysRecord => {
+    if(disabledClassKeys!==classKeysRecord){
+    setDisabledClassKeys(classKeysRecord);}
+    else{
+      setDisabledClassKeys(-1)
+    }
+  };
+
+  const catchInput = e => {
+    e.persist();
+    setAdditionalKeysInputs({
+      ...additionalKeysInputs,
+      [e.target.name]: e.target.value,
+    });
+    console.log(additionalKeysInputs);
+  };
+
+  const addAdditionalKeys = async e => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:8000/api/additional-keys', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+          user_id:studentId,
+        ...additionalKeysInputs,
+        
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      getAdditionalKeys();
+      setCreateForm(false)
+      document.getElementById('additionalKeys').value=""
+      document.getElementById('additionalKeysDescription').value=""
+      
+      //studentsDropDown
+      setStudentName('Students') 
+    
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
+
+  const addClassKeys = async e => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:8000/api/class-keys', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+          cohort_id:cohortId,
+        ...additionalKeysInputs,
+        
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      getClassKeys()
+      setCreateFormClassKeys(false)
+      document.getElementById('teamName').value=""
+      document.getElementById('classKeys').value=""
+      document.getElementById('classKeysDescription').value=""
+      
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
+  const getCohortStudents = async () => {
+
+    const res = await fetch(`http://localhost:8000/api/user-byCohort/${cohortId}`);
+    const result = await res.json();
+    // console.log(result.data);
+    setStudents(result.data);
+
+  };
 
   const getAdditionalKeys = async () => {
     const res = await fetch(
@@ -50,6 +159,19 @@ const ActivityEvaluationAdmin = props => {
     );
     const result = await res.json();
     setAdditionalKeys(result.data);
+    setAdditionalKeysInputs([]);
+    console.log(result.data);
+  };
+
+  //Class Keys
+  const getClassKeys = async () => {
+    const res = await fetch(
+      `http://localhost:8000/api/class-keys/${cohortId}`,
+    );
+    const result = await res.json();
+    setClassKeys(result.data);
+    setAdditionalKeysInputs([]);
+
     console.log(result.data);
   };
 
@@ -73,29 +195,60 @@ const ActivityEvaluationAdmin = props => {
     console.log(result.data);
   };
 
-  //   const editBranch = async e => {
-  //     e.preventDefault();
-  //     const response = await fetch(`http://localhost:8000/api/branch/${editId}`, {
-  //       method: 'PATCH',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Accept: 'application/json',
-  //         //Authorization: "Bearer " + token,
-  //       },
-  //       body: JSON.stringify({
-  //         ...branchInputs,
 
-  //       }),
-  //     });
-  //     const result = await response.json();
-  //     console.log(result);
-  //     if (result.success) {
-  //       setErrors(result);
-  //       window.location.reload();
-  //     } else {
-  //       setErrors(result.errors);
-  //     }
-  //   };
+    const editAdditionalKeys = async e => {
+      e.preventDefault();
+      const response = await fetch(`http://localhost:8000/api/additional-keys/${editId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          //Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          ...additionalKeysInputs,
+
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.success) {
+        setErrors(result);
+      setDisabled(-1)
+      setEditId();
+
+        // getAdditionalKeys()
+      } else {
+        setErrors(result.errors);
+      }
+    };
+
+    const editClassKeys = async e => {
+      e.preventDefault();
+      const response = await fetch(`http://localhost:8000/api/class-keys/${editId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          //Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          ...additionalKeysInputs,
+
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.success) {
+        setErrors(result);
+      setDisabledClassKeys(-1)
+      setEditId();
+
+        // getAdditionalKeys()
+      } else {
+        setErrors(result.errors);
+      }
+    };
 
     const deleteAdditionalKeys = async () => {
       console.log(editId)
@@ -115,8 +268,34 @@ const ActivityEvaluationAdmin = props => {
 
       console.log(result.message);
       setModal(!modal);
-      setEditId();
-      getAdditionalKeys();
+      // setEditId();
+      // getAdditionalKeys();
+      window.location.reload()
+
+    };
+
+    const deleteClassKeys = async () => {
+      console.log(editId)
+      const deleteRequestOptions = {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          //Authorization: "Bearer " + token,
+        },
+      };
+      const res = await fetch(
+        `http://localhost:8000/api/class-keys/${editId}`,
+        deleteRequestOptions,
+      );
+      const result = await res.json();
+
+      console.log(result.message);
+      setModalClassKeys(!modalClassKeys);
+      // setEditId();
+      // getClassKeys();
+      window.location.reload();
+
 
     };
 
@@ -124,89 +303,200 @@ const ActivityEvaluationAdmin = props => {
     getAdditionalKeys();
     getAttendanceKeys();
     getAssignmentKeys();
+    getClassKeys();
   }, []);
-var myDate=new Date();
+
   return (
     <Row>
       <Col>
         <Card className="mb-3">
-          {/* <CardHeader>
-            Mentors
+          <CardHeader>
+            Activity Evaluation
             <Button
               className="ml-3"
               color="primary"
-              onClick={() => setCreateForm(!createForm)}
+              onClick={() => {
+                setCreateForm(!createForm);
+                setCreateFormClassKeys(false); 
+                getCohortStudents()}}
             >
-              Create New Mentor
+              Add Individual Keys
             </Button>
-          </CardHeader> */}
-          <CardBody>
-            {/* <Row hidden={!createForm}>
-              <Col sm={6}>
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Branch Name
-                  </Label>
-                  <Col sm={7}>
-                    <Input
-                      type="text"
-                      placeholder=""
-                      onChange={catchInput}
-                      name="branch_name"
-                    />
-                    {errors.branch_name ? (
-                      <UncontrolledAlert color="danger">
-                        {errors.branch_name}{' '}
-                      </UncontrolledAlert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Branch Country
-                  </Label>
-                  <Col sm={7}>
-                    <Input
-                      type="text"
-                      onChange={catchInput}
-                      name="branch_country"
-                    />
-                    {errors.branch_country ? (
-                      <UncontrolledAlert color="danger">
-                        {errors.branch_country}{' '}
-                      </UncontrolledAlert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
 
+            <Button
+              className="ml-3"
+              color="primary"
+              onClick={() => {
+                setCreateFormClassKeys(!createFormClassKeys);
+                setCreateForm(false);
+              }}
+            >
+              Add Team Keys
+            </Button>
+          </CardHeader>
+          <CardBody>
+            <Row hidden={!createForm}>
+              
+              <Col sm={4}>
                 <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Branch Location
+                  <Label for="key" sm={3}>
+                    Keys
                   </Label>
-                  <Col sm={7}>
+                  <Col sm={9}>
                     <Input
-                      type="text"
+                    id="additionalKeys"
+                      type="number"
+                      placeholder="Key amount"
                       onChange={catchInput}
-                      name="branch_location"
+                      name="key"
                     />
-                    {errors.branch_location ? (
+                    {errors.key ? (
                       <UncontrolledAlert color="danger">
-                        {errors.branch_location}{' '}
+                        {errors.key}{' '}
                       </UncontrolledAlert>
                     ) : (
                       ''
                     )}
-                    <Button color="primary" onClick={createBranch}>
+                  </Col>
+                </FormGroup>
+                </Col>
+
+
+                <Col sm={8} style={{marginBottom:'2%'}}>
+                <FormGroup row>
+                  <Label for="description" sm={2}>
+                    Description
+                  </Label>
+                  <Col sm={9}>
+                    <Input
+                     id="additionalKeysDescription"
+                      placeholder="Description"
+                      type="text"
+                      onChange={catchInput}
+                      name="description"
+                    />
+                    {errors.description ? (
+                      <UncontrolledAlert color="danger">
+                        {errors.description}{' '}
+                      </UncontrolledAlert>
+                    ) : (
+                      ''
+                    )}
+                  </Col>
+                </FormGroup>
+                </Col>
+            
+                 
+                      <Col sm={4} style={{marginBottom:'2%'}}>
+                      <UncontrolledButtonDropdown addonType="append">
+                      <DropdownToggle id="studentsDropDown" caret> {studentName} </DropdownToggle>
+                      <DropdownMenu>
+                        {students.map((student, key) => (
+                          <DropdownItem
+                            key={key}
+                            onClick={() => { setStudentId(student.id); setStudentName(student.user_first_name) }}>
+                            {student.user_first_name} {student.user_last_name}
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                    {errors.user_id ? (
+                      <UncontrolledAlert color="danger">
+                        {errors.user_id}{' '}
+                      </UncontrolledAlert>
+                    ) : (
+                      ''
+                    )}
+                      </Col>
+                      <Col sm={4}>
+                <Button color="primary" onClick={addAdditionalKeys}>
                       Submit
                     </Button>
+                    </Col>
+                
+                </Row>
+    {/* -------------------------------add keys for a team or class------------------------------------ */}
+                <Row hidden={!createFormClassKeys}>
+              
+                <Col sm={6}>
+                <FormGroup row>
+                  <Label for="team" sm={3}>
+                    Team Name
+                  </Label>
+                  <Col sm={9}>
+                    <Input
+                    id="teamName"
+                      type="text"
+                      placeholder="Team Name or Class"
+                      onChange={catchInput}
+                      name="team"
+                    />
+                    {errors.team ? (
+                      <UncontrolledAlert color="danger">
+                        {errors.team}{' '}
+                      </UncontrolledAlert>
+                    ) : (
+                      ''
+                    )}
                   </Col>
                 </FormGroup>
-              </Col>
-            </Row> */}
+                </Col>
+
+              <Col sm={6}>
+                <FormGroup row>
+                  <Label for="key" sm={2}>
+                    Keys
+                  </Label>
+                  <Col sm={10}>
+                    <Input
+                      id="classKeys"
+                      type="number"
+                      placeholder="Key amount"
+                      onChange={catchInput}
+                      name="key"
+                    />
+                    {errors.key ? (
+                      <UncontrolledAlert color="danger">
+                        {errors.key}{' '}
+                      </UncontrolledAlert>
+                    ) : (
+                      ''
+                    )}
+                  </Col>
+                </FormGroup>
+                </Col>
+
+
+                <Col sm={10} style={{marginBottom:'2%'}}>
+                <FormGroup row>
+                  <Label for="description" sm={2}>
+                    Description
+                  </Label>
+                  <Col sm={10}>
+                    <Input
+                     id="classKeysDescription"
+                      placeholder="Description"
+                      type="text"
+                      onChange={catchInput}
+                      name="description"
+                    />
+                    {errors.description ? (
+                      <UncontrolledAlert color="danger">
+                        {errors.description}{' '}
+                      </UncontrolledAlert>
+                    ) : (
+                      ''
+                    )}
+                  </Col>
+                </FormGroup>
+                </Col>
+                      <Col sm={2}>
+                <Button color="primary" onClick={addClassKeys}>
+                      Submit
+                    </Button>
+                    </Col>
+                
+                </Row>
 {/* 
             <Row hidden={!editForm}>
               <Col sm={6}>
@@ -278,7 +568,7 @@ var myDate=new Date();
             <Row>
               <Col>
                 <Card body>
-                  <h3>Attendance's Keys</h3>
+                  <h5 style={{fontWeight:'600'}}>Attendance's Keys</h5>
                   <Table responsive hover>
                     <thead>
                       <tr>
@@ -314,7 +604,7 @@ var myDate=new Date();
             <Row>
               <Col>
                 <Card body>
-                  <h3>Task's Keys</h3>
+                  <h5 style={{fontWeight:'600'}}>Task's Keys</h5>
                   <Table responsive hover>
                     <thead>
                       <tr>
@@ -345,38 +635,180 @@ var myDate=new Date();
                 </Card>
               </Col>
             </Row>
-  {/* -----------------------------------ADDITIONAL KEYS TABLE------------------------------------ */}
+
+            {/* -----------------------------------CLASS KEYS TABLE------------------------------------ */}
             <Row>
               <Col>
                 <Card body>
-                  <h3>Additional Keys</h3>
+                  <h5 style={{fontWeight:'600'}}>Class/Team Keys</h5>
                   <Table responsive hover>
                     <thead>
                       <tr>
                         <th style={{width:"12%"}}>Date</th>
-                        <th style={{width:"15%"}}>Name</th>
+                        <th style={{width:"20%"}}>Class/Team</th>
                         <th style={{width:"13%"}}>Keys</th>
-                        <th style={{width:"45%"}}>Description</th>
+                        <th style={{width:"40%"}}>Description</th>
                       </tr>
                     </thead>
                     <tbody>
 
-                      { additionalKeys.map((adKeys, key) => (
-                      
-                        
+                      { classKeys.map((adKeys, key) => (
                         <tr key={key}>
-                          
                       <td>{moment(adKeys.created_at).format("YYYY/MM/DD")}</td>
-                          <td>{adKeys.user.user_first_name?adKeys.user.user_first_name + " "+ adKeys.user.user_last_name:'CLASS'}</td>
-                          <td>{adKeys.key}</td>
-                          <td><p style={{fontSize:'small'}}>{adKeys.description}</p></td>
+                          <td>{adKeys.team}</td>
+                          <td>
+                          <Input
+                                defaultValue={adKeys.key}
+                                type="number"
+                                id="key"
+                                name="key"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                                disabled={disabledClassKeys!==key}
+                              /></td>
+                          <td style={{fontSize:'small'}}>
+                          <Input
+                                defaultValue={adKeys.description}
+                                type="text"
+                                id="description"
+                                name="description"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                                disabled={disabledClassKeys!==key}
+                              />
+                              <Button
+                              className="mr-2"
+                              size="sm"
+                              onClick={editClassKeys}
+                              color="primary"
+                              hidden={disabledClassKeys!==key}
+                            >Submit Changes</Button>
+                            </td>
                           <td>
                             <Button
                               className="mr-2"
                               size="sm"
 
                               onClick={e => {
-                                setEditForm(!editForm);
+                                handleIndexClickClassKeys(key);
+                                setEditId(adKeys.id);
+                                
+
+                              }}
+                              color="primary"
+                            >
+                              {' '}
+                              Edit{' '}
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                setModalClassKeys(!modalClassKeys);
+                                setEditId(adKeys.id);
+                                console.log(adKeys.id)
+                              }}
+                              color="danger"
+                              size="sm"
+                            >
+                              {' '}
+                              Del{' '}
+                            </Button>
+                            <Modal
+                              isOpen={modalClassKeys}
+
+                              //   className={props.className}
+                            >
+                              <ModalHeader>
+                                You cannot undo this action !
+                              </ModalHeader>
+                              <ModalBody>
+                                Are you sure, you want to delete{' '}
+                                {adKeys.team}'s keys? 
+                              </ModalBody>
+                              <ModalFooter>
+                                <Button
+                                  color="primary"
+                                  onClick={() => deleteClassKeys()}
+                                >
+                                  Confirm
+                                </Button>{' '}
+                                <Button
+                                  color="secondary"
+                                  onClick={() => setModalClassKeys(!modalClassKeys)}
+                                >
+                                  Cancel
+                                </Button>
+                              </ModalFooter>
+                            </Modal>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </Card>
+              </Col>
+            </Row>
+  {/* -----------------------------------ADDITIONAL KEYS TABLE------------------------------------ */}
+            <Row>
+              <Col>
+                <Card body>
+                  <h5 style={{fontWeight:'600'}}>Individual Additional Keys</h5>
+                  <Table responsive hover>
+                    <thead>
+                      <tr>
+                        <th style={{width:"12%"}}>Date</th>
+                        <th style={{width:"20%"}}>Name</th>
+                        <th style={{width:"13%"}}>Keys</th>
+                        <th style={{width:"40%"}}>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      { additionalKeys.map((adKeys, key) => (
+                        <tr key={key}>
+                      <td>{moment(adKeys.created_at).format("YYYY/MM/DD")}</td>
+                          <td>{adKeys.user.user_first_name +" "+ adKeys.user.user_last_name}</td>
+                          <td>
+                          <Input
+                                defaultValue={adKeys.key}
+                                type="number"
+                                id="key"
+                                name="key"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                                disabled={disabled!==key}
+                              /></td>
+                          <td style={{fontSize:'small'}}>
+                          <Input
+                                defaultValue={adKeys.description}
+                                type="text"
+                                id="description"
+                                name="description"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                                disabled={disabled!==key}
+                              />
+                              <Button
+                              className="mr-2"
+                              size="sm"
+
+                              onClick={
+                                editAdditionalKeys
+                              }
+                              color="primary"
+                              hidden={disabled!==key}
+                            >Submit Changes</Button>
+                            </td>
+                          <td>
+                            <Button
+                              className="mr-2"
+                              size="sm"
+
+                              onClick={e => {
+                                handleIndexClick(key)
                                 setEditId(adKeys.id);
                               }}
                               color="primary"
