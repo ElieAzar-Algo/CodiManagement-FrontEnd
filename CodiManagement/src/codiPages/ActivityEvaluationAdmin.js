@@ -50,11 +50,16 @@ const ActivityEvaluationAdmin = props => {
   
   const [modal, setModal] = useState(false);
   const [modalClassKeys, setModalClassKeys] = useState(false);
+  const [deleteTargetModel, setDeleteTargetModel] = useState(false);
+
   const [editId, setEditId] = useState();
   const [errors, setErrors] = useState(false);
   const [disabled, setDisabled] = useState(-1);
   const [disabledClassKeys, setDisabledClassKeys] = useState(-1);
-  const [totalArray, setTotalArray] = useState([]);
+  const [totalAdditional, setTotalAdditional] = useState();
+  const [totalTeam, setTotalTeam] = useState();
+  const [totalAttendance, setTotalAttendance] = useState();
+  const [totalAssignment, setTotalAssignment] = useState();
   const [total, setTotal] = useState(0);
 
 
@@ -173,6 +178,7 @@ const ActivityEvaluationAdmin = props => {
     if (result.success) {
       setErrors(result);
       document.querySelector('#targetInput').hidden=true;
+      getTargetKeys();
       
     } else {
       setErrors(result.errors);
@@ -207,13 +213,13 @@ const ActivityEvaluationAdmin = props => {
     const result = await res.json();
     setAdditionalKeys(result.data);
     setAdditionalKeysInputs([]);
-    console.log(result.data);
-    
+    //console.log(result.data);
+    // 
     let t=0;
     for (let i=0; i<result.data.length;i++){
       t+=result.data[i].key
     }
-    setTotalArray([...totalArray,t]);
+    setTotalAdditional(t);
   };
 
   //get class keys info (class keys table)
@@ -222,15 +228,14 @@ const ActivityEvaluationAdmin = props => {
       `http://localhost:8000/api/class-keys/${cohortId}`,
     );
     const result = await res.json();
-    setClassKeys(result.data);
+    setClassKeys( result.data);
     setAdditionalKeysInputs([]);
-
-    //console.log(result.data);
+   
     let t=0;
     for (let i=0; i<result.data.length;i++){
       t+=result.data[i].key
     }
-    setTotalArray([...totalArray,t]);
+    setTotalTeam(t);
   };
 
     //get attendance keys info (attendance keys table)
@@ -240,7 +245,12 @@ const ActivityEvaluationAdmin = props => {
     );
     const result = await res.json();
     setAttendanceKeys(result.data);
-    // console.log(result.data);
+    //console.log(result.data);
+    let t=0;
+    for (let i=0; i<result.data.length;i++){
+      t+=result.data[i].attendance_key_amount
+    }
+    setTotalAttendance(t);
   };
 
       //get assignment keys info (assignment keys table)
@@ -250,7 +260,12 @@ const ActivityEvaluationAdmin = props => {
     );
     const result = await res.json();
     setAssignmentKeys(result.data);
-    // console.log(result.data);
+     console.log(result.data);
+     let t=0;
+    for (let i=0; i<result.data.length;i++){
+      t+=result.data[i].keys
+    }
+    setTotalAssignment(t);
   };
 
 // edit additional keys info
@@ -308,6 +323,29 @@ const ActivityEvaluationAdmin = props => {
         setErrors(result.errors);
       }
     };
+    
+    //deleteCohortTarget
+    const deleteCohortTarget = async () => {
+      let cohortTargetId=targetKeys.id
+      const deleteRequestOptions = {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          //Authorization: "Bearer " + token,
+        },
+      };
+      const res = await fetch(
+        `http://localhost:8000/api/target-keys/${cohortTargetId}`,
+        deleteRequestOptions,
+      );
+      const result = await res.json();
+
+       console.log(result.message);
+     
+      window.location.reload()
+
+    };
 
 
 // delete additional keys info
@@ -359,15 +397,13 @@ const ActivityEvaluationAdmin = props => {
       window.location.reload();
     };
 
-    const sumFunction =async ()=>{
-      if (totalArray.length>1){
-      var sum = totalArray.reduce(function(a, b){
-        return a + b;
-    }, 0);
-    console.log(sum)
-    setTotal(sum)
-  }
-    }
+    // const sumFunction =async ()=>{
+    //   let t=0;
+    //   for (let i=0; i<classKeys.length;i++){
+    //     t+=classKeys[i].key
+    //   }
+    //   setTotalArray([...totalArray,t]);
+    // }
 
   useEffect(() => {
   
@@ -376,7 +412,7 @@ const ActivityEvaluationAdmin = props => {
     getAssignmentKeys();
     getClassKeys();
     getTargetKeys();
-    sumFunction();
+    
     
   }, []);
 
@@ -385,6 +421,7 @@ const ActivityEvaluationAdmin = props => {
       <Col>
         <Card className="mb-3">
           <CardHeader>
+          
             <h5> <strong>Activity Evaluation</strong></h5>
             <Row >
               <FormGroup>
@@ -436,19 +473,73 @@ const ActivityEvaluationAdmin = props => {
                       ''
                     )}
                     </Form>
+                   
 
-             <Col  lg={4} md={6} sm={6} xs={12} className="float-right" style={{marginLeft:"10%"}}>
+             <Col  lg={4} md={6} sm={6} xs={12} className="float-right" style={{marginLeft:"12%"}}>
+             <FormGroup>
+                    {/* <Button
+                              className="mr-2"
+                              size="sm"
+
+                              // onClick={e => {
+                              //   handleIndexClick(key);
+                              //   handleIndexClickClassKeys(-2);
+                              //   setEditId(adKeys.id);
+                              // }}
+                              color="primary"
+                            >
+                              {' '}
+                              Edit{' '}
+                            </Button> */}
+                            <Button
+                              onClick={()=>setDeleteTargetModel(!deleteTargetModel)}
+                              color="danger"
+                              size="sm"
+                            >
+                              {' '}
+                              Delete Cohort Target{' '}
+                            </Button>
+                            <Modal
+                            
+                             isOpen={deleteTargetModel}
+
+                              //   className={props.className}
+                            >
+                              <ModalHeader>
+                                You cannot undo this action !
+                              </ModalHeader>
+                              <ModalBody>
+                                Are you sure, you want to delete Cohort's Target?
+                              </ModalBody>
+                              <ModalFooter>
+                                <Button
+                                  color="primary"
+                                 onClick={deleteCohortTarget}
+                                >
+                                  Confirm
+                                </Button>{' '}
+                                <Button
+                                  color="secondary"
+                                  onClick={()=>setDeleteTargetModel(!deleteTargetModel)}
+                                >
+                                  Cancel
+                                </Button>
+                              </ModalFooter>
+                            </Modal>
+                    </FormGroup>
             <NumberWidget
             
+            
               title="Cohort Target"
-              subtitle="This month"
-              number={`${total} keys`}
+              subtitle={`${(totalAdditional+totalTeam+totalAttendance+totalAssignment)} Keys Achieved `}
+              number={targetKeys? `${targetKeys.target} keys`:"0"}
               color='primary'
               progress={{
-                // value: (total/targetKeys.target)*100,
-                label: 'Last month',
+                value: targetKeys?(((totalAdditional+totalTeam+totalAttendance+totalAssignment)/targetKeys.target)*100).toFixed(2):"0",
+                label:targetKeys?'Remain'+((totalAdditional+totalTeam+totalAttendance+totalAssignment)-targetKeys.target):"0",
               }}
             />
+            
           </Col>
                     </Row>  
           </CardHeader>

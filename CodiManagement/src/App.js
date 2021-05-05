@@ -117,7 +117,8 @@ class App extends React.Component {
             <MainLayout breakpoint={this.props.breakpoint}>
 
               <React.Suspense fallback={<PageSpinner />}>
-                <SecuredRoute isAdmin={this.state.isAdmin} exact path="/branches-info" component={BranchesInfo} />
+                {/* <SecuredRoute isAdmin={this.state.isAdmin} exact path="/branches-info" component={BranchesInfo} /> */}
+                <Route exact path="/branches-info" component={BranchesInfo} />
                 <Route exact path='/cohort-info/:name/:id' component={CohortInfo} />
                 {/* <Route exact path='/user-profile/:id' component={UserProfile} /> */}
                 <Route exact path='/create-user' component={CreateUser} />
