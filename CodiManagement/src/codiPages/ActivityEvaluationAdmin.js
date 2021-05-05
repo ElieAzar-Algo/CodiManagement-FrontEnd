@@ -27,35 +27,40 @@ import {
   ModalFooter,
   ModalHeader,
   Alert,
+  
   UncontrolledAlert,
 } from 'reactstrap';
+import { NumberWidget, IconWidget } from 'components/Widget';
+
 
 const ActivityEvaluationAdmin = props => {
   const [additionalKeys, setAdditionalKeys] = useState([]);
   const [classKeys, setClassKeys] = useState([]);
   const [attendanceKeys, setAttendanceKeys] = useState([]);
   const [assignmentKeys, setAssignmentKeys] = useState([]);
+  const [targetKeys, setTargetKeys] = useState([]);
   const [additionalKeysInputs, setAdditionalKeysInputs] = useState([]);
 
   const [students, setStudents] = useState([]);
   const [studentName, setStudentName] = useState('Student');
   const [studentId, setStudentId] = useState();
 
-
   const [createForm, setCreateForm] = useState(false);
   const [createFormClassKeys, setCreateFormClassKeys] = useState(false);
   
-  const [editForm, setEditForm] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalClassKeys, setModalClassKeys] = useState(false);
   const [editId, setEditId] = useState();
   const [errors, setErrors] = useState(false);
   const [disabled, setDisabled] = useState(-1);
   const [disabledClassKeys, setDisabledClassKeys] = useState(-1);
+  const [totalArray, setTotalArray] = useState([]);
+  const [total, setTotal] = useState(0);
 
 
   const cohortId = props.match.params.id;
 
+  //handle click additional Keys table
   const handleIndexClick = additionalKeysRecord => {
     if(disabled!==additionalKeysRecord){
     setDisabled(additionalKeysRecord);}
@@ -64,6 +69,7 @@ const ActivityEvaluationAdmin = props => {
     }
   };
 
+  //handle click class Keys table
   const handleIndexClickClassKeys = classKeysRecord => {
     if(disabledClassKeys!==classKeysRecord){
     setDisabledClassKeys(classKeysRecord);}
@@ -72,15 +78,17 @@ const ActivityEvaluationAdmin = props => {
     }
   };
 
+  //catch all inputs
   const catchInput = e => {
     e.persist();
     setAdditionalKeysInputs({
       ...additionalKeysInputs,
       [e.target.name]: e.target.value,
     });
-    console.log(additionalKeysInputs);
+    // console.log(additionalKeysInputs);
   };
 
+  //create new additional keys record
   const addAdditionalKeys = async e => {
     e.preventDefault();
     const response = await fetch('http://localhost:8000/api/additional-keys', {
@@ -97,7 +105,7 @@ const ActivityEvaluationAdmin = props => {
       }),
     });
     const result = await response.json();
-    console.log(result);
+    // console.log(result);
     if (result.success) {
       setErrors(result);
       getAdditionalKeys();
@@ -113,7 +121,7 @@ const ActivityEvaluationAdmin = props => {
     }
   };
 
-
+  //create new class keys record
   const addClassKeys = async e => {
     e.preventDefault();
     const response = await fetch('http://localhost:8000/api/class-keys', {
@@ -130,7 +138,7 @@ const ActivityEvaluationAdmin = props => {
       }),
     });
     const result = await response.json();
-    console.log(result);
+    // console.log(result);
     if (result.success) {
       setErrors(result);
       getClassKeys()
@@ -144,15 +152,54 @@ const ActivityEvaluationAdmin = props => {
     }
   };
 
+  //create new cohort target keys record
+  const addTargetKeys = async e => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:8000/api/target-keys', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+          cohort_id:cohortId,
+        target:document.querySelector('#targetInput').value,
+        
+      }),
+    });
+    const result = await response.json();
+    // console.log(result);
+    if (result.success) {
+      setErrors(result);
+      document.querySelector('#targetInput').hidden=true;
+      
+    } else {
+      setErrors(result.errors);
+    }
+  };
+
+  //get cohort students (dropdown select)
   const getCohortStudents = async () => {
 
     const res = await fetch(`http://localhost:8000/api/user-byCohort/${cohortId}`);
     const result = await res.json();
-    // console.log(result.data);
+    console.log(result.data);
     setStudents(result.data);
 
   };
 
+// get cohort target (up right card)
+  const getTargetKeys = async () => {
+    const res = await fetch(
+      `http://localhost:8000/api/target-keys/${cohortId}`,
+    );
+    const result = await res.json();
+    setTargetKeys(result.data);
+    // console.log(result.data);
+  };
+  
+  //get additional keys info (additional keys table)
   const getAdditionalKeys = async () => {
     const res = await fetch(
       `http://localhost:8000/api/additional-keys/${cohortId}`,
@@ -161,9 +208,15 @@ const ActivityEvaluationAdmin = props => {
     setAdditionalKeys(result.data);
     setAdditionalKeysInputs([]);
     console.log(result.data);
+    
+    let t=0;
+    for (let i=0; i<result.data.length;i++){
+      t+=result.data[i].key
+    }
+    setTotalArray([...totalArray,t]);
   };
 
-  //Class Keys
+  //get class keys info (class keys table)
   const getClassKeys = async () => {
     const res = await fetch(
       `http://localhost:8000/api/class-keys/${cohortId}`,
@@ -172,30 +225,35 @@ const ActivityEvaluationAdmin = props => {
     setClassKeys(result.data);
     setAdditionalKeysInputs([]);
 
-    console.log(result.data);
+    //console.log(result.data);
+    let t=0;
+    for (let i=0; i<result.data.length;i++){
+      t+=result.data[i].key
+    }
+    setTotalArray([...totalArray,t]);
   };
 
-  //attendance-keys/
+    //get attendance keys info (attendance keys table)
   const getAttendanceKeys = async () => {
     const res = await fetch(
       `http://localhost:8000/api/attendance-keys/${cohortId}`,
     );
     const result = await res.json();
     setAttendanceKeys(result.data);
-    console.log(result.data);
+    // console.log(result.data);
   };
 
-  //task keys
+      //get assignment keys info (assignment keys table)
   const getAssignmentKeys = async () => {
     const res = await fetch(
       `http://localhost:8000/api/task-keys/${cohortId}`,
     );
     const result = await res.json();
     setAssignmentKeys(result.data);
-    console.log(result.data);
+    // console.log(result.data);
   };
 
-
+// edit additional keys info
     const editAdditionalKeys = async e => {
       e.preventDefault();
       const response = await fetch(`http://localhost:8000/api/additional-keys/${editId}`, {
@@ -211,7 +269,7 @@ const ActivityEvaluationAdmin = props => {
         }),
       });
       const result = await response.json();
-      console.log(result);
+      // console.log(result);
       if (result.success) {
         setErrors(result);
       setDisabled(-1)
@@ -223,6 +281,7 @@ const ActivityEvaluationAdmin = props => {
       }
     };
 
+// edit class keys info
     const editClassKeys = async e => {
       e.preventDefault();
       const response = await fetch(`http://localhost:8000/api/class-keys/${editId}`, {
@@ -238,7 +297,7 @@ const ActivityEvaluationAdmin = props => {
         }),
       });
       const result = await response.json();
-      console.log(result);
+      // console.log(result);
       if (result.success) {
         setErrors(result);
       setDisabledClassKeys(-1)
@@ -250,8 +309,10 @@ const ActivityEvaluationAdmin = props => {
       }
     };
 
+
+// delete additional keys info
     const deleteAdditionalKeys = async () => {
-      console.log(editId)
+      // console.log(editId)
       const deleteRequestOptions = {
         method: 'DELETE',
         headers: {
@@ -266,7 +327,7 @@ const ActivityEvaluationAdmin = props => {
       );
       const result = await res.json();
 
-      console.log(result.message);
+      // console.log(result.message);
       setModal(!modal);
       // setEditId();
       // getAdditionalKeys();
@@ -274,8 +335,9 @@ const ActivityEvaluationAdmin = props => {
 
     };
 
+// delete class keys info
     const deleteClassKeys = async () => {
-      console.log(editId)
+      // console.log(editId)
       const deleteRequestOptions = {
         method: 'DELETE',
         headers: {
@@ -290,20 +352,32 @@ const ActivityEvaluationAdmin = props => {
       );
       const result = await res.json();
 
-      console.log(result.message);
+      // console.log(result.message);
       setModalClassKeys(!modalClassKeys);
       // setEditId();
       // getClassKeys();
       window.location.reload();
-
-
     };
 
+    const sumFunction =async ()=>{
+      if (totalArray.length>1){
+      var sum = totalArray.reduce(function(a, b){
+        return a + b;
+    }, 0);
+    console.log(sum)
+    setTotal(sum)
+  }
+    }
+
   useEffect(() => {
+  
     getAdditionalKeys();
     getAttendanceKeys();
     getAssignmentKeys();
     getClassKeys();
+    getTargetKeys();
+    sumFunction();
+    
   }, []);
 
   return (
@@ -311,7 +385,9 @@ const ActivityEvaluationAdmin = props => {
       <Col>
         <Card className="mb-3">
           <CardHeader>
-            Activity Evaluation
+            <h5> <strong>Activity Evaluation</strong></h5>
+            <Row >
+              <FormGroup>
             <Button
               className="ml-3"
               color="primary"
@@ -322,7 +398,8 @@ const ActivityEvaluationAdmin = props => {
             >
               Add Individual Keys
             </Button>
-
+            </FormGroup>
+                <FormGroup>
             <Button
               className="ml-3"
               color="primary"
@@ -333,6 +410,47 @@ const ActivityEvaluationAdmin = props => {
             >
               Add Team Keys
             </Button>
+            </FormGroup>
+            <Form style={{width:"20%", margin:"0"}}method="POST" onSubmit={addTargetKeys}>
+            <Button
+              className="ml-3"
+              color="primary"
+              onClick={() => {
+               document.querySelector('#targetInput').hidden=!document.querySelector('#targetInput').hidden
+              }}
+            >
+              Create Cohort Target
+            </Button>
+            <Input    style={{marginLeft:"4%"}}
+                      id="targetInput"
+                      type="number"
+                      placeholder="Cohort Target"
+                      name="target"
+                      hidden
+                    />
+                    {errors.cohort_id ? (
+                      <UncontrolledAlert color="danger">
+                        {errors.cohort_id}{' '}
+                      </UncontrolledAlert>
+                    ) : (
+                      ''
+                    )}
+                    </Form>
+
+             <Col  lg={4} md={6} sm={6} xs={12} className="float-right" style={{marginLeft:"10%"}}>
+            <NumberWidget
+            
+              title="Cohort Target"
+              subtitle="This month"
+              number={`${total} keys`}
+              color='primary'
+              progress={{
+                // value: (total/targetKeys.target)*100,
+                label: 'Last month',
+              }}
+            />
+          </Col>
+                    </Row>  
           </CardHeader>
           <CardBody>
             <Row hidden={!createForm}>
@@ -621,7 +739,6 @@ const ActivityEvaluationAdmin = props => {
                       
                         
                         <tr key={key}>
-                          
                           <td>{moment(atKeys.updated_at).format("YYYY/MM/DD")}</td>
                           <td>{atKeys.user.user_first_name + " "+ atKeys.user.user_last_name}</td>
                           <td><p>{atKeys.task.task_name}</p></td>
@@ -693,6 +810,7 @@ const ActivityEvaluationAdmin = props => {
 
                               onClick={e => {
                                 handleIndexClickClassKeys(key);
+                                handleIndexClick(-2);
                                 setEditId(adKeys.id);
                                 
 
@@ -706,7 +824,7 @@ const ActivityEvaluationAdmin = props => {
                               onClick={() => {
                                 setModalClassKeys(!modalClassKeys);
                                 setEditId(adKeys.id);
-                                console.log(adKeys.id)
+                                // console.log(adKeys.id)
                               }}
                               color="danger"
                               size="sm"
@@ -808,7 +926,8 @@ const ActivityEvaluationAdmin = props => {
                               size="sm"
 
                               onClick={e => {
-                                handleIndexClick(key)
+                                handleIndexClick(key);
+                                handleIndexClickClassKeys(-2);
                                 setEditId(adKeys.id);
                               }}
                               color="primary"
