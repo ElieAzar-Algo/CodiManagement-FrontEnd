@@ -349,7 +349,7 @@ const StagesInfo = props => {
                                   {' '}
                                   <Link
                                     to={{
-                                      pathname: `/stage-tasks/${stage.id}`,
+                                      pathname: `/stage-tasks/${stage.id}/${cohortId}`,
                                     }}
                                   >
                                     <Button color="info"> More Info </Button>

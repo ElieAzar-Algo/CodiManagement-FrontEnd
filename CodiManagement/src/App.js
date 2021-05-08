@@ -51,7 +51,8 @@ const Mentors = React.lazy(() => import('./codiPages/Mentors'));
 const TodayAbsenceRequests = React.lazy(() => import('./codiPages/TodayAbsenceRequests'));
 const Skills = React.lazy(() => import('./codiPages/Skills'));
 const ActivityEvaluationAdmin = React.lazy(() => import('./codiPages/ActivityEvaluationAdmin'));
-//StageTasks
+const Team = React.lazy(() => import('./codiPages/Team'));
+
 
 
 const getBasename = () => {
@@ -127,7 +128,7 @@ class App extends React.Component {
                 <Route exact path='/view-attendance/:id' component={ViewAttendance} />
                 {/* <Route exact path='/view-attendance-day/:id' component={ViewAttendanceDay}/> */}
                 <Route exact path='/stages-info/:id' component={StagesInfo} />
-                <Route exact path='/stage-tasks/:id' component={StageTasks} />
+                <Route exact path='/stage-tasks/:id/:cohortId' component={StageTasks} />
                 <Route exact path='/solo-task-info/:id' component={SoloTaskInfo} />
                 <Route exact path='/user-skills/:id/' component={UserSkills} />
                 <Route exact path='/create-skill-map/:id/student/:studentId' component={CreateSkillMap} />
@@ -136,6 +137,7 @@ class App extends React.Component {
                 <Route exact path='/today-absence-requests/' component={TodayAbsenceRequests} />
                 <Route exact path='/skills-list/' component={Skills} />
                 <Route exact path='/activity-evaluation-admin/:id' component={ActivityEvaluationAdmin} />
+                <Route exact path='/teams/:id/:cohortId' component={Team} />
                 
 
 

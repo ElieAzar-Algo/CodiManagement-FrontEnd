@@ -395,7 +395,7 @@ const SoloTaskInfo = props => {
                                 <td>{ts.user.user_first_name} {ts.user.user_last_name}</td>
                                 <td> <a href={ts.assignment_link} target="_blank">LINK</a></td>
                                 <td>
-                                  <Input className="w-50"
+                                  <Input className="w-70"
                                     defaultValue={ts.keys}
                                     disabled={editForm !== tsKey}
                                     onChange={(e) => setKeys(e.target.value)} />

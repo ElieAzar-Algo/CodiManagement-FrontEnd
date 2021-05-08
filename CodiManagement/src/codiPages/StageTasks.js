@@ -35,6 +35,7 @@ const StageTasks = props => {
 
 
   const stageId = props.match.params.id;
+  const cohortId = props.match.params.cohortId;
 
   const catchInput = e => {
     e.persist();
@@ -150,6 +151,15 @@ const StageTasks = props => {
                             Create Task
                           </Button>
 
+                          <Link to={{
+                              pathname: `/teams/${stageId}/${cohortId}`,
+                                    }}>  <Button 
+                          className="mr-3"
+                           color="danger"
+                           >
+                            Teams
+                          </Button>
+                          </Link>
 
                           <Button 
                           className="mr-3"
@@ -176,7 +186,7 @@ const StageTasks = props => {
                   </ModalFooter>
                 </Modal>
                        
-
+                  
                       </Col>
                     </Row>
                     {createForm?
@@ -320,7 +330,7 @@ const StageTasks = props => {
                           </Col>
                     </Row>
                     :editForm?(
-<Row>
+                    <Row>
                       <Col sm={6}>
                          <FormGroup row>
                       <Label for="exampleEmail" sm={5}>
