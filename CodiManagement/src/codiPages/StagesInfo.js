@@ -27,9 +27,19 @@ const StagesInfo = props => {
   const [prairie, setPrairie] = useState(false);
   //const [users, setUsers] = useState([]);
   const [errors, setErrors] = useState(false);
+  const [disabled, setDisabled] = useState(-1);
+  const [hidden, setHidden] = useState(false);
+
 
   //const branchName=props.match.params.name;
   const cohortId = props.match.params.id;
+
+  const handleIndexClick = stageKey => {
+    if (disabled==stageKey){
+      setDisabled(-1);
+    }else{
+    setDisabled(stageKey);}
+  };
 
   const catchInput = e => {
     e.persist();
@@ -96,9 +106,9 @@ const StagesInfo = props => {
     }
   };
 
-  const editStage = async e => {
-    e.preventDefault();
-    const response = await fetch(`http://localhost:8000/api/stage/${stageId}`, {
+  const editStage = async (id) => {
+   
+    const response = await fetch(`http://localhost:8000/api/stage/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -107,9 +117,7 @@ const StagesInfo = props => {
       },
       body: JSON.stringify({
         ...stageInputs,
-        cohort_code: cohortId,
-        prairie: prairie,
-        active_inactive: 0,
+       
 
       }),
     });
@@ -117,8 +125,8 @@ const StagesInfo = props => {
     console.log(result);
     if (result.success) {
       setErrors(result);
-      
-        window.location.reload();
+      setStageInputs([]);
+    getStages();
     
     } else {
       setErrors(result.errors);
@@ -232,102 +240,105 @@ const StagesInfo = props => {
                         </Col>
                       </FormGroup>
                     </Col>
-                  ) :editForm?(
-                    <Col sm={5}>
-                      <FormGroup row>
-                        <Label for="exampleEmail" sm={5}>
-                          Stage Name
-                        </Label>
-                        <Col sm={7}>
-                          <Input
-                            type="text"
-                            placeholder=""
-                            onChange={catchInput}
-                            name="stage_name"
-                          />
-                          {errors.stage_name ? (
-                            <Alert color="danger">{errors.stage_name} </Alert>
-                          ) : (
-                            ''
-                          )}
-                        </Col>
-                      </FormGroup>
+                  ) :
+                  // editForm?(
+                  //   <Col sm={5}>
+                  //     <FormGroup row>
+                  //       <Label for="exampleEmail" sm={5}>
+                  //         Stage Name
+                  //       </Label>
+                  //       <Col sm={7}>
+                  //         <Input
+                  //           type="text"
+                  //           placeholder=""
+                  //           onChange={catchInput}
+                  //           name="stage_name"
+                  //         />
+                  //         {errors.stage_name ? (
+                  //           <Alert color="danger">{errors.stage_name} </Alert>
+                  //         ) : (
+                  //           ''
+                  //         )}
+                  //       </Col>
+                  //     </FormGroup>
 
-                      <FormGroup check>
-                        <Label check>
-                          <Input
-                            type="checkbox"
-                            id="prairie"
-                            name="prairie"
-                            onChange={e => {
-                              setPrairie(e.target.checked ? 1 : 0);
-                            }}
-                          />{' '}
-                          {errors.prairie ? (
-                            <Alert color="danger">{errors.prairie} </Alert>
-                          ) : (
-                            ''
-                          )}
-                          Prairie
-                        </Label>
-                      </FormGroup>
+                  //     <FormGroup check>
+                  //       <Label check>
+                  //         <Input
+                  //           type="checkbox"
+                  //           id="prairie"
+                  //           name="prairie"
+                  //           onChange={e => {
+                  //             setPrairie(e.target.checked ? 1 : 0);
+                  //           }}
+                  //         />{' '}
+                  //         {errors.prairie ? (
+                  //           <Alert color="danger">{errors.prairie} </Alert>
+                  //         ) : (
+                  //           ''
+                  //         )}
+                  //         Prairie
+                  //       </Label>
+                  //     </FormGroup>
 
-                      <FormGroup row>
-                        <Label for="exampleEmail" sm={5}>
-                          Start Date
-                        </Label>
-                        <Col sm={7}>
-                          <Input
-                            type="date"
-                            onChange={catchInput}
-                            name="start_date"
-                          />
-                          {errors.start_date ? (
-                            <Alert color="danger">{errors.start_date} </Alert>
-                          ) : (
-                            ''
-                          )}
-                        </Col>
-                      </FormGroup>
+                  //     <FormGroup row>
+                  //       <Label for="exampleEmail" sm={5}>
+                  //         Start Date
+                  //       </Label>
+                  //       <Col sm={7}>
+                  //         <Input
+                  //           type="date"
+                  //           onChange={catchInput}
+                  //           name="start_date"
+                  //         />
+                  //         {errors.start_date ? (
+                  //           <Alert color="danger">{errors.start_date} </Alert>
+                  //         ) : (
+                  //           ''
+                  //         )}
+                  //       </Col>
+                  //     </FormGroup>
 
-                      <FormGroup row>
-                        <Label for="exampleEmail" sm={5}>
-                          End Date
-                        </Label>
-                        <Col sm={7}>
-                          <Input
-                            type="date"
-                            onChange={catchInput}
-                            name="end_date"
-                          />
-                          {errors.end_date ? (
-                            <Alert color="danger">{errors.end_date} </Alert>
-                          ) : (
-                            ''
-                          )}
-                          <Button className=" mr-3"color="primary" onClick={editStage}>
-                            Submit
-                          </Button>
-                          <Button color="primary" onClick={()=>setEditForm(!editForm)}>
-                            Back
-                          </Button>
+                  //     <FormGroup row>
+                  //       <Label for="exampleEmail" sm={5}>
+                  //         End Date
+                  //       </Label>
+                  //       <Col sm={7}>
+                  //         <Input
+                  //           type="date"
+                  //           onChange={catchInput}
+                  //           name="end_date"
+                  //         />
+                  //         {errors.end_date ? (
+                  //           <Alert color="danger">{errors.end_date} </Alert>
+                  //         ) : (
+                  //           ''
+                  //         )}
+                  //         <Button className=" mr-3"color="primary" onClick={editStage}>
+                  //           Submit
+                  //         </Button>
+                  //         <Button color="primary" onClick={()=>setEditForm(!editForm)}>
+                  //           Back
+                  //         </Button>
 
-                        </Col>
-                      </FormGroup>
+                  //       </Col>
+                  //     </FormGroup>
                       
-                    </Col>
-                  ) :(
+                  //   </Col>
+                  // ) :
+                  (
                     <Col>
                       <Card body>
                         <Table responsive hover>
                           <thead>
                             <tr>
-                              <th>Stage Name</th>
-                              <th>Prairie</th>
-                              <th>Start Date</th>
-                              <th>End Date</th>
-                              <th></th>
-                              <th>Active</th>
+                              <th style={{ width: '18%' }}  >Stage Name</th>
+                              {/* <th>Prairie</th> */}
+                              <th style={{ width: '15%' }} >Start Date</th>
+                              <th style={{ width: '15%' }}>End Date</th>
+                             
+                              <th style={{ width: '15%' }}>Active</th>
+                              <th style={{ width: '30%' }}></th>
                               
                             </tr>
                           </thead>
@@ -335,11 +346,41 @@ const StagesInfo = props => {
                           <tbody>
                             {stages.map((stage, stageKey) => (
                               <tr key={stageKey}>
-                                <td>{stage.stage_name}</td>
-                                <td>{stage.prairie}</td>
-                                <td>{stage.start_date}</td>
-                                <td>{stage.end_date}</td>
-                                <td></td>
+                                {/* <td>{stage.stage_name}</td> */}
+                                <td>
+                                <Input
+                                defaultValue={stage.stage_name}
+                               disabled={disabled!==stageKey}
+                                type="text"
+                                id="stage_name"
+                                name="stage_name"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                              />
+                                </td>
+                                {/* <td>{stage.prairie}</td> */}
+                                <td hidden={disabled==stageKey}>{stage.start_date}</td>
+                                <td hidden={disabled!==stageKey}> 
+                                 <Input
+                                 defaultValue={stage.start_date}
+                                 style={{ width: '80%' }}
+                                  type="date"
+                                  onChange={catchInput}
+                                  name="start_date"
+                              /></td>
+
+                                <td hidden={disabled==stageKey}>{stage.end_date}</td>
+                                <td hidden={disabled!==stageKey} >
+                                <Input
+                                 defaultValue={stage.end_date}
+
+                                 style={{ width: '80%' }}
+                                  type="date"
+                                  onChange={catchInput}
+                                  name="end_date"
+                              />
+                                </td>
                                 <td>
                                   {stage.active_inactive
                                     ? 'Active'
@@ -352,17 +393,42 @@ const StagesInfo = props => {
                                       pathname: `/stage-tasks/${stage.id}/${cohortId}`,
                                     }}
                                   >
-                                    <Button color="info"> More Info </Button>
+                                    <Button 
+                                    hidden={hidden}
+                                    size='sm'
+                                     color="info"> More Info </Button>
                                   </Link>
 
 
-                                  <Button className="mr-3 ml-3"
+                                  <Button 
+                                    disabled={disabled==-1?!disabled:disabled!==stageKey}
+                                    hidden={disabled==stageKey}
+                                    className="mr-3 ml-3"
+                                    size='sm'
                                     color="primary"
-                                    onClick={()=>{setEditForm(!editForm);setStageId(stage.id);}} >
+                                    onClick={()=>{handleIndexClick(stageKey);
+                                    // setStageId(stage.id);
+                                    setHidden(true)
+                                    }} >
                                     Edit Stage
                                   </Button>
+                              <Button 
+                                  hidden={disabled!==stageKey}
+                                  size="sm" 
+                                  className=" ml-2 mr-2"
+                                  color="warning" 
+                                  onClick={(e)=>{ 
+                                  e.preventDefault();
+                                  editStage(stage.id); 
+                                  handleIndexClick(-1)
+                                  setHidden(false)
+                              }}>
+                                Submit Changes
+                                </Button>
 
                                   <Button
+                                    size='sm'
+                                    hidden={hidden}
                                     color="danger"
                                     onClick={() =>
                                       activateStage(
