@@ -29,6 +29,16 @@ const BranchesInfo = (props) => {
   const [modal, setModal] = useState(false);
   const [editId, setEditId] = useState();
   const [errors, setErrors] = useState(false);
+  const [disabled, setDisabled] = useState(-1);
+  const [hidden, setHidden] = useState(false);
+
+
+  const handleIndexClick = key => {
+    if (disabled==key){
+      setDisabled(-1);
+    }else{
+    setDisabled(key);}
+  };
 
   const catchInput = e => {
     e.persist();
@@ -71,9 +81,9 @@ const BranchesInfo = (props) => {
       setErrors(result.errors);
     }
   };
-  const editBranch = async e => {
-    e.preventDefault();
-    const response = await fetch(`http://localhost:8000/api/branch/${editId}`, {
+  const editBranch = async (id) => {
+    
+    const response = await fetch(`http://localhost:8000/api/branch/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +99,7 @@ const BranchesInfo = (props) => {
     console.log(result);
     if (result.success) {
       setErrors(result);
-      window.location.reload();
+     getBranches()
     } else {
       setErrors(result.errors);
     }
@@ -200,7 +210,7 @@ const BranchesInfo = (props) => {
                   </Col>
                 </Row>
 
-                <Row hidden={!editForm}>
+                {/* <Row hidden={!editForm}>
                   <Col sm={6}>
 
                     <FormGroup row>
@@ -260,7 +270,7 @@ const BranchesInfo = (props) => {
                       </Col>
                     </FormGroup>
                   </Col>
-                </Row>
+                </Row> */}
 
 
               
@@ -270,10 +280,11 @@ const BranchesInfo = (props) => {
                       <Table responsive hover>
                         <thead>
                           <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Country</th>
-                            <th>Location</th>
+                            <th style={{ width: '5%' }} >#</th>
+                            <th style={{ width: '20%' }} >Name</th>
+                            <th style={{ width: '20%' }} >Country</th>
+                            <th style={{ width: '20%' }} >Location</th>
+                            <th style={{ width: '35%' }} ></th>
                             
                           </tr>
                         </thead>
@@ -282,11 +293,68 @@ const BranchesInfo = (props) => {
                            
                               <tr key={key}>
                                 <th scope="row">{key + 1}</th>
-                                <td>{branch.branch_name}</td>
-                                <td>{branch.branch_country} </td>
-                                <td>{branch.branch_location}</td>
+                                {/* <td>{branch.branch_name}</td> */}
+                                <td><Input
+                                defaultValue={branch.branch_name}
+                               disabled={disabled!==key}
+                                type="text"
+                                id="branch_name"
+                                name="branch_name"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                              /></td>
+                                {/* <td>{branch.branch_country} </td> */}
                                 <td>
-                                <Button
+                                <Input
+                                defaultValue={branch.branch_country}
+                               disabled={disabled!==key}
+                                type="text"
+                                id="branch_country"
+                                name="branch_country"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                              />
+                                </td>
+                                {/* <td>{branch.branch_location}</td> */}
+                                <td><Input
+                                defaultValue={branch.branch_location}
+                               disabled={disabled!==key}
+                                type="text"
+                                id="branch_location"
+                                name="branch_location"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                              /></td>
+                                <td>
+                                <Button 
+                                    disabled={disabled==-1?!disabled:disabled!==key}
+                                    hidden={disabled==key}
+                                    className="mr-3 ml-3"
+                                    size='sm'
+                                    color="primary"
+                                    onClick={()=>{handleIndexClick(key);
+                                    // setStageId(stage.id);
+                                    setHidden(true)
+                                    }} >
+                                    Edit Stage
+                                  </Button>
+                              <Button 
+                                  hidden={disabled!==key}
+                                  size="sm" 
+                                  className=" ml-2 mr-2"
+                                  color="warning" 
+                                  onClick={(e)=>{ 
+                                  e.preventDefault();
+                                  editBranch(branch.id); 
+                                  handleIndexClick(-1)
+                                  setHidden(false)
+                              }}>
+                                Submit Changes
+                                </Button>
+                                {/* <Button
                                 className="mr-4"
                                     onClick={e => {
                                       setEditForm(!editForm);
@@ -296,8 +364,10 @@ const BranchesInfo = (props) => {
                                   >
                                     {' '}
                                     Edit{' '}
-                                  </Button>
+                                  </Button> */}
                                   <Button
+                                  size="sm"
+                                  hidden={hidden}
                                     onClick={() => setModal(!modal)}
                                     color="danger"
                                   >
