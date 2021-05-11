@@ -97,8 +97,10 @@ const BranchesInfo = () => {
     const result = await response.json();
     console.log(result);
     if (result.success) {
-      setErrors(result);
-      window.location.reload();
+     getIndividualBranchInfo(branchId);
+    setErrors(result);
+     setCohortForm(false)
+     setBranchId();
     } else {
       setErrors(result.errors);
     }
@@ -143,7 +145,7 @@ const BranchesInfo = () => {
     const result = await res.json();
 
     console.log(result.message);
-    getIndividualBranchInfo();
+    getIndividualBranchInfo(branchId);
   };
 
   useEffect(() => {
@@ -169,11 +171,100 @@ const BranchesInfo = () => {
                 icon={MdRoom}
                 title={branch.branch_name}
                 subtitle="Branch"
-                onClick={e => getIndividualBranchInfo(branch.id)}
+                onClick={e => {getIndividualBranchInfo(branch.id);setBranchId(branch.id);}}
               />
             </Col>
           ))}
         </Row>
+
+        <Row style={{marginLeft:"3%"}} hidden={!cohortForm}>
+                            <Col>
+                              {/* <Row>
+                                <Label for="exampleEmail" sm={5}>
+                                  Choose Branch
+                                </Label>
+                                <UncontrolledButtonDropdown className="m-2 ml-3">
+                                  <DropdownToggle caret>{branchName}</DropdownToggle>
+                                  <DropdownMenu>
+                                    {branches.map((branch, branchKey) => (
+                                      <DropdownItem
+                                        key={branchKey}
+                                        onClick={() => {
+                                          setBranchId(branch.id);
+                                          setBranchName(branch.branch_name);
+                                        }}
+                                      >
+                                        {branch.branch_name}
+                                      </DropdownItem>
+                                    ))}
+                                  </DropdownMenu>
+                                </UncontrolledButtonDropdown>
+                                {errors.branch_id ? (
+                                  <Alert color="danger">{errors.branch_id} </Alert>
+                                ) : (
+                                    ''
+                                  )}
+                              </Row> */}
+          
+                              <FormGroup row>
+                                <Label for="exampleEmail" sm={2}>
+                                  Cohort Code
+                                </Label>
+                                <Col sm={4}>
+                                  <Input
+                                    type="text"
+                                    placeholder="example: BB09"
+                                    onChange={catchInput}
+                                    name="cohort_code"
+                                  />
+                                  {errors.cohort_code ? (
+                                    <Alert color="danger">{errors.cohort_code} </Alert>
+                                  ) : (
+                                      ''
+                                    )}
+                                </Col>
+                              </FormGroup>
+                              <FormGroup row>
+                                <Label for="exampleEmail" sm={2}>
+                                  Start Date
+                                </Label>
+                                <Col sm={4}>
+                                  <Input
+                                    type="date"
+                                    onChange={catchInput}
+                                    name="start_date"
+                                  />
+                                  {errors.start_date ? (
+                                    <Alert color="danger">{errors.start_date} </Alert>
+                                  ) : (
+                                      ''
+                                    )}
+                                </Col>
+                              </FormGroup>
+          
+                              <FormGroup row>
+                                <Label for="exampleEmail" sm={2}>
+                                  End Date
+                                </Label>
+                                <Col sm={4}>
+                                  <Input
+                                    type="date"
+                                    onChange={catchInput}
+                                    name="end_date"
+                                  />
+                                  {errors.end_date ? (
+                                    <Alert color="danger">{errors.end_date} </Alert>
+                                  ) : (
+                                      ''
+                                    )}
+                                  <Button color="primary" onClick={createCohort}>
+                                    Submit
+                                  </Button>
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+        
         <Card className="mb-3">
           <CardHeader>
             <Form
@@ -181,12 +272,7 @@ const BranchesInfo = () => {
               className="cr-search-form"
               onSubmit={e => searchForCohort(e)}
             >
-              <Button
-                color="primary"
-                onClick={() => setCohortForm(!cohortForm)}
-              >
-                Create New Cohort
-              </Button>
+             
               {/* <Input
                 type="search"
                 className="cr-search-form__input"
@@ -197,96 +283,9 @@ const BranchesInfo = () => {
           </CardHeader>
           <CardBody>
             <Row>
-              {cohortForm ? (
-                <Row>
-                  <Col>
-                    <Row>
-                      <Label for="exampleEmail" sm={5}>
-                        Choose Branch
-                      </Label>
-                      <UncontrolledButtonDropdown className="m-2 ml-3">
-                        <DropdownToggle caret>{branchName}</DropdownToggle>
-                        <DropdownMenu>
-                          {branches.map((branch, branchKey) => (
-                            <DropdownItem
-                              key={branchKey}
-                              onClick={() => {
-                                setBranchId(branch.id);
-                                setBranchName(branch.branch_name);
-                              }}
-                            >
-                              {branch.branch_name}
-                            </DropdownItem>
-                          ))}
-                        </DropdownMenu>
-                      </UncontrolledButtonDropdown>
-                      {errors.branch_id ? (
-                        <Alert color="danger">{errors.branch_id} </Alert>
-                      ) : (
-                          ''
-                        )}
-                    </Row>
-
-                    <FormGroup row>
-                      <Label for="exampleEmail" sm={5}>
-                        Cohort Code
-                      </Label>
-                      <Col sm={7}>
-                        <Input
-                          type="text"
-                          placeholder="example: BB09"
-                          onChange={catchInput}
-                          name="cohort_code"
-                        />
-                        {errors.cohort_code ? (
-                          <Alert color="danger">{errors.cohort_code} </Alert>
-                        ) : (
-                            ''
-                          )}
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label for="exampleEmail" sm={5}>
-                        Start Date
-                      </Label>
-                      <Col sm={7}>
-                        <Input
-                          type="date"
-                          onChange={catchInput}
-                          name="start_date"
-                        />
-                        {errors.start_date ? (
-                          <Alert color="danger">{errors.start_date} </Alert>
-                        ) : (
-                            ''
-                          )}
-                      </Col>
-                    </FormGroup>
-
-                    <FormGroup row>
-                      <Label for="exampleEmail" sm={5}>
-                        End Date
-                      </Label>
-                      <Col sm={7}>
-                        <Input
-                          type="date"
-                          onChange={catchInput}
-                          name="end_date"
-                        />
-                        {errors.end_date ? (
-                          <Alert color="danger">{errors.end_date} </Alert>
-                        ) : (
-                            ''
-                          )}
-                        <Button color="primary" onClick={createCohort}>
-                          Submit
-                        </Button>
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                </Row>
-              ) : editForm ? (
-                <Row>
+              
+              
+                <Row hidden={!editForm}>
                   <Col>
                     <h3>
                       Edit Form{' '}
@@ -377,8 +376,8 @@ const BranchesInfo = () => {
                     </FormGroup>
                   </Col>
                 </Row>
-              ) : (
-                    <Col>
+              
+                    <Col >
                       {!individualBranch ? (
                         <Card className="flex-row">
                           <CardImg
@@ -396,9 +395,21 @@ const BranchesInfo = () => {
                           </CardBody>
                         </Card>
                       ) : (
+
+                      
+                         
                           <Card body>
+                             <Button
+                                style={{width:'25%'}}
+                                color="primary"
+                                onClick={() => setCohortForm(!cohortForm)}
+                              >
+                                Create New Cohort
+                              </Button>
                             <Table responsive hover>
+                           
                               <thead>
+                              
                                 <tr>
                                   <th>#</th>
                                   <th>Cohort</th>
@@ -489,7 +500,7 @@ const BranchesInfo = () => {
                           </Card>
                         )}
                     </Col>
-                  )}
+                  
             </Row>
           </CardBody>
         </Card>

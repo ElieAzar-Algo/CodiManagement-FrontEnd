@@ -52,6 +52,7 @@ const TodayAbsenceRequests = React.lazy(() => import('./codiPages/TodayAbsenceRe
 const Skills = React.lazy(() => import('./codiPages/Skills'));
 const ActivityEvaluationAdmin = React.lazy(() => import('./codiPages/ActivityEvaluationAdmin'));
 const Team = React.lazy(() => import('./codiPages/Team'));
+const CreateUserInCohort = React.lazy(() => import('./codiPages/CreateUserInCohort'));
 
 
 
@@ -138,9 +139,9 @@ class App extends React.Component {
                 <Route exact path='/skills-list/' component={Skills} />
                 <Route exact path='/activity-evaluation-admin/:id' component={ActivityEvaluationAdmin} />
                 <Route exact path='/teams/:id/:cohortId' component={Team} />
+                <Route exact path='/create-user-cohort/:cohortId' component={CreateUserInCohort} />
                 
-
-
+              
 
                 <Route exact path="/dd" component={DashboardPage} />
                 <Route exact path="/login-modal" component={AuthModalPage} />

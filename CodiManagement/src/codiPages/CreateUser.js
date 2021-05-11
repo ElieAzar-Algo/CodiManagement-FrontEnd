@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+// import CountrySelector from '../components/CountrySelector'
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
 //import { Link } from 'react-router-dom';
 import {
   Row,
@@ -22,8 +25,16 @@ const CreateUser = props => {
   const [cohorts, setCohorts] = useState([]);
   const [UserCohort, setUserCohort] = useState();
   const [cohortName, setCohortName] = useState('Cohorts');
+  const [gender, setGender] = useState('Gender');
   const [userInputs, setUserInputs] = useState([]);
   const [errors, setErrors] = useState([]);
+
+  const [value, setValue] = useState('')
+
+  const options = useMemo(() => countryList().getData(), [])
+  const changeHandler = value => {
+    setValue(value)
+  }
 
   const getCohorts = async () => {
     const response = await fetch('http://localhost:8000/api/only-cohorts');
@@ -41,6 +52,7 @@ const CreateUser = props => {
   };
 
   const createUser = async e => {
+    console.log(value)
     e.preventDefault();
     const response = await fetch('http://localhost:8000/api/user', {
       method: 'POST',
@@ -53,6 +65,9 @@ const CreateUser = props => {
         ...userInputs,
         active_inactive: 1,
         cohort_code: UserCohort,
+        user_gender:gender,
+        user_nationality:value.label
+
       }),
     });
     const result = await response.json();
@@ -269,26 +284,34 @@ const CreateUser = props => {
                   </Col>
                 </FormGroup>
 
+                
+               
+
+
+
                 <FormGroup row>
-                  <Label for="exampleEmail" sm={4}>
-                    Nationality :
+                  <Label for="gender" sm={4}>
+                    Gender
                   </Label>
                   <Col sm={8}>
-                    <Input
-                      type="text"
-                      placeholder="Nationality"
-                      onChange={catchInput}
-                      name="user_nationality"
-                    />
-                    {errors.user_nationality ? (
-                      <Alert color="danger">{errors.user_nationality} </Alert>
+                    <UncontrolledButtonDropdown addonType="append">
+                      <DropdownToggle caret> {gender} </DropdownToggle>
+                      <DropdownMenu>
+                        
+                          <DropdownItem onClick={()=>setGender('Female')}> Female</DropdownItem>
+                          <DropdownItem onClick={()=>setGender('Male')}> Male</DropdownItem>
+                      
+                      </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                    {errors.user_gender ? (
+                      <Alert color="danger">{errors.user_gender} </Alert>
                     ) : (
                       ''
                     )}
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Label for="exampleEmail" sm={4}>
                     Gender :
                   </Label>
@@ -305,8 +328,8 @@ const CreateUser = props => {
                       ''
                     )}
                   </Col>
-                </FormGroup>
-
+                </FormGroup> */}
+  
                 <FormGroup row>
                   <Label for="exampleEmail" sm={4}>
                     City :
@@ -345,7 +368,7 @@ const CreateUser = props => {
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Label for="exampleEmail" sm={4}>
                     Security Level :
                   </Label>
@@ -357,7 +380,7 @@ const CreateUser = props => {
                       name="user_security_level"
                     />
                   </Col>
-                </FormGroup>
+                </FormGroup> */}
 
                 <FormGroup row>
                   <Label for="exampleEmail" sm={4}>
@@ -370,6 +393,26 @@ const CreateUser = props => {
                       onChange={catchInput}
                       name="user_avatar"
                     />
+                  </Col>
+                </FormGroup>
+
+                <FormGroup row>
+                  <Label for="exampleEmail" sm={4}>
+                    Nationality :
+                  </Label>
+                  <Col sm={8}>
+                  <Select options={options} value={value} onChange={changeHandler} />
+                    {/* <Input
+                      type="text"
+                      placeholder="Nationality"
+                      onChange={catchInput}
+                      name="user_nationality"
+                    /> */}
+                    {errors.user_nationality ? (
+                      <Alert color="danger">{errors.user_nationality} </Alert>
+                    ) : (
+                      ''
+                    )}
                   </Col>
                 </FormGroup>
                 <Button color="success" onClick={createUser}>

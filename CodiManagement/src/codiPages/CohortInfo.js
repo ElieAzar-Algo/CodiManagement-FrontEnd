@@ -27,12 +27,15 @@ import './codiStyles/CodiDashboard.css';
 
 const CohortInfo = props => {
   const [cohort, setCohort] = useState([]);
+  const [errors, setErrors] = useState(false);
+
   //const [searchField, setSearchField] = useState('Choose a field ');
   //const [searchValue, setSearchValue] = useState(''); //search function is not completed
   const branchName = props.match.params.name;
   const cohortId = props.match.params.id;
 
-  const getCohort = async () => {
+  const getCohort = async () => 
+  {
     // console.log(branchName,cohortId);
     const res = await fetch(`http://localhost:8000/api/cohort/${cohortId}`);
     const result = await res.json();
@@ -40,13 +43,37 @@ const CohortInfo = props => {
     setCohort(result.data);
   };
 
-  const searchForUser = async e => {
+  const searchForUser = async e => 
+  {
     e.preventDefault();
     const search = cohort.map(coh =>
       coh.users.filter(e => (e.user_first_name === 'Elie') > -1),
     );
     console.log(search);
   };
+  const disableCohort= async e=>
+  {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:8000/api/disable-cohort-students/${cohortId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    if (result.success) {
+      setErrors(result);
+      getCohort();
+    } else {
+      setErrors(result.errors);
+    }
+  }
 
   useEffect(() => {
     getCohort();
@@ -102,9 +129,15 @@ const CohortInfo = props => {
                     <Col>
                       <Row className="mb-2">
                         <Col>
-                          <Link to="/create-user">
+                          {/* <Link to="/create-user">
                             <Button className="mr-3" color="primary">
                               Create Student
+                          </Button>
+                          </Link> */}
+
+                          <Link to={{ pathname: `/create-user-cohort/${cohortId}` }}>
+                            <Button className="mr-3" color="primary">
+                            Create Student
                           </Button>
                           </Link>
 
@@ -134,7 +167,7 @@ const CohortInfo = props => {
                           </Button>
                         </Link> */}
 
-                          <Button className="mr-3" color="primary">
+                          <Button onClick={disableCohort} className="mr-3" color="primary">
                             {' '}
                           Disable Cohort
                         </Button>

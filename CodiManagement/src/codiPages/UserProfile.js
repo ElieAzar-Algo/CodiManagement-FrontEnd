@@ -64,9 +64,9 @@ const UserProfile = (props) => {
   const getUser = async () => {
     const res = await fetch(`http://localhost:8000/api/user/${userId}`);
     const result = await res.json()
-    console.log(result.data[0])
-    setUser(result.data[0])
-    setCohortId(result.data[0].cohort_code)
+    console.log(result.data)
+    setUser(result.data)
+    setCohortId(result.data.cohort_code)
   }
 
   const getAdmins = async () => {
@@ -370,8 +370,8 @@ const UserProfile = (props) => {
                   </thead>
 
                   <tbody>
-                    {user.stage &&
-                      user.stage[0].task.map((t, taskKey) => (
+                    {user.stage?
+                      user.stage.task.map((t, taskKey) => (
                         <tr key={taskKey}>
                           <td> {taskKey + 1}</td>
                           <td>{t.task_name}</td>
@@ -386,7 +386,8 @@ const UserProfile = (props) => {
                           <td>{t.start_date}</td>
                           <td>{t.end_date}</td>
                         </tr>
-                      ))}
+                      )):""
+                    }
                   </tbody>
                 </Table>
               </Card>{' '}
@@ -422,7 +423,7 @@ const UserProfile = (props) => {
                     <DropdownToggle caret> {taskName} </DropdownToggle>
                     <DropdownMenu>
                       {user.stage &&
-                        user.stage[0].task.map((t, key) => (
+                        user.stage.task.map((t, key) => (
                           <DropdownItem
                             key={key}
                             onClick={() => {

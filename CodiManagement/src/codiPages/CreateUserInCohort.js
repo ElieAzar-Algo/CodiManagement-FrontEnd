@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+// import CountrySelector from '../components/CountrySelector'
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
 //import { Link } from 'react-router-dom';
 import {
   Row,
@@ -18,36 +21,38 @@ import {
   DropdownMenu,
 } from 'reactstrap';
 
-const EditUser = props => {
+const CreateUserInCohort = props => {
+ 
+  
+  
+  const [gender, setGender] = useState('Gender');
   const [userInputs, setUserInputs] = useState([]);
   const [errors, setErrors] = useState([]);
-  const [cohorts, setCohorts] = useState([]);
-  const [UserCohort, setUserCohort] = useState();
-  const [cohortName, setCohortName] = useState(props.userInfo.cohort_code);
-  const [userActive, setUserActive] = useState(1);
 
-  const getCohorts = async () => {
-    const response = await fetch('http://localhost:8000/api/only-cohorts');
-    const result = await response.json();
-    setCohorts(result.data);
-    //console.log(result.data)
-  };
+  const [value, setValue] = useState('')
+
+  const options = useMemo(() => countryList().getData(), [])
+  const changeHandler = value => {
+    setValue(value)
+  }
+
+  const cohortId = props.match.params.cohortId;
+
+  
   const catchInput = e => {
     e.persist();
     setUserInputs({
       ...userInputs,
       [e.target.name]: e.target.value,
     });
-
     console.log(userInputs);
   };
 
   const createUser = async e => {
+    console.log(value)
     e.preventDefault();
-    console.log(UserCohort)
-    const userId = props.userInfo.id;
-    const response = await fetch(`http://localhost:8000/api/user/${userId}`, {
-      method: 'PATCH',
+    const response = await fetch('http://localhost:8000/api/user', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -55,8 +60,11 @@ const EditUser = props => {
       },
       body: JSON.stringify({
         ...userInputs,
-        active_inactive: userActive,
-        cohort_code: UserCohort,
+        active_inactive: 1,
+        cohort_code: cohortId,
+        user_gender:gender,
+        user_nationality:value.label
+
       }),
     });
     const result = await response.json();
@@ -72,15 +80,10 @@ const EditUser = props => {
   };
 
   useEffect(() => {
-    getCohorts();
+    
   }, []);
   return (
-    <>  
-      {!errors.message ? (
-       <Row><Col>   <Alert color="danger">CHANGE ONLY the info that you to edit </Alert>   </Col> </Row>) : (
-        ''
-      )}
-
+    <>
       {errors.message ? (
         <Row className="m-2">
           <Col xl={12} lg={12} md={12}>
@@ -96,57 +99,7 @@ const EditUser = props => {
             <CardHeader>Student Info</CardHeader>
             <CardBody>
               <Form>
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Change to Alumni :
-                  </Label>
-                  <Col sm={7}>
-                    <UncontrolledButtonDropdown addonType="append">
-                      <DropdownToggle caret> {userActive?"Active":"Alumni"}  </DropdownToggle>
-                      <DropdownMenu>
-                       
-                          <DropdownItem onClick={()=>setUserActive(1)}> Active </DropdownItem>
-                          <DropdownItem onClick={()=>setUserActive(0)}> Alumni </DropdownItem>
-                      
-                      </DropdownMenu>
-                    </UncontrolledButtonDropdown>
-                    {errors.cohort_code ? (
-                      <Alert color="danger">{errors.cohort_code} </Alert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Choose a cohort :
-                  </Label>
-                  <Col sm={7}>
-                    <UncontrolledButtonDropdown addonType="append">
-                      <DropdownToggle caret> {cohortName} </DropdownToggle>
-                      <DropdownMenu>
-                        {cohorts.map((coh, key) => (
-                          <DropdownItem
-                            key={key}
-                            onClick={() => {
-                              setUserCohort(coh.id);
-                              setCohortName(coh.cohort_code);
-                            }}
-                          >
-                            {coh.cohort_code}
-                          </DropdownItem>
-                        ))}
-                      </DropdownMenu>
-                    </UncontrolledButtonDropdown>
-                    {errors.cohort_code ? (
-                      <Alert color="danger">{errors.cohort_code} </Alert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
-
+               
                 <FormGroup row>
                   <Label for="exampleEmail" sm={5}>
                     First Name :
@@ -154,7 +107,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="text"
-                      placeholder={props.userInfo.user_first_name}
+                      placeholder="example: Adam"
                       onChange={catchInput}
                       name="user_first_name"
                     />
@@ -172,7 +125,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="text"
-                      placeholder={props.userInfo.user_last_name}
+                      placeholder="example: Azar"
                       onChange={catchInput}
                       name="user_last_name"
                     />
@@ -191,7 +144,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="email"
-                      placeholder={props.userInfo.email}
+                      placeholder="example@mail.com"
                       onChange={catchInput}
                       name="email"
                     />
@@ -210,7 +163,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="password"
-                      placeholder="********"
+                      placeholder="password"
                       onChange={catchInput}
                       name="password"
                     />
@@ -229,7 +182,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="number"
-                      placeholder={props.userInfo.user_phone_number}
+                      placeholder="example: 0096170123456"
                       onChange={catchInput}
                       name="user_phone_number"
                     />
@@ -248,7 +201,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="number"
-                      placeholder={props.userInfo.user_emergency_number}
+                      placeholder="example: 0096170123456"
                       onChange={catchInput}
                       name="user_emergency_number"
                     />
@@ -262,7 +215,7 @@ const EditUser = props => {
                   <Col sm={7}>
                     <Input
                       type="text"
-                      placeholder={props.userInfo.user_discord_id}
+                      placeholder="example: #5579"
                       onChange={catchInput}
                       name="user_discord_id"
                     />
@@ -293,8 +246,6 @@ const EditUser = props => {
                       name="user_birth_date"
                       onChange={catchInput}
                     />
-                    <p>{props.userInfo.user_birth_date}</p>
-
                     {errors.user_birth_date ? (
                       <Alert color="danger">{errors.user_birth_date} </Alert>
                     ) : (
@@ -303,36 +254,25 @@ const EditUser = props => {
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={4}>
-                    Nationality :
-                  </Label>
-                  <Col sm={8}>
-                    <Input
-                      type="text"
-                      placeholder={props.userInfo.user_nationality}
-                      onChange={catchInput}
-                      name="user_nationality"
-                    />
-                    {errors.user_nationality ? (
-                      <Alert color="danger">{errors.user_nationality} </Alert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
+                
+               
+
+
 
                 <FormGroup row>
-                  <Label for="exampleEmail" sm={4}>
-                    Gender :
+                  <Label for="gender" sm={4}>
+                    Gender
                   </Label>
                   <Col sm={8}>
-                    <Input
-                      type="text"
-                      placeholder="example: Male/Female"
-                      onChange={catchInput}
-                      name="user_gender"
-                    />
+                    <UncontrolledButtonDropdown addonType="append">
+                      <DropdownToggle caret> {gender} </DropdownToggle>
+                      <DropdownMenu>
+                        
+                          <DropdownItem onClick={()=>setGender('Female')}> Female</DropdownItem>
+                          <DropdownItem onClick={()=>setGender('Male')}> Male</DropdownItem>
+                      
+                      </DropdownMenu>
+                    </UncontrolledButtonDropdown>
                     {errors.user_gender ? (
                       <Alert color="danger">{errors.user_gender} </Alert>
                     ) : (
@@ -341,6 +281,7 @@ const EditUser = props => {
                   </Col>
                 </FormGroup>
 
+  
                 <FormGroup row>
                   <Label for="exampleEmail" sm={4}>
                     City :
@@ -348,7 +289,7 @@ const EditUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder={props.userInfo.user_city}
+                      placeholder="City name"
                       onChange={catchInput}
                       name="user_city"
                     />
@@ -367,7 +308,7 @@ const EditUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder={props.userInfo.user_address}
+                      placeholder="Blg-Street-Town-"
                       onChange={catchInput}
                       name="user_address"
                     />
@@ -379,19 +320,7 @@ const EditUser = props => {
                   </Col>
                 </FormGroup>
 
-                {/* <FormGroup row>
-                  <Label for="exampleEmail" sm={4}>
-                    Security Level :
-                  </Label>
-                  <Col sm={8}>
-                    <Input
-                      type="number"
-                      placeholder={props.userInfo.user_security_level}
-                      onChange={catchInput}
-                      name="user_security_level"
-                    />
-                  </Col>
-                </FormGroup> */}
+              
 
                 <FormGroup row>
                   <Label for="exampleEmail" sm={4}>
@@ -400,10 +329,25 @@ const EditUser = props => {
                   <Col sm={8}>
                     <Input
                       type="text"
-                      placeholder={props.userInfo.user_avatar}
+                      placeholder="Upload photo "
                       onChange={catchInput}
                       name="user_avatar"
                     />
+                  </Col>
+                </FormGroup>
+
+                <FormGroup row>
+                  <Label for="exampleEmail" sm={4}>
+                    Nationality :
+                  </Label>
+                  <Col sm={8}>
+                  <Select options={options} value={value} onChange={changeHandler} />
+                    
+                    {errors.user_nationality ? (
+                      <Alert color="danger">{errors.user_nationality} </Alert>
+                    ) : (
+                      ''
+                    )}
                   </Col>
                 </FormGroup>
                 <Button color="success" onClick={createUser}>
@@ -411,10 +355,12 @@ const EditUser = props => {
                 </Button>
               </Form>
             </CardBody>
+            
           </Card>
+          <Button onClick={()=>props.history.goBack()} >Back</Button>
         </Col>
       </Row>
     </>
   );
 };
-export default EditUser;
+export default CreateUserInCohort;
