@@ -38,7 +38,7 @@ const Attendance = props => {
   const handleIndexClick = studentKey => {
     setDisabled(studentKey);
   };
-
+  
 
   const catchInput = e => {
     e.persist();

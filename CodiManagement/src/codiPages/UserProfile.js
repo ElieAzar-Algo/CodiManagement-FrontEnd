@@ -58,7 +58,7 @@ const UserProfile = (props) => {
       ...taskInputs,
       [e.target.name]: e.target.value,
     });
-    console.log(taskInputs);
+    // console.log(taskInputs);
   };
 
   const getUser = async () => {
@@ -72,14 +72,14 @@ const UserProfile = (props) => {
   const getAdmins = async () => {
     const res = await fetch(`http://localhost:8000/api/admin`);
     const result = await res.json()
-    console.log(result.data)
+    // console.log(result.data)
     setAdmins(result.data)
   }
 
   const getStudentTasks = async () => {
     const res = await fetch(`http://localhost:8000/api/user-task-individually/${userId}`);
     const result = await res.json()
-    console.log(result.data)
+    // console.log(result.data)
     setYourTasks(result.data)
   }
 
@@ -87,7 +87,7 @@ const UserProfile = (props) => {
 
     const res = await fetch(`http://localhost:8000/api/stage/${cohortId}`);
     const result = await res.json();
-    // console.log(result.data);
+    console.log(result.data);
     setStages(result.data);
 
   };
@@ -107,7 +107,7 @@ const UserProfile = (props) => {
     const res = await fetch(`http://localhost:8000/api/user/${userId}`, deleteRequestOptions);
     const result = await res.json()
     toggle();
-    console.log(result.message)
+    // console.log(result.message)
     props.history.goBack()
 
   }
@@ -130,7 +130,7 @@ const UserProfile = (props) => {
       }),
     });
     const result = await response.json();
-    console.log(result);
+    // console.log(result);
     if (result.success) {
       setErrors(result);
       window.location.reload();
@@ -156,9 +156,9 @@ const UserProfile = (props) => {
 
     const res = await fetch(`http://localhost:8000/api/user-skills-stage/${userId}`);
     const result = await res.json();
-    console.log(result.data);
+    // console.log(result.data);
     const grouped = Object.values(groupByKey(result.data, 'skill_id'));
-    console.log(grouped);
+    // console.log(grouped);
     const sortedGroups = grouped.map(group => {
       const sorted = group.sort(function (a, b) {
         var keyA = a.stage_id,
@@ -170,7 +170,7 @@ const UserProfile = (props) => {
       })
       return sorted
     });
-    console.log(sortedGroups);
+    // console.log(sortedGroups);
     if (!sortedGroups.length == 0) {
       setStudentSkills(sortedGroups);
       getCohortStages()
@@ -185,7 +185,7 @@ const UserProfile = (props) => {
 
   //   const res = await fetch(`http://localhost:8000/api/user-skills/${userId}`);
   //   const result = await res.json();
-  //   console.log(result.data);
+    //console.log(result.data);
   //   setStudentSkills(result.data);
   // };
 
@@ -202,7 +202,7 @@ const UserProfile = (props) => {
       }),
     });
     const result = await response.json();
-    console.log(result);
+    // console.log(result);
     if (result.success) {
       setErrors(result);
       window.location.reload();

@@ -1,5 +1,6 @@
 import Avatar from 'components/Avatar';
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { UncontrolledTooltip } from 'reactstrap';
 import PropTypes from 'utils/propTypes';
 import user1Image from '../assets/img/users/100_1.jpg';
@@ -17,14 +18,22 @@ const HorizontalAvatarList = ({
   return (
     <Tag className="d-flex align-items-center" {...restProps}>
       {avatars &&
-        avatars.map(({ user_avatar, user_first_name, user_last_name}, i) => {
+        avatars.map(({id, user_avatar, user_first_name, user_last_name}, i) => {
           const index = count();
           const isFirstItem = i === 0;
+ 
 
           return (
             <Fragment key={index}>
+             
+              <Link 
+              to={{
+                    pathname: `/user-profile/${id}`,
+                   }}
+              >
               <Avatar
               className="avatarsList"
+              
                 {...avatarProps}
                 id={`HorizontalAvatarList-avatar-${index+user_first_name+user_last_name}`}
                 src={user1Image}
@@ -34,8 +43,10 @@ const HorizontalAvatarList = ({
                   marginLeft: !isFirstItem && -20,
                   marginBottom: '1px',
                   marginTop:'1px'
+                  
                 }}
-              />
+              /></Link>
+              
 
               {!!user_first_name && (
                 <UncontrolledTooltip
