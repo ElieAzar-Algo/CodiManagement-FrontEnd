@@ -30,12 +30,23 @@ const StageTasks = props => {
   const [editForm, setEditForm] = useState(false);  
   const [modal, setModal] = useState(false);  
   const [taskInputs, setTaskInputs] = useState([]);
-  const [taskId, setTaskId] = useState();
+
   const [errors, setErrors] = useState(false);
+  const [deleteId, setDeleteId] = useState();
+
+  const [disabled, setDisabled] = useState(-1);
+  const [hidden, setHidden] = useState(false);
 
 
   const stageId = props.match.params.id;
   const cohortId = props.match.params.cohortId;
+
+  const handleIndexClick = key => {
+    if (disabled==key){
+      setDisabled(-1);
+    }else{
+    setDisabled(key);}
+  };
 
   const catchInput = e => {
     e.persist();
@@ -96,9 +107,31 @@ const StageTasks = props => {
     props.history.goBack();
   };
 
-  const editTask = async e => {
-    e.preventDefault();
-    const response = await fetch(`http://localhost:8000/api/task/${taskId}`, {
+  const deleteTask=async()=>
+  {
+    const deleteRequestOptions = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        //Authorization: "Bearer " + token,
+      },
+    };
+    const res = await fetch(
+      `http://localhost:8000/api/task/${deleteId}`,
+      deleteRequestOptions,
+    );
+    const result = await res.json();
+
+    console.log(result.message);
+    setModal(!modal);
+    getTasks();
+  }
+
+
+  const editTask = async (id) => {
+    
+    const response = await fetch(`http://localhost:8000/api/task/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -115,9 +148,7 @@ const StageTasks = props => {
     console.log(result);
     if (result.success) {
       setErrors(result);
-      
-        window.location.reload();
-    
+      getTasks();
     } else {
       setErrors(result.errors);
     }
@@ -464,14 +495,16 @@ const StageTasks = props => {
                           <Table responsive hover>
                             <thead>
                               <tr>
-                              <th>#</th>
-                                <th>Task Name</th>
-                                <th>Link</th>
-                                <th>Type</th>
-                                <th>Key Range</th>
-                                <th>Team/Solo</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
+                             
+                                <th  style={{fontSize:"small", width: '20%' }}>Task Name</th>
+                                <th style={{fontSize:"small", width: '7%' }}>Link</th>
+                                <th style={{fontSize:"small", width: '15%' }}>Type</th>
+                                <th style={{ fontSize:"small", width: '8%' }}>Key Range</th>
+                                <th style={{ fontSize:"small", width: '8%' }}>Team/Solo</th>
+                                <th style={{fontSize:"small",  width: '8%' }}>Start Date</th>
+                                <th style={{fontSize:"small",  width: '8%' }}>End Date</th>
+                                <th style={{fontSize:"small",  width: '30%' }}></th>
+                                {/* <th style={{ width: '15%' }}></th> */}
                                 
                                 
                               </tr>
@@ -480,14 +513,113 @@ const StageTasks = props => {
                             <tbody>
                               {tasks && tasks.map((task, taskKey) => (
                                 <tr key={taskKey}>
-                                  <td> {taskKey + 1}</td>
-                                  <td>{task.task_name}</td>
-                                  <td><a href={task.task_link} target="_blank">LINK</a></td>
-                                  <td>{task.task_type}</td>
-                                  <td>{task.key_range}</td>
-                                  <td>{task.is_teamwork?'Teamwork':'Solo'}</td>
-                                  <td>{task.start_date}</td>
-                                  <td>{task.end_date}</td>
+                                 
+                                  {/* <td>{task.task_name}</td> */}
+                                  <td> <Input
+                                   style={{fontSize:"small"}}
+                                defaultValue={task.task_name}
+                                disabled={disabled!==taskKey}
+                                type="text"
+                                id="task_name"
+                                name="task_name"
+                                onChange={e => {
+                                  catchInput(e);
+                                }}
+                              /></td>
+                                  <td >
+                                    <a  hidden={disabled==taskKey} href={task.task_link} target="_blank">LINK</a>
+                                    <Input
+                                     style={{fontSize:"small"}}
+                                      defaultValue={task.task_link}
+                                      hidden={disabled!==taskKey}
+                                      type="text"
+                                      id="task_link"
+                                      name="task_link"
+                                      onChange={e => {
+                                        catchInput(e);
+                                      }}
+                                    />
+                                    </td>
+                                  
+                                  {/* <td>{task.task_type}</td> */}
+                                  <td>
+                                  <Input
+                                   style={{fontSize:"small"}}
+                                      defaultValue={task.task_type}
+                                      disabled={disabled!==taskKey}
+                                      type="text"
+                                      id="task_type"
+                                      name="task_type"
+                                      onChange={e => {
+                                        catchInput(e);
+                                      }}
+                                    />
+                                  </td>
+                                  {/* <td>{task.key_range}</td> */}
+                                  <td>
+                                  <Input
+                                   style={{fontSize:"small"}}
+                                      defaultValue={task.key_range}
+                                      disabled={disabled!==taskKey}
+                                      type="text"
+                                      id="key_range"
+                                      name="key_range"
+                                      onChange={e => {
+                                        catchInput(e);
+                                      }}
+                                    />
+                                  </td>
+                                  <td disabled={disabled==taskKey}>{task.is_teamwork?'Teamwork':'Solo'}</td>
+                                  {/* <td>
+                                  <Input
+                                      defaultValue={task.is_teamwork?'Teamwork':'Solo'}
+                                      disabled={disabled!==taskKey}
+                                      type="text"
+                                      id="is_teamwork"
+                                      name="is_teamwork"
+                                      onChange={e => {
+                                        catchInput(e);
+                                      }}
+                                    />
+                                  </td> */}
+                                  <td  hidden={disabled!==taskKey}>
+                                  
+                                  <UncontrolledButtonDropdown addonType="append">
+                                    <DropdownToggle caret>{teamwork?'Teamwork':'solo'} </DropdownToggle>
+                                    <DropdownMenu>
+                                    
+                                        <DropdownItem onClick={()=>setTeamwork(1)}> Teamwork</DropdownItem>
+                                        <DropdownItem onClick={()=>setTeamwork(0)}> Solo</DropdownItem>
+                                    
+                                    </DropdownMenu>
+                                  </UncontrolledButtonDropdown>
+                                  </td>
+                                  {/* <td>{task.start_date}</td> */}
+                                    <td style={{fontSize:"small"}} hidden={disabled==taskKey}>{task.start_date}</td>
+                                    <td style={{ width: '70%' }} hidden={disabled!==taskKey}> 
+                                    <Input
+                                    style={{fontSize:"small"}}
+                                    defaultValue={task.start_date}
+                                    style={{ width: '80%' }}
+                                      type="date"
+                                      onChange={catchInput}
+                                      name="start_date"
+                                  /></td> 
+
+                                  {/* <td>{task.end_date}</td> */}
+
+                                  <td  style={{fontSize:"small"}} hidden={disabled==taskKey}>{task.end_date}</td>
+                                    <td style={{ width: '70%' }} hidden={disabled!==taskKey}> 
+                                    <Input
+                                    style={{fontSize:"small"}}
+                                    defaultValue={task.end_date}
+                                    style={{ width: '80%' }}
+                                      type="date"
+                                      onChange={catchInput}
+                                      name="end_date"
+                                  /></td> 
+
+
                                  {task.is_teamwork?
                                   <td>
   
@@ -496,8 +628,32 @@ const StageTasks = props => {
                                          pathname: ``,
                                       }}
                                     >
-                                      <Button color="info"> More Info </Button>
+                                      <Button hidden={hidden} size='sm' color="info"> More Info </Button>
                                     </Link>
+                                    <Button 
+                                    disabled={disabled==-1?!disabled:disabled!==taskKey}
+                                    hidden={disabled==taskKey}
+                                    className="ml-2"
+                                    size='sm'
+                                    color="primary"
+                                    onClick={()=>{handleIndexClick(taskKey);
+                                    // setStageId(stage.id);
+                                    
+                                    setHidden(true)
+                                    }} >
+                                    Edit
+                                  </Button>
+                                  <Button 
+                                   
+                                    hidden={hidden}
+                                    className="ml-2"
+                                    size='sm'
+                                    color="danger"
+                                    onClick={() => {setModal(!modal);setDeleteId(task.id)}}
+
+                                   >
+                                    Delete
+                                  </Button>
                                   </td>
                                   :
                                   <td>
@@ -507,18 +663,63 @@ const StageTasks = props => {
                                          pathname: `/solo-task-info/${task.id}`,
                                       }}
                                     >
-                                      <Button color="info"> More Info </Button>
+                                      <Button 
+                                      hidden={hidden}
+                                      size='sm'
+                                      color="info"> More Info </Button>
                                     </Link>
+                                    <Button 
+                                    disabled={disabled==-1?!disabled:disabled!==taskKey}
+                                    hidden={disabled==taskKey}
+                                    className="ml-2"
+                                    size='sm'
+                                    color="primary"
+                                    onClick={()=>{handleIndexClick(taskKey);
+                                    // setStageId(stage.id);
+                                    
+                                    setHidden(true)
+                                    }} >
+                                    Edit
+                                  </Button>
+                                  <Button 
+                                   
+                                    hidden={hidden}
+                                    className="ml-2"
+                                    size='sm'
+                                    color="danger"
+                                    onClick={() => {setModal(!modal);setDeleteId(task.id)}}
+
+                                   >
+                                    Delete
+                                  </Button>
                                   </td>
                                   }
 
-                                  <td><Button className="mr-3"
+                                    <td  hidden={disabled!==taskKey}>
+                                    
+                              <Button 
+                                 
+                                  size="sm" 
+                                  className=" "
+                                  color="warning" 
+                                  onClick={(e)=>{ 
+                                  e.preventDefault();
+                                  editTask(task.id); 
+                                  handleIndexClick(-1)
+                                  setHidden(false)
+                              }}>
+                                Submit Changes
+                                </Button>
+                                    </td>
+
+
+                                  {/* <td><Button className="mr-3"
                                   color="primary"
                                   onClick={()=>{setEditForm(!editForm);setTaskId(task.id)}}
                                   >
                                     Edit Task
                                   </Button>
-                                 </td>
+                                 </td> */}
                                 </tr>
                               ))}
 
@@ -533,7 +734,33 @@ const StageTasks = props => {
               <Button onClick={()=>props.history.goBack()} >Back</Button>
             </Card>
 
-           
+            <Modal
+                                    isOpen={modal}
+
+                                    //   className={props.className}
+                                  >
+                                    <ModalHeader>
+                                      You cannot undo this action !
+                                    </ModalHeader>
+                                    <ModalBody>
+                                      Are you sure, you want to delete{' '}
+                                       
+                                    </ModalBody>
+                                    <ModalFooter>
+                                      <Button
+                                        color="primary"
+                                        onClick={() => deleteTask()}
+                                      >
+                                        Confirm
+                                      </Button>{' '}
+                                      <Button
+                                        color="secondary"
+                                        onClick={() => setModal(!modal)}
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </ModalFooter>
+                                  </Modal>
         
         </Col>
       

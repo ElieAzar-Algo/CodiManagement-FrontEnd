@@ -368,7 +368,7 @@ const StagesInfo = props => {
                                   type="date"
                                   onChange={catchInput}
                                   name="start_date"
-                              /></td>
+                              /></td> 
 
                                 <td hidden={disabled==stageKey}>{stage.end_date}</td>
                                 <td hidden={disabled!==stageKey} >

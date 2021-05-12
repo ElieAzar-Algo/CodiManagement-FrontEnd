@@ -45,6 +45,16 @@ const BranchesInfo = () => {
   const [branchId, setBranchId] = useState();
   const [branchName, setBranchName] = useState('Branches');
   const [errors, setErrors] = useState(false);
+  const [disabled, setDisabled] = useState(-1);
+  const [hidden, setHidden] = useState(false);
+
+
+  const handleIndexClick = key => {
+    if (disabled==key){
+      setDisabled(-1);
+    }else{
+    setDisabled(key);}
+  };
 
   const catchInput = e => {
     e.persist();
@@ -105,9 +115,9 @@ const BranchesInfo = () => {
       setErrors(result.errors);
     }
   };
-  const editCohort = async e => {
-    e.preventDefault();
-    const response = await fetch(`http://localhost:8000/api/cohort/${editId}`, {
+  const editCohort = async (id) => {
+    // e.preventDefault();
+    const response = await fetch(`http://localhost:8000/api/cohort/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +133,7 @@ const BranchesInfo = () => {
     console.log(result);
     if (result.success) {
       setErrors(result);
-      window.location.reload();
+     getIndividualBranchInfo(branchId)
     } else {
       setErrors(result.errors);
     }
@@ -285,7 +295,7 @@ const BranchesInfo = () => {
             <Row>
               
               
-                <Row hidden={!editForm}>
+                {/* <Row hidden={!editForm}>
                   <Col>
                     <h3>
                       Edit Form{' '}
@@ -375,7 +385,7 @@ const BranchesInfo = () => {
                       </Col>
                     </FormGroup>
                   </Col>
-                </Row>
+                </Row> */}
               
                     <Col >
                       {!individualBranch ? (
@@ -411,22 +421,52 @@ const BranchesInfo = () => {
                               <thead>
                               
                                 <tr>
-                                  <th>#</th>
-                                  <th>Cohort</th>
-                                  <th>Start date</th>
-                                  <th>End date</th>
-                                  <th>Students Number</th>
-                                  <th>Mentors Number</th>
+                                  {/* <th>#</th> */}
+                                  <th style={{ width: '15%' }}>Cohort</th>
+                                  <th style={{ width: '15%' }}>Start date</th>
+                                  <th style={{ width: '15%' }}>End date</th>
+                                  <th style={{ width: '15%' }}>Students Number</th>
+                                  <th style={{ width: '15%' }}>Mentors Number</th>
+                                  <th style={{ width: '25%' }}></th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {individualBranch.map((branch, key) =>
                                   branch.cohorts.map((cohort, cohortKey) => (
-                                    <tr key={key}>
-                                      <th scope="row">{cohortKey + 1}</th>
-                                      <td>{cohort.cohort_code}</td>
-                                      <td>{cohort.start_date} </td>
-                                      <td>{cohort.end_date}</td>
+                                    <tr key={cohortKey}>
+                                      {/* <th scope="row">{cohortKey + 1}</th> */}
+                                      {/* <td>{cohort.cohort_code}</td> */}
+                                     <td> <Input
+                                      defaultValue={cohort.cohort_code}
+                                      disabled={disabled!==cohortKey}
+                                      type="text"
+                                      id="cohort_code"
+                                      name="cohort_code"
+                                      onChange={e => {
+                                        catchInput(e);
+                                      }}
+                                    /></td>
+                                      {/* <td>{cohort.start_date} </td> */}
+                                      <td hidden={disabled==cohortKey}>{cohort.start_date}</td>
+                                    <td style={{ width: '15%' }} hidden={disabled!==cohortKey}> 
+                                    <Input
+                                    defaultValue={cohort.start_date}
+                                    style={{ width: '80%' }}
+                                      type="date"
+                                      onChange={catchInput}
+                                      name="start_date"
+                                  /></td> 
+
+                                      {/* <td>{cohort.end_date}</td> */}
+                                      <td hidden={disabled==cohortKey}>{cohort.end_date}</td>
+                                    <td style={{ width: '15%' }} hidden={disabled!==cohortKey}> 
+                                    <Input
+                                    defaultValue={cohort.end_date}
+                                    style={{ width: '80%' }}
+                                      type="date"
+                                      onChange={catchInput}
+                                      name="end_date"
+                                  /></td> 
                                       <td>{cohort.users.length} Students</td>
                                       <td>{branch.admins.length} Mentors</td>
 
@@ -440,10 +480,36 @@ const BranchesInfo = () => {
                                             },
                                           }}
                                         >
-                                          <Button color="info"> More Info </Button>
+                                          <Button size='sm' hidden={hidden} color="info"> More Info </Button>
                                         </Link>
 
+                                        <Button 
+                                          disabled={disabled==-1?!disabled:disabled!==cohortKey}
+                                          hidden={disabled==cohortKey}
+                                          className="ml-2 mr-2"
+                                          size='sm'
+                                          color="primary"
+                                          onClick={()=>{handleIndexClick(cohortKey);
+                                          setBranchId(branch.id);
+                                          
+                                          setHidden(true)
+                                          }} >
+                                          Edit
+                                        </Button>
                                         <Button
+                                        hidden={disabled!==cohortKey}
+                                        size="sm" 
+                                        className=" "
+                                        color="warning" 
+                                        onClick={(e)=>{ 
+                                        e.preventDefault();
+                                        editCohort(cohort.id); 
+                                        handleIndexClick(-1)
+                                        setHidden(false)
+                                    }}>
+                                      Submit Changes
+                                      </Button>
+                                        {/* <Button
                                           className="ml-3 mr-3"
                                           onClick={e => {
                                             setEditForm(!editForm);
@@ -453,8 +519,10 @@ const BranchesInfo = () => {
                                         >
                                           {' '}
                                     Edit{' '}
-                                        </Button>
+                                        </Button> */}
                                         <Button
+                                        hidden={hidden}
+                                        size='sm'
                                           onClick={() => setModal(!modal)}
                                           color="danger"
                                         >

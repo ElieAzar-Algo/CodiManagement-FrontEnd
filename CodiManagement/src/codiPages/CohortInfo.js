@@ -136,25 +136,25 @@ const CohortInfo = props => {
                           </Link> */}
 
                           <Link to={{ pathname: `/create-user-cohort/${cohortId}` }}>
-                            <Button className="mr-3" color="primary">
+                            <Button  size='sm' className="mr-2" color="primary">
                             Create Student
                           </Button>
                           </Link>
 
                           <Link to={{ pathname: `/attendance/${cohortId}` }}>
-                            <Button className="mr-3" color="primary">
+                            <Button  size='sm' className="mr-2" color="primary">
                               Take cohort Attendance
                           </Button>
                           </Link>
 
                           <Link to={{ pathname: `/view-attendance/${cohortId}` }}>
-                            <Button className="mr-3" color="primary">
+                            <Button  size='sm' className="mr-2" color="primary">
                               View attendance individually
                           </Button>
                           </Link>
 
                           <Link to={{ pathname: `/activity-evaluation-admin/${cohortId}` }}>
-                            <Button className="mr-3" color="primary">
+                            <Button  size='sm' className="mr-2" color="primary">
                               Activity Evaluation
                           </Button>
                           </Link>
@@ -167,27 +167,31 @@ const CohortInfo = props => {
                           </Button>
                         </Link> */}
 
-                          <Button onClick={disableCohort} className="mr-3" color="primary">
+                         
+
+                        <Link to={{ pathname: `/stages-info/${cohortId}` }}>
+                            <Button size='sm'  className="mr-2 " color="primary">
+                              Stages
+                          </Button>
+                          </Link>
+                          <Link to={{ pathname: `/user-skills/${cohortId}` }}>
+                            <Button  size='sm' className="mr-2" color="primary">
+                              Skill Map
+                          </Button>
+                          </Link>
+
+                          <Button  size='sm' onClick={disableCohort} className="mr-2" color="danger">
                             {' '}
                           Disable Cohort
                         </Button>
+
 
                         </Col>
                       </Row>
 
                       <Row className="mb-3 mt-3">
                         <Col>
-                          <Link to={{ pathname: `/stages-info/${cohortId}` }}>
-                            <Button className="mr-3 " color="primary">
-                              Stages
-                          </Button>
-                          </Link>
-                          <Link to={{ pathname: `/user-skills/${cohortId}` }}>
-                            <Button className="mr-3" color="primary">
-                              Skill Map
-                          </Button>
-                          </Link>
-
+                          
                         </Col>
                       </Row>
 
@@ -301,7 +305,7 @@ const CohortInfo = props => {
                                           pathname: `/user-profile/${user.id}`,
                                         }}
                                       >
-                                        <Button color="info"> More Info </Button>
+                                        <Button size='sm' color="info"> More Info </Button>
                                       </Link>
                                     </td>
                                   </tr>

@@ -56,6 +56,8 @@ const StagesInfo = props => {
   //const [users, setUsers] = useState([]);
   const [errors, setErrors] = useState(false);
   const [disabled, setDisabled] = useState(-1);
+  const [hidden, setHidden] = useState(false);
+
 
 
   //const branchName=props.match.params.name;
@@ -357,10 +359,10 @@ const StagesInfo = props => {
 
 
                       <FormGroup row>
-                <Label for="exampleEmail" sm={3}>
+                <Label for="exampleEmail" sm={5}>
                   Mentors
                   </Label>
-                <Col sm={9}>
+                <Col sm={7}>
                   <UncontrolledButtonDropdown addonType="append">
                     <DropdownToggle caret> {adminName} </DropdownToggle>
                     <DropdownMenu>
@@ -436,7 +438,7 @@ const StagesInfo = props => {
                           <thead>
                             <tr>
                               <th style={{ width: '14%' }}>Team Name</th>
-                              <th style={{ width: '9%' }}>Team of ...</th>
+                              <th style={{ width: '9%' }}>Team of </th>
                               <th style={{ width: '13%' }}>Mentor</th>
                               <th style={{ width: '15%' }}>Scrum Master</th>
                               <th style={{ width: '18%' }}>Members</th>
@@ -460,14 +462,14 @@ const StagesInfo = props => {
                                   catchInput(e);
                                 }}
                               /> </Label>
-                              <Button
+                              {/* <Button
                               color="primary"
                               size="xs"
                               hidden={disabled!==teamKey}
                               onClick={()=>editTeam(team.id)}
                               >
                                 submit
-                              </Button>
+                              </Button> */}
                               </FormGroup>
                               </td>
                                 
@@ -485,6 +487,8 @@ const StagesInfo = props => {
                                           setAdminId(admin.id);
                                           setAdminName(admin.username);
                                           editTeam(team.id,admin.id)
+                                          handleIndexClick(-1)
+                                          setHidden(false)
                                         }}
                                       >
                                         {admin.username}
@@ -537,6 +541,7 @@ const StagesInfo = props => {
                                     onClick={() => {setScrumModal(!ScrumModal);
                                       setTeamId(team.id)
                                     }}
+                                    hidden={hidden}
                                     size='sm'
                                     color="primary"
                                     className="mr-2"
@@ -545,8 +550,33 @@ const StagesInfo = props => {
                                     Edit Team Members{' '}
                                   </Button>
 
-                                 
-                                  <Button
+                                  <Button 
+                                    disabled={disabled==-1?!disabled:disabled!==teamKey}
+                                    hidden={disabled==teamKey}
+                                    className="mr-2"
+                                    size='sm'
+                                    color="primary"
+                                    onClick={()=>{handleIndexClick(teamKey);
+                                    // setStageId(stage.id);
+                                    
+                                    setHidden(true)
+                                    }} >
+                                    Edit
+                                  </Button>
+                                  <Button 
+                                 hidden={disabled!==teamKey}
+                                  size="sm" 
+                                  className=" "
+                                  color="warning" 
+                                  onClick={(e)=>{ 
+                                  e.preventDefault();
+                                  editTeam(team.id); 
+                                  handleIndexClick(-1)
+                                  setHidden(false)
+                              }}>
+                                Submit Changes
+                                </Button>
+                                  {/* <Button
                                   onClick={()=>{ handleIndexClick(teamKey)}}
                                   size='sm'
                                   className="mr-2"
@@ -555,13 +585,13 @@ const StagesInfo = props => {
                                   >
                                     {' '}
                                     Edit{' '}
-                                  </Button>
+                                  </Button> */}
 
 
                                 <Button
                                   onClick={() => {setModal(!modal);setDeleteId(team.id)}}
                                   size='sm'
-
+                                  hidden={hidden}
                                     color="danger"
                                   >
                                     {' '}
