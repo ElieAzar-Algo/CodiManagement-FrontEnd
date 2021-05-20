@@ -134,6 +134,7 @@ const BranchesInfo = () => {
     if (result.success) {
       setErrors(result);
      getIndividualBranchInfo(branchId)
+     setCohortInputs([])
     } else {
       setErrors(result.errors);
     }

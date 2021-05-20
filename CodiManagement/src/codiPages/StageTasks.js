@@ -175,7 +175,9 @@ const StageTasks = props => {
                     <Row className="mb-2">
                       <Col>
                        
-                          <Button className="mr-3"
+                          <Button 
+                          size='sm'
+                          className="mr-2"
                            color="primary"
                            onClick={()=>setCreateForm(!createForm)}
                           >
@@ -185,15 +187,23 @@ const StageTasks = props => {
                           <Link to={{
                               pathname: `/teams/${stageId}/${cohortId}`,
                                     }}>  <Button 
-                          className="mr-3"
-                           color="danger"
+                          className="mr-2"
+                           color="primary"
+                           size='sm'
                            >
                             Teams
                           </Button>
                           </Link>
 
+                          <Link to={{ pathname: `/activity-evaluation-admin/${cohortId}/stage/${stageId}` }}>
+                            <Button  size='sm' className="mr-2" color="primary">
+                              Activity Evaluation
+                          </Button>
+                          </Link>
+
                           <Button 
-                          className="mr-3"
+                          size='sm'
+                          className="mr-2"
                            color="danger"
                            onClick={()=>setModal(!modal)}>
                             Delete Stage
@@ -217,6 +227,7 @@ const StageTasks = props => {
                   </ModalFooter>
                 </Modal>
                        
+               
                   
                       </Col>
                     </Row>

@@ -40,7 +40,7 @@ const CreateUser = props => {
     const response = await fetch('http://localhost:8000/api/only-cohorts');
     const result = await response.json();
     setCohorts(result.data);
-    //console.log(result.data)
+  //  console.log(result.data)
   };
   const catchInput = e => {
     e.persist();
@@ -48,36 +48,49 @@ const CreateUser = props => {
       ...userInputs,
       [e.target.name]: e.target.value,
     });
-    console.log(userInputs);
+    // console.log(userInputs);
   };
 
   const createUser = async e => {
-    console.log(value)
+    // console.log(value)
     e.preventDefault();
+   const photo= document.querySelector('#user_avatar').files[0]
+   //console.log(photo)
+    const body =new FormData();
+    body.append('active_inactive',1);
+    body.append('cohort_code',UserCohort);
+    body.append('user_gender',gender);
+    body.append('user_gender',gender);
+    body.append('user_avatar',photo);
+    body.append('user_nationality',value.label);
+    // Object.keys(userInputs).map((key, index)=>{
+      
+    //   body.append(key, userInputs[key])
+    // //  console.log(key,userInputs[key] )
+    // })
+   // console.log(body);
+  
+   // body.append({...userInputs},);
+
     const response = await fetch('http://localhost:8000/api/user', {
       method: 'POST',
-      headers: {
+     /*  headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         //Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        ...userInputs,
-        active_inactive: 1,
-        cohort_code: UserCohort,
-        user_gender:gender,
-        user_nationality:value.label
-
-      }),
+      }, */
+      body
     });
     const result = await response.json();
-    console.log(result);
+    // console.log(result);
     if (result.success) {
+      console.log("success", result);
       setErrors(result);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
     } else {
+      console.log("success", result);
       setErrors(result.errors);
     }
   };
@@ -388,9 +401,10 @@ const CreateUser = props => {
                   </Label>
                   <Col sm={8}>
                     <Input
-                      type="text"
+                      type="file"
+                      id="user_avatar"
                       placeholder="Upload photo "
-                      onChange={catchInput}
+                      // onChange={catchInput}
                       name="user_avatar"
                     />
                   </Col>

@@ -27,6 +27,10 @@ import {
   ModalFooter,
   ModalHeader,
   Alert,
+  PaginationItem,
+  CardFooter,
+  Pagination,
+  PaginationLink,
   
   UncontrolledAlert,
 } from 'reactstrap';
@@ -58,12 +62,14 @@ const ActivityEvaluationAdmin = props => {
   const [disabledClassKeys, setDisabledClassKeys] = useState(-1);
   const [totalAdditional, setTotalAdditional] = useState();
   const [totalTeam, setTotalTeam] = useState();
-  const [totalAttendance, setTotalAttendance] = useState();
-  const [totalAssignment, setTotalAssignment] = useState();
-  const [total, setTotal] = useState(0);
+  const [totalAttendance, setTotalAttendance] = useState(0);
+  const [totalAssignment, setTotalAssignment] = useState(0);
+  
+  const [pagination, setPagination] = useState([]);
 
 
   const cohortId = props.match.params.id;
+  const stageId = props.match.params.stageId;
 
   //handle click additional Keys table
   const handleIndexClick = additionalKeysRecord => {
@@ -105,6 +111,7 @@ const ActivityEvaluationAdmin = props => {
       },
       body: JSON.stringify({
           user_id:studentId,
+          stage_id:stageId,
         ...additionalKeysInputs,
         
       }),
@@ -138,6 +145,7 @@ const ActivityEvaluationAdmin = props => {
       },
       body: JSON.stringify({
           cohort_id:cohortId,
+          stage_id:stageId,
         ...additionalKeysInputs,
         
       }),
@@ -168,7 +176,7 @@ const ActivityEvaluationAdmin = props => {
         //Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-          cohort_id:cohortId,
+          stage_id:stageId,
         target:document.querySelector('#targetInput').value,
         
       }),
@@ -198,7 +206,7 @@ const ActivityEvaluationAdmin = props => {
 // get cohort target (up right card)
   const getTargetKeys = async () => {
     const res = await fetch(
-      `http://localhost:8000/api/target-keys/${cohortId}`,
+      `http://localhost:8000/api/target-keys/${stageId}`,
     );
     const result = await res.json();
     setTargetKeys(result.data);
@@ -208,12 +216,12 @@ const ActivityEvaluationAdmin = props => {
   //get additional keys info (additional keys table)
   const getAdditionalKeys = async () => {
     const res = await fetch(
-      `http://localhost:8000/api/additional-keys/${cohortId}`,
+      `http://localhost:8000/api/additional-keys/${cohortId}/${stageId}`,
     );
     const result = await res.json();
     setAdditionalKeys(result.data);
     setAdditionalKeysInputs([]);
-    //console.log(result.data);
+    console.log(result.data);
     // 
     let t=0;
     for (let i=0; i<result.data.length;i++){
@@ -225,7 +233,7 @@ const ActivityEvaluationAdmin = props => {
   //get class keys info (class keys table)
   const getClassKeys = async () => {
     const res = await fetch(
-      `http://localhost:8000/api/class-keys/${cohortId}`,
+      `http://localhost:8000/api/class-keys/${cohortId}/${stageId}`,
     );
     const result = await res.json();
     setClassKeys( result.data);
@@ -238,34 +246,69 @@ const ActivityEvaluationAdmin = props => {
     setTotalTeam(t);
   };
 
-    //get attendance keys info (attendance keys table)
+    //get attendance keys info (attendance keys table) with pagination 
   const getAttendanceKeys = async () => {
     const res = await fetch(
-      `http://localhost:8000/api/attendance-keys/${cohortId}`,
+      `http://localhost:8000/api/attendance-keys/${cohortId}/${stageId}`,
+
     );
+
     const result = await res.json();
-    setAttendanceKeys(result.data);
-    //console.log(result.data);
+    console.log(result)
+    const arr=[]
+    arr.push(result.data)
+    setPagination(arr)
+    console.log(pagination);
     let t=0;
-    for (let i=0; i<result.data.length;i++){
-      t+=result.data[i].attendance_key_amount
+    if(result.success){
+     setAttendanceKeys(result.data.data);
+    for (let i=0; i<result.data.data.length;i++){
+      t+=result.data.data[i].attendance_key_amount
     }
     setTotalAttendance(t);
+    }
   };
+
+  const nextPage= async (e)=>{
+    e.preventDefault();
+    const getNextUrl=pagination[0].next_page_url;
+    const response= await fetch(getNextUrl);
+    const result= await response.json();
+    setAttendanceKeys(result.data.data);
+    const arr=[]
+    arr.push(result.data)
+    setPagination(arr)
+  }
+  const prevPage= async (e)=>{
+    e.preventDefault();
+    // pagination[0].prev_page_url?
+    const getPrevUrl=pagination[0].prev_page_url;
+    const response= await fetch(getPrevUrl);
+    const result= await response.json();
+    setAttendanceKeys(result.data.data);
+    const arr=[]
+    arr.push(result.data)
+    setPagination(arr)
+    
+  }
 
       //get assignment keys info (assignment keys table)
   const getAssignmentKeys = async () => {
     const res = await fetch(
-      `http://localhost:8000/api/task-keys/${cohortId}`,
+      `http://localhost:8000/api/task-keys/${cohortId}/${stageId}`,
     );
+
     const result = await res.json();
+    let t=0;
+    if(result.success){
     setAssignmentKeys(result.data);
      console.log(result.data);
-     let t=0;
+   
     for (let i=0; i<result.data.length;i++){
       t+=result.data[i].keys
     }
     setTotalAssignment(t);
+  }
   };
 
 // edit additional keys info
@@ -406,15 +449,23 @@ const ActivityEvaluationAdmin = props => {
     // }
 
   useEffect(() => {
-  
-    getAdditionalKeys();
     getAttendanceKeys();
+    getAdditionalKeys();
     getAssignmentKeys();
     getClassKeys();
     getTargetKeys();
     
     
   }, []);
+  
+  // const consoleTotals=()=>{
+
+  // console.log('additional '+totalAdditional)
+  // console.log('team/class'+totalTeam)
+  // console.log('attendance'+totalAttendance)
+  // console.log('tasks'+totalAssignment)
+
+  // }
 
   return (
     <Row>
@@ -424,6 +475,15 @@ const ActivityEvaluationAdmin = props => {
           
             <h5> <strong>Activity Evaluation</strong></h5>
             <Row >
+            {/* <FormGroup>
+            <Button
+              className="ml-3"
+              color="primary"
+              onClick={() => consoleTotals()}
+            >
+              console
+            </Button>
+            </FormGroup> */}
               <FormGroup>
             <Button
               className="ml-3"
@@ -706,75 +766,9 @@ const ActivityEvaluationAdmin = props => {
                     </Col>
                 
                 </Row>
-{/* 
-            <Row hidden={!editForm}>
-              <Col sm={6}>
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Branch Name
-                  </Label>
-                  <Col sm={7}>
-                    <Input
-                      type="text"
-                      placeholder=""
-                      onChange={catchInput}
-                      name="branch_name"
-                    />
-                    {errors.branch_name ? (
-                      <UncontrolledAlert color="danger">
-                        {errors.branch_name}{' '}
-                      </UncontrolledAlert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Branch Country
-                  </Label>
-                  <Col sm={7}>
-                    <Input
-                      type="text"
-                      onChange={catchInput}
-                      name="branch_country"
-                    />
-                    {errors.branch_country ? (
-                      <UncontrolledAlert color="danger">
-                        {errors.branch_country}{' '}
-                      </UncontrolledAlert>
-                    ) : (
-                      ''
-                    )}
-                  </Col>
-                </FormGroup>
 
-                <FormGroup row>
-                  <Label for="exampleEmail" sm={5}>
-                    Branch Location
-                  </Label>
-                  <Col sm={7}>
-                    <Input
-                      type="text"
-                      onChange={catchInput}
-                      name="branch_location"
-                    />
-                    {errors.branch_location ? (
-                      <UncontrolledAlert color="danger">
-                        {errors.branch_location}{' '}
-                      </UncontrolledAlert>
-                    ) : (
-                      ''
-                    )}
-                    <Button color="primary" onClick={editBranch}>
-                      Submit
-                    </Button>
-                  </Col>
-                </FormGroup>
-              </Col>
-            </Row> */}
 
-            <Row>
+            <Row hidden={attendanceKeys.length==0}>
               <Col>
                 <Card body>
                   <h5 style={{fontWeight:'600'}}>Attendance's Keys</h5>
@@ -790,7 +784,7 @@ const ActivityEvaluationAdmin = props => {
                     </thead>
                     <tbody>
 
-                      { attendanceKeys.map((atKeys, key) => (
+                       { attendanceKeys.map((atKeys, key) => (
                       
                         
                         <tr key={key}>
@@ -802,15 +796,42 @@ const ActivityEvaluationAdmin = props => {
                           <td>{atKeys.comment}</td>
                           
                         </tr>
-                      ))}
+                      ))} 
                     </tbody>
                   </Table>
+                  <CardFooter className="py-4">
+                <nav aria-label="...">
+                  <Pagination
+                    className="pagination justify-content-end mb-0"
+                    listClassName="justify-content-end mb-0"
+                  >
+                    <PaginationItem>
+                      <PaginationLink
+                        onClick={prevPage}
+                        tabIndex="-1"
+                      >
+                        <i className="fas fa-angle-left" />
+                        <span className="sr-only">Previous</span>
+                      </PaginationLink>
+                    </PaginationItem>
+                    
+                    <PaginationItem>
+                      <PaginationLink
+                        onClick={nextPage}
+                      >
+                        <i className="fas fa-angle-right" />
+                        <span className="sr-only">Next</span>
+                      </PaginationLink>
+                    </PaginationItem>
+                  </Pagination>
+                </nav>
+              </CardFooter>
                 </Card>
               </Col>
             </Row>
   {/* -----------------------------------TASKS KEYS TABLE------------------------------------ */}
 
-            <Row>
+            <Row hidden={assignmentKeys.length==0}>
               <Col>
                 <Card body>
                   <h5 style={{fontWeight:'600'}}>Task's Keys</h5>
@@ -845,7 +866,7 @@ const ActivityEvaluationAdmin = props => {
             </Row>
 
             {/* -----------------------------------CLASS KEYS TABLE------------------------------------ */}
-            <Row>
+            <Row hidden={classKeys.length==0}>
               <Col>
                 <Card body>
                   <h5 style={{fontWeight:'600'}}>Class/Team Keys</h5>
@@ -959,7 +980,7 @@ const ActivityEvaluationAdmin = props => {
               </Col>
             </Row>
   {/* -----------------------------------ADDITIONAL KEYS TABLE------------------------------------ */}
-            <Row>
+            <Row hidden={additionalKeys.length==0}>
               <Col>
                 <Card body>
                   <h5 style={{fontWeight:'600'}}>Individual Additional Keys</h5>
