@@ -16,6 +16,7 @@ import {
   MdPersonPin,
   MdSettingsApplications,
 } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import {
   Button,
   ListGroup,
@@ -96,6 +97,7 @@ state = {
 
   render() {
     const { isNotificationConfirmed } = this.state;
+    const myId=localStorage.getItem('adminID')
 
     return (
       <Navbar light expand className={bem.b('bg-white')}>
@@ -140,10 +142,10 @@ state = {
 
           <NavItem>
             <NavLink id="Popover2">
-              {/* <Avatar
+              <Avatar
                 onClick={this.toggleUserCardPopover}
                 className="can-click"
-              /> */}
+              />
             </NavLink>
             <Popover
               placement="bottom-end"
@@ -155,16 +157,18 @@ state = {
             >
               <PopoverBody className="p-0 border-light">
                 <UserCard
-                  title="Jane"
-                  subtitle="jane@jane.com"
-                  text="Last updated 3 mins ago"
+                  // title="Jane"
+                  // subtitle="jane@jane.com"
+                  // text="Last updated 3 mins ago"
                   className="border-light"
                 >
                   <ListGroup flush>
-                    <ListGroupItem tag="button" action className="border-light">
-                      <MdPersonPin /> Profile
+                    <ListGroupItem onClick={this.toggleUserCardPopover} tag="button" action className="border-light">
+                     <Link to={{ 
+                                 pathname: `/mentor-profile/${myId}`,
+                              }}> <MdPersonPin />My Profile</Link>
                     </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
+                    {/* <ListGroupItem tag="button" action className="border-light">
                       <MdInsertChart /> Stats
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
@@ -178,7 +182,7 @@ state = {
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdExitToApp /> Signout
-                    </ListGroupItem>
+                    </ListGroupItem> */}
                   </ListGroup>
                 </UserCard>
               </PopoverBody>

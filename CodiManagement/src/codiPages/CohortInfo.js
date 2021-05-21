@@ -33,6 +33,8 @@ const CohortInfo = props => {
   //const [searchValue, setSearchValue] = useState(''); //search function is not completed
   const branchName = props.match.params.name;
   const cohortId = props.match.params.id;
+  const branchId = props.location.state.branch;
+  // console.log(branchId)
 
   const getCohort = async () => 
   {
@@ -164,7 +166,12 @@ const CohortInfo = props => {
 
                          
 
-                        <Link to={{ pathname: `/stages-info/${cohortId}` }}>
+                        <Link to={{ 
+                          pathname: `/stages-info/${cohortId}`,
+                          state:{
+                            branch:branchId
+                          }
+                       }}>
                             <Button size='sm'  className="mr-2 " color="primary">
                               Stages
                           </Button>

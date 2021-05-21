@@ -476,8 +476,7 @@ const BranchesInfo = () => {
                                           to={{
                                             pathname: `/cohort-info/${branch.branch_name}/${cohort.id}`,
                                             state: {
-                                              branch_name: 'batata',
-                                              new_id: '',
+                                              branch: branch.id,
                                             },
                                           }}
                                         >

@@ -40,6 +40,8 @@ const StageTasks = props => {
 
   const stageId = props.match.params.id;
   const cohortId = props.match.params.cohortId;
+  const branchId = props.location.state.branch;
+
 
   const handleIndexClick = key => {
     if (disabled==key){
@@ -186,6 +188,10 @@ const StageTasks = props => {
 
                           <Link to={{
                               pathname: `/teams/${stageId}/${cohortId}`,
+                              state:{
+                                branch:branchId
+                              }
+                              
                                     }}>  <Button 
                           className="mr-2"
                            color="primary"

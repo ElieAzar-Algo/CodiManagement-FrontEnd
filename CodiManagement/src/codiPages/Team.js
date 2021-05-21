@@ -63,6 +63,8 @@ const StagesInfo = props => {
   //const branchName=props.match.params.name;
   const stageId = props.match.params.id;
   const cohortId = props.match.params.cohortId;
+  const branchId = props.location.state.branch;
+
 
   const handleIndexClick = teamKey => {
     if (disabled==teamKey){
@@ -91,7 +93,7 @@ const StagesInfo = props => {
   };
 
   const getAdmins = async () => {
-    const res = await fetch(`http://localhost:8000/api/admin`);
+    const res = await fetch(`http://localhost:8000/api/admin/${branchId}`);
     const result = await res.json()
     console.log(result.data)
     setAdmins(result.data)
