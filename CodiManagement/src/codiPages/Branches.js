@@ -339,7 +339,7 @@ const BranchesInfo = (props) => {
                                     // setStageId(stage.id);
                                     setHidden(true)
                                     }} >
-                                    Edit Stage
+                                    Edit Branch
                                   </Button>
                               <Button 
                                   hidden={disabled!==key}

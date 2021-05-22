@@ -40,7 +40,8 @@ const StagesInfo = props => {
 
   const [admins, setAdmins] = useState([]);
   const [adminId, setAdminId] = useState();
-  const [adminName, setAdminName] = useState('Mentors');
+  const [adminName, setAdminName] = useState();
+  const [createAdminName, setCreateAdminName] = useState('Mentors');
 
   const [students, setStudents] = useState([]);
   const [studentId, setStudentId] = useState();
@@ -130,7 +131,7 @@ const StagesInfo = props => {
       console.log(result);
       if (result.success) {
         setErrors(result);
-        setAdminName('Mentors');
+        setCreateAdminName('Mentors');
         document.getElementById('TeamName').value="";
        // document.getElementById('max_members').value="";
         getTeams(); 
@@ -240,6 +241,7 @@ const StagesInfo = props => {
       setDisabled(-1);
       setTeamInputs([]);
       setAdminId();
+      setAdminName()
     } else {
       setErrors(result.errors);
     }
@@ -366,7 +368,7 @@ const StagesInfo = props => {
                   </Label>
                 <Col sm={7}>
                   <UncontrolledButtonDropdown addonType="append">
-                    <DropdownToggle caret> {adminName} </DropdownToggle>
+                    <DropdownToggle caret> {createAdminName} </DropdownToggle>
                     <DropdownMenu>
                       {admins.map((admin, adminKey) => (
                         <DropdownItem
@@ -374,7 +376,7 @@ const StagesInfo = props => {
                           onClick={() => {
                             
                             setAdminId(admin.id);
-                            setAdminName(admin.username);
+                            setCreateAdminName(admin.username);
                           }}
                         >
                           {admin.username}
@@ -479,7 +481,7 @@ const StagesInfo = props => {
                                 <td hidden={disabled==teamKey}> {team.admin.username} </td>
                                 <td hidden={disabled!==teamKey}>
                                 <UncontrolledButtonDropdown addonType="append">
-                                  <DropdownToggle caret> {adminName} </DropdownToggle>
+                                  <DropdownToggle caret> {adminName?adminName:team.admin.username?team.admin.username:"Mentors"} </DropdownToggle>
                                   <DropdownMenu>
                                     {admins.map((admin, adminKey) => (
                                       <DropdownItem

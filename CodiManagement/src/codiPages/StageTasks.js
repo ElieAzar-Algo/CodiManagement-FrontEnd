@@ -29,6 +29,7 @@ const StageTasks = props => {
   const [createForm, setCreateForm] = useState(false);  
   const [editForm, setEditForm] = useState(false);  
   const [modal, setModal] = useState(false);  
+  const [deleteStageModal, setDeleteStageModal] = useState(false);  
   const [taskInputs, setTaskInputs] = useState([]);
 
   const [errors, setErrors] = useState(false);
@@ -36,6 +37,7 @@ const StageTasks = props => {
 
   const [disabled, setDisabled] = useState(-1);
   const [hidden, setHidden] = useState(false);
+  const [agree, setAgree] = useState(true);
 
 
   const stageId = props.match.params.id;
@@ -91,7 +93,8 @@ const StageTasks = props => {
       setErrors(result.errors);
     }
   };
-  const deleteRecord = async () => {
+  const deleteStage= async () => {
+    console.log(stageId)
     const deleteRequestOptions = {
       method: 'DELETE',
       headers: {
@@ -106,7 +109,7 @@ const StageTasks = props => {
     );
     const result = await res.json();
     console.log(result.message);
-    props.history.goBack();
+   props.history.goBack();
   };
 
   const deleteTask=async()=>
@@ -124,7 +127,6 @@ const StageTasks = props => {
       deleteRequestOptions,
     );
     const result = await res.json();
-
     console.log(result.message);
     setModal(!modal);
     getTasks();
@@ -211,23 +213,28 @@ const StageTasks = props => {
                           size='sm'
                           className="mr-2"
                            color="danger"
-                           onClick={()=>setModal(!modal)}>
+                           onClick={()=>setDeleteStageModal(!deleteStageModal)}>
                             Delete Stage
                           </Button>
                           <Modal
-                  isOpen={modal}
+                  isOpen={deleteStageModal}
                   
                 //   className={props.className}
                 >
-                  <ModalHeader >You cannot undo this action !</ModalHeader>
+                  <ModalHeader > <h3 style={{color:'red'}}>WARNING!</h3>You cannot undo this action !</ModalHeader>
                   <ModalBody>
                      Are you sure, you want to delete this stage?
+                     <p style={{color:"red"}}>this may cause a loss of all the stage's tasks, teams, Skill-Maps, and the activity evalutation</p>
+                     <span 
+                     style={{cursor:'pointer',backgroundColor:"grey",padding:"10px"}}
+                     onClick={()=>setAgree(false)}
+                     >I AGREE</span>
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={deleteRecord}>
+                    <Button color="primary" disabled={agree} onClick={deleteStage}>
                       Confirm
                     </Button>{' '}
-                    <Button color="secondary" onClick={()=>setModal(!modal)}>
+                    <Button color="secondary" onClick={()=>setDeleteStageModal(!deleteStageModal)}>
                       Cancel
                     </Button>
                   </ModalFooter>
@@ -586,7 +593,7 @@ const StageTasks = props => {
                                       }}
                                     />
                                   </td>
-                                  <td disabled={disabled==taskKey}>{task.is_teamwork?'Teamwork':'Solo'}</td>
+                                  <td hidden={disabled==taskKey}>{task.is_teamwork?'Teamwork':'Solo'}</td>
                                   {/* <td>
                                   <Input
                                       defaultValue={task.is_teamwork?'Teamwork':'Solo'}
@@ -617,7 +624,7 @@ const StageTasks = props => {
                                     <Input
                                     style={{fontSize:"small"}}
                                     defaultValue={task.start_date}
-                                    style={{ width: '80%' }}
+                                    style={{ width: '65%' }}
                                       type="date"
                                       onChange={catchInput}
                                       name="start_date"
@@ -630,7 +637,7 @@ const StageTasks = props => {
                                     <Input
                                     style={{fontSize:"small"}}
                                     defaultValue={task.end_date}
-                                    style={{ width: '80%' }}
+                                    style={{ width: '65%' }}
                                       type="date"
                                       onChange={catchInput}
                                       name="end_date"

@@ -41,7 +41,7 @@ const BranchesInfo = () => {
   const [cohortForm, setCohortForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modal, setModal] = useState(false);
-  const [editId, setEditId] = useState();
+  const [deleteId, setDeleteId] = useState();
   const [branchId, setBranchId] = useState();
   const [branchName, setBranchName] = useState('Branches');
   const [errors, setErrors] = useState(false);
@@ -75,6 +75,7 @@ const BranchesInfo = () => {
   };
 
   const getIndividualBranchInfo = async id => {
+   
     console.log(id);
     const res = await fetch(`http://localhost:8000/api/branch/${id}`);
     const result = await res.json();
@@ -110,7 +111,12 @@ const BranchesInfo = () => {
      getIndividualBranchInfo(branchId);
     setErrors(result);
      setCohortForm(false)
-     setBranchId();
+    //  setBranchId();
+     document.querySelector('#create_cohort_code').value=""
+     document.querySelector('#start_date').value=""
+     document.querySelector('#end_date').value=""
+
+
     } else {
       setErrors(result.errors);
     }
@@ -140,7 +146,7 @@ const BranchesInfo = () => {
     }
   };
 
-  const deleteCohort = async id => {
+  const deleteCohort = async () => {
     const deleteRequestOptions = {
       method: 'DELETE',
       headers: {
@@ -150,13 +156,14 @@ const BranchesInfo = () => {
       },
     };
     const res = await fetch(
-      `http://localhost:8000/api/cohort/${id}`,
+      `http://localhost:8000/api/cohort/${deleteId}`,
       deleteRequestOptions,
     );
     const result = await res.json();
 
     console.log(result.message);
     getIndividualBranchInfo(branchId);
+    setModal(!modal)
   };
 
   useEffect(() => {
@@ -182,7 +189,13 @@ const BranchesInfo = () => {
                 icon={MdRoom}
                 title={branch.branch_name}
                 subtitle="Branch"
-                onClick={e => {getIndividualBranchInfo(branch.id);setBranchId(branch.id);}}
+                onClick={(e) => {
+                  
+                  setBranchId(branch.id)
+                  getIndividualBranchInfo(branch.id);
+                  
+                
+                }}
               />
             </Col>
           ))}
@@ -216,13 +229,14 @@ const BranchesInfo = () => {
                                     ''
                                   )}
                               </Row> */}
-          
+                              <Form>
                               <FormGroup row>
                                 <Label for="exampleEmail" sm={2}>
                                   Cohort Code
                                 </Label>
                                 <Col sm={4}>
                                   <Input
+                                  id="create_cohort_code"
                                     type="text"
                                     placeholder="example: BB09"
                                     onChange={catchInput}
@@ -241,6 +255,7 @@ const BranchesInfo = () => {
                                 </Label>
                                 <Col sm={4}>
                                   <Input
+                                  id="start_date"
                                     type="date"
                                     onChange={catchInput}
                                     name="start_date"
@@ -259,6 +274,7 @@ const BranchesInfo = () => {
                                 </Label>
                                 <Col sm={4}>
                                   <Input
+                                  id="end_date"
                                     type="date"
                                     onChange={catchInput}
                                     name="end_date"
@@ -268,11 +284,12 @@ const BranchesInfo = () => {
                                   ) : (
                                       ''
                                     )}
-                                  <Button color="primary" onClick={createCohort}>
+                                  <Button type='reset' color="primary" onClick={createCohort}>
                                     Submit
                                   </Button>
                                 </Col>
                               </FormGroup>
+                              </Form>
                             </Col>
                           </Row>
         
@@ -434,10 +451,12 @@ const BranchesInfo = () => {
                               <tbody>
                                 {individualBranch.map((branch, key) =>
                                   branch.cohorts.map((cohort, cohortKey) => (
-                                    <tr key={cohortKey}>
+                                    <tr key={cohortKey+(key*10)}>
                                       {/* <th scope="row">{cohortKey + 1}</th> */}
                                       {/* <td>{cohort.cohort_code}</td> */}
-                                     <td> <Input
+                                  <td hidden={disabled==cohortKey}>{cohort.cohort_code}</td>
+                                     <td hidden={disabled!==cohortKey}> 
+                                       <Input
                                       defaultValue={cohort.cohort_code}
                                       disabled={disabled!==cohortKey}
                                       type="text"
@@ -491,7 +510,7 @@ const BranchesInfo = () => {
                                           color="primary"
                                           onClick={()=>{handleIndexClick(cohortKey);
                                           setBranchId(branch.id);
-                                          
+                                          document.querySelector('#cohort_code').value=cohort.cohort_code
                                           setHidden(true)
                                           }} >
                                           Edit
@@ -506,6 +525,7 @@ const BranchesInfo = () => {
                                         editCohort(cohort.id); 
                                         handleIndexClick(-1)
                                         setHidden(false)
+                                        
                                     }}>
                                       Submit Changes
                                       </Button>
@@ -523,7 +543,9 @@ const BranchesInfo = () => {
                                         <Button
                                         hidden={hidden}
                                         size='sm'
-                                          onClick={() => setModal(!modal)}
+                                          onClick={() => {
+                                            setDeleteId(cohort.id);
+                                            setModal(!modal)}}
                                           color="danger"
                                         >
                                           {' '}
@@ -539,13 +561,13 @@ const BranchesInfo = () => {
                                     </ModalHeader>
                                           <ModalBody>
                                             Are you sure, you want to delete{' '}
-                                            {cohort.cohort_code}? This could cause a
+                                            this cohort? This could cause a
                                       loss of all the cohort's students
                                     </ModalBody>
                                           <ModalFooter>
                                             <Button
                                               color="primary"
-                                              onClick={() => deleteCohort(cohort.id)}
+                                              onClick={() => deleteCohort()}
                                             >
                                               Confirm
                                       </Button>{' '}
